@@ -1,9 +1,15 @@
 import { pokemonAPI } from "../utils/constants";
-import { Pokemon } from "../utils/types";
+import { PokemonSpecies } from "../utils/types";
 
-export async function getPokemonSpecies(id = "53") {
-  const res = await fetch(`${pokemonAPI}/pokemon-species/${id}/`);
-  const data: Pokemon = await res.json();
+export async function fetchPokemonSpecies(name = "persian") {
+  const url = `${pokemonAPI}/pokemon-species/${name}/`;
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+
+  const res = await fetch(url, requestOptions);
+  const data: PokemonSpecies = await res.json();
 
   return data;
 }

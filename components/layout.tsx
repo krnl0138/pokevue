@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { Footer } from "./footer/Footer";
 
 export const Layout = ({
   children,
@@ -11,7 +12,9 @@ export const Layout = ({
         <title>Pokemon</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
+      <h1>Find your pokemons!</h1>
       <main>{children}</main>
+      <Footer />
     </div>
   );
 };
