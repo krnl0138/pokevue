@@ -28,3 +28,15 @@ export type Pokemon = {
     weight: 320;
   };
 };
+
+export type PokemonFlavor = {
+  flavor_text: string;
+  language: {
+    name: string;
+    url: string;
+  };
+  version: {
+    name: string;
+    url: string;
+  };
+};
