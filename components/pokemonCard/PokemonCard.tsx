@@ -18,9 +18,11 @@ import { MoreVert } from "@mui/icons-material";
 export const PokemonCard = ({
   currentPokemon,
   currentPokemonSpecies,
+  openModal,
 }: {
   currentPokemon: Pokemon;
   currentPokemonSpecies: PokemonSpecies;
+  openModal?: () => void;
 }): JSX.Element => {
   const [displayCard, setDisplayCard] = useState(false);
   const [pokemonFlavor, setPokemonFlavor] = useState<string[]>([]);
@@ -41,7 +43,7 @@ export const PokemonCard = ({
         .map((flavor) => `${flavor.flavor_text}\n`);
       setPokemonFlavor(flavors);
     }
-    if (currentPokemon) {
+    if (currentPokemon && currentPokemon.name) {
       setDisplayCard(true);
 
       const nameCapitalize =
@@ -80,7 +82,8 @@ export const PokemonCard = ({
               title={pokemonName}
               // subheader="September 14, 2016"
             />
-            <CardActionArea>
+
+            <CardActionArea onClick={openModal}>
               {pokemonImage ? (
                 <Image
                   // <CardMedia
@@ -102,6 +105,7 @@ export const PokemonCard = ({
                 ) : null}
               </CardContent>
             </CardActionArea>
+
             <CardActions>
               <Button onClick={removeCard} size="small">
                 Remove
