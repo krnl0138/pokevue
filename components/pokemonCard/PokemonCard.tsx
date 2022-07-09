@@ -106,11 +106,13 @@ export const PokemonCard = ({
               </CardContent>
             </CardActionArea>
 
-            <CardActions>
-              <Button onClick={removeCard} size="small">
-                Remove
-              </Button>
-            </CardActions>
+            {openModal ? (
+              <CardActions>
+                <Button onClick={removeCard} size="small">
+                  Remove
+                </Button>
+              </CardActions>
+            ) : null}
           </Card>
         </article>
       ) : null}
