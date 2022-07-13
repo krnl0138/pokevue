@@ -2,6 +2,7 @@
 // import { PokemonCard } from "../pokemonCard/PokemonCard";
 
 import { useAppSelector } from "../../utils/hooks";
+import { Header } from "../header/Header";
 import { PokemonCard } from "../pokemonCard/PokemonCard";
 
 export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
@@ -19,11 +20,12 @@ export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
 
   const recentSearch = useAppSelector((state) => state.recentSearch);
 
-  const renderCards = () => {
-    return recentSearch.map((card, index) => (
-      <PokemonCard key={index} data={card} />
-    ));
-  };
-
-  return recentSearch.length > 0 ? renderCards() : null;
+  return (
+    <>
+      <Header title={"Recent search"} />
+      {recentSearch.map((card, index) => (
+        <PokemonCard key={index} data={card} />
+      ))}
+    </>
+  );
 };

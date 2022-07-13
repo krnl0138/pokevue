@@ -7,14 +7,16 @@ export const Layout = ({
   children: React.ReactNode;
 }): JSX.Element => {
   return (
-    <div>
+    <>
       <Head>
         <title>Pokemon</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <h1>Find your pokemons!</h1>
-      <main>{children}</main>
-      <Footer />
-    </div>
+      <div>
+        <h1>Find your pokemons!</h1>
+        <main>{children}</main>
+        <Footer />
+      </div>
+    </>
   );
 };

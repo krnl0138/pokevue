@@ -24,14 +24,9 @@ type TPokemonCard = {
 
 export const PokemonCard = ({ data, openModal }: TPokemonCard): JSX.Element => {
   const dispatch = useAppDispatch();
-  // console.log("data parameter from PokemonCard", data);
   const [pokemon, pokemonSpecies] = data;
-  // console.log(pokemon, pokemonSpecies);
-
-  // const [displayCard, setDisplayCard] = useState(false);
 
   const removeCard = () => {
-    // setDisplayCard(false);
     dispatch(removeRecentCard(0));
   };
 

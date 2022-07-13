@@ -8,7 +8,7 @@ export const recentSearchSlice = createSlice({
       state.push(action.payload);
     },
     removeRecentCard: (state, action) => {
-      state.filter((card, i) => i !== action.payload.index);
+      state.splice(action.payload, 1);
     },
   },
 });
