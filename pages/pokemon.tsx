@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { SearchForm } from "../components/searchForm/SearchForm";
 import { PokemonCard } from "../components/pokemonCard/PokemonCard";
-import { Layout } from "../components/Layout";
+import { Layout } from "../components/layout/Layout";
 import { Modal } from "@mui/material";
 import { RecentSearch } from "../components/recentSearch/RecentSearch";
 

@@ -2,7 +2,7 @@
 // import { PokemonCard } from "../pokemonCard/PokemonCard";
 
 import { useAppSelector } from "../../utils/hooks";
-import { Header } from "../header/Header";
+import { Heading } from "../heading/Heading";
 import { PokemonCard } from "../pokemonCard/PokemonCard";
 
 export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
@@ -22,7 +22,7 @@ export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
 
   return (
     <>
-      <Header title={"Recent search"} />
+      <Heading title={"Recent search"} />
       {recentSearch.map((card, index) => (
         <PokemonCard key={index} data={card} />
       ))}
