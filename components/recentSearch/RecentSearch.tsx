@@ -25,7 +25,6 @@ export const RecentSearch = ({
   //     recentSearch?.map
   // }, [])
 
-  console.log(recentSearch);
   return (
     <>
       {/* {recentSearch.map((search, index) =>

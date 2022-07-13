@@ -10,48 +10,38 @@ import {
 import { SyntheticEvent } from "react";
 import { fetchPokemon } from "../../lib/fetch-pokemon";
 import { fetchPokemonSpecies } from "../../lib/fetch-pokemon-species";
-import { Pokemon, PokemonSpecies } from "../../utils/types";
-
-import { useDispatch } from "react-redux";
-
-import { recentSearchSlice } from "../../lib/redux/slices/recentSearchSlice";
+import { addRecentCard } from "../../lib/redux/slices/recentSearchSlice";
+import { useAppDispatch } from "../../utils/hooks";
 
 type TSearchForm = {
   searchValue: string;
   setSearchValue: (value: string) => void;
-  setCurrentPokemon: (value: Pokemon) => void;
-  setCurrentPokemonSpecies: (value: PokemonSpecies) => void;
-  // TODO change type
-  setRecentSearch: any;
+};
+
+const getPokemon = async (search) => {
+  const pokemon = await fetchPokemon(search);
+  const pokemonSpecies = await fetchPokemonSpecies(search);
+  return [pokemon, pokemonSpecies];
 };
 
 export const SearchForm = ({
   searchValue,
   setSearchValue,
-  setCurrentPokemon,
-  setCurrentPokemonSpecies,
-  setRecentSearch,
 }: TSearchForm): JSX.Element => {
-  const { actions } = recentSearchSlice;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // form 'submit' button function
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    const search = searchValue.toLowerCase();
     try {
-      const pokemon = await fetchPokemon(searchValue);
-      const pokemonSpecies = await fetchPokemonSpecies(searchValue);
-      setCurrentPokemon(pokemon);
-      setCurrentPokemonSpecies(pokemonSpecies);
-      setSearchValue("");
-
-      const recentSearch: any = [pokemon, pokemonSpecies];
-      // setRecentSearch(recentSearch);
-      dispatch(actions.addRecentCard(recentSearch));
+      const recentSearch = await getPokemon(search);
+      dispatch(addRecentCard(recentSearch));
     } catch (e: any) {
       console.error(e);
       throw new Error(e.message);
     }
+    setSearchValue("");
   };
 
   return (

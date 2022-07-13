@@ -15,9 +15,6 @@ export const App = () => {
   // TODO type casting
   const [currentPokemonSpecies, setCurrentPokemonSpecies] = useState<any>(null);
 
-  // recent search state
-  const [recentSearch, setRecentSearch] = useState<TRecentSearch[]>([]);
-
   // modal state
   const [openModal, setOpenModal] = useState(false);
   const handleOpen = () => setOpenModal(true);
@@ -32,20 +29,12 @@ export const App = () => {
           setSearchValue={setSearchValue}
           setCurrentPokemon={setCurrentPokemon}
           setCurrentPokemonSpecies={setCurrentPokemonSpecies}
-          setRecentSearch={setRecentSearch}
         />
-        <RecentSearch recentSearch={recentSearch} />
-        <PokemonCard
-          openModal={handleOpen}
-          // currentPokemon={currentPokemon}
-          currentPokemonSpecies={currentPokemonSpecies}
-        />
+        <RecentSearch />
+        <PokemonCard openModal={handleOpen} />
         {openModal && (
           <Modal open={openModal} onClose={handleClose}>
-            <PokemonCard
-              // currentPokemon={currentPokemon}
-              currentPokemonSpecies={currentPokemonSpecies}
-            />
+            <PokemonCard />
           </Modal>
         )}
       </PokemonContext.Provider>
