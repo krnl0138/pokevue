@@ -14,16 +14,19 @@ import { blue } from "@mui/material/colors";
 import { MoreVert } from "@mui/icons-material";
 import React from "react";
 import { removeRecentCard } from "../../lib/redux/slices/recentSearchSlice";
-import { useAppDispatch, useAppSelector } from "../../utils/hooks";
+import { useAppDispatch } from "../../utils/hooks";
+import { Pokemon, PokemonFlavor } from "../../utils/types";
 
-export const PokemonCard = ({
-  openModal,
-}: {
+type TPokemonCard = {
+  data: [Pokemon, PokemonFlavor];
   openModal?: () => void;
-}): JSX.Element => {
-  const dispatch = useAppDispatch();
+};
 
-  const recentSearch = useAppSelector((store) => store.recentSearch);
+export const PokemonCard = ({ data, openModal }: TPokemonCard): JSX.Element => {
+  const dispatch = useAppDispatch();
+  // console.log("data parameter from PokemonCard", data);
+  const [pokemon, pokemonSpecies] = data;
+  // console.log(pokemon, pokemonSpecies);
 
   // const [displayCard, setDisplayCard] = useState(false);
 
@@ -32,78 +35,71 @@ export const PokemonCard = ({
     dispatch(removeRecentCard(0));
   };
 
-  const getFlavors = (pokemonSpecies) => {
-    const flavors = pokemonSpecies.flavor_text_entries
-      .slice(1, 3)
-      .map((flavor) => `${flavor.flavor_text}\n`);
-    return flavors;
-  };
-
-  const getName = (pokemon) => pokemon.name;
-  const getAvatar = (pokemon) =>
-    pokemon.sprites?.other["official-artwork"].front_default;
+  const name = pokemon.name;
+  const avatar = pokemon.sprites?.other["official-artwork"].front_default;
+  const flavors = pokemonSpecies.flavor_text_entries
+    .slice(1, 3)
+    .map((flavor) => `${flavor.flavor_text}\n`);
 
   return (
     <>
-      {recentSearch.map((card, i) => (
-        <article key={i}>
-          <Card variant="outlined" sx={{ maxWidth: 345 }}>
-            <CardHeader
-              avatar={
-                <Avatar sx={{ bgcolor: blue[600] }} aria-label="recipe">
-                  {getAvatar(card[0]) ? (
-                    <Image
-                      src={getAvatar(card[0])}
-                      width="30"
-                      height="30"
-                      alt="avatar pokemon"
-                    />
-                  ) : null}
-                </Avatar>
-              }
-              action={
-                <IconButton aria-label="settings">
-                  <MoreVert />
-                </IconButton>
-              }
-              title={getName(card[0])}
-              // subheader="September 14, 2016"
-            />
-
-            <CardActionArea onClick={openModal}>
-              {/* Change to placeholder image from /public */}
-              {getAvatar(card[0]) ? (
-                <Image
-                  // <CardMedia
-                  //   component="img"
-                  height="140"
-                  width="140"
-                  src={getAvatar(card[0])}
-                  alt="pokemon avatar"
-                />
-              ) : null}
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {getName(card[0])}
-                </Typography>
-                {card[1] ? (
-                  <Typography variant="body2" color="text.secondary">
-                    {getFlavors(card[1])}
-                  </Typography>
+      <article>
+        <Card variant="outlined" sx={{ maxWidth: 345 }}>
+          <CardHeader
+            avatar={
+              <Avatar sx={{ bgcolor: blue[600] }} aria-label="recipe">
+                {avatar ? (
+                  <Image
+                    src={avatar}
+                    width="30"
+                    height="30"
+                    alt="avatar pokemon"
+                  />
                 ) : null}
-              </CardContent>
-            </CardActionArea>
+              </Avatar>
+            }
+            action={
+              <IconButton aria-label="settings">
+                <MoreVert />
+              </IconButton>
+            }
+            title={name}
+            // subheader="September 14, 2016"
+          />
 
-            {openModal ? (
-              <CardActions>
-                <Button onClick={removeCard} size="small">
-                  Remove
-                </Button>
-              </CardActions>
+          <CardActionArea onClick={openModal}>
+            {/* Change to placeholder image from /public */}
+            {avatar ? (
+              <Image
+                // <CardMedia
+                //   component="img"
+                height="140"
+                width="140"
+                src={avatar}
+                alt="pokemon avatar"
+              />
             ) : null}
-          </Card>
-        </article>
-      ))}
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {name}
+              </Typography>
+              {pokemonSpecies ? (
+                <Typography variant="body2" color="text.secondary">
+                  {flavors}
+                </Typography>
+              ) : null}
+            </CardContent>
+          </CardActionArea>
+
+          {openModal ? null : (
+            <CardActions>
+              <Button onClick={removeCard} size="small">
+                Remove
+              </Button>
+            </CardActions>
+          )}
+        </Card>
+      </article>
     </>
   );
 };

@@ -1,14 +1,10 @@
 // import { useEffect } from "react";
-import { TRecentSearch } from "../../utils/types";
 // import { PokemonCard } from "../pokemonCard/PokemonCard";
 
-export const RecentSearch = ({
-  recentSearch,
-  children,
-}: {
-  recentSearch: TRecentSearch[];
-  children?: JSX.Element;
-}) => {
+import { useAppSelector } from "../../utils/hooks";
+import { PokemonCard } from "../pokemonCard/PokemonCard";
+
+export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
   /*
     1. [ ]- create an array of current search results in the global state
         a. [ ]- array length <=  3 (improvement: should be based on the display dimensions)
@@ -21,20 +17,13 @@ export const RecentSearch = ({
     5. [ ]- add Header component
     */
 
-  // useEffect(() => {
-  //     recentSearch?.map
-  // }, [])
+  const recentSearch = useAppSelector((state) => state.recentSearch);
 
-  return (
-    <>
-      {/* {recentSearch.map((search, index) =>
-        console.log(search)
-        // <PokemonCard
-        //   key={index}
-        //   currentPokemon={search.pokemon}
-        //   currentPokemonSpecies={search.pokemonSpecies}
-        // />
-      )} */}
-    </>
-  );
+  const renderCards = () => {
+    return recentSearch.map((card, index) => (
+      <PokemonCard key={index} data={card} />
+    ));
+  };
+
+  return recentSearch.length > 0 ? renderCards() : null;
 };
