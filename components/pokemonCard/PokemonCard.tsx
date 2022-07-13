@@ -9,18 +9,25 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { Pokemon, PokemonSpecies } from "../../utils/types";
+import { useContext, useEffect, useState } from "react";
+import { PokemonSpecies } from "../../utils/types";
 import Image from "next/image";
 import { blue } from "@mui/material/colors";
 import { MoreVert } from "@mui/icons-material";
+import React from "react";
+import { PokemonContext } from "../../lib/test-pokemon-context";
+
+// eslint-disable-next-line react/display-name
+const HoverOnRemoveButton = React.memo(() => {
+  return <p>Hello World</p>;
+});
 
 export const PokemonCard = ({
-  currentPokemon,
+  // currentPokemon,
   currentPokemonSpecies,
   openModal,
 }: {
-  currentPokemon: Pokemon;
+  // currentPokemon: Pokemon;
   currentPokemonSpecies: PokemonSpecies;
   openModal?: () => void;
 }): JSX.Element => {
@@ -35,6 +42,20 @@ export const PokemonCard = ({
     setPokemonName("");
     setPokemonImage("");
   };
+
+  // Test functionality
+  // state for button hover (can be rewritten in CSS)
+  const [showRemoveHover, setShowRemoveHover] = useState(false);
+  const removeOnMouseEnter = () => {
+    setShowRemoveHover(true);
+  };
+  const removeOnMouseLeave = () => {
+    setShowRemoveHover(false);
+  };
+
+  // TEST functionality
+  // get data from useContext
+  const currentPokemon = useContext(PokemonContext);
 
   useEffect(() => {
     if (currentPokemonSpecies?.flavor_text_entries) {
@@ -84,6 +105,7 @@ export const PokemonCard = ({
             />
 
             <CardActionArea onClick={openModal}>
+              {/* Change to placeholder image from /public */}
               {pokemonImage ? (
                 <Image
                   // <CardMedia
@@ -108,9 +130,16 @@ export const PokemonCard = ({
 
             {openModal ? (
               <CardActions>
-                <Button onClick={removeCard} size="small">
+                <Button
+                  onClick={removeCard}
+                  size="small"
+                  onMouseEnter={removeOnMouseEnter}
+                  onMouseLeave={removeOnMouseLeave}
+                >
                   Remove
                 </Button>
+                {/* test functionality */}
+                {showRemoveHover && <HoverOnRemoveButton />}
               </CardActions>
             ) : null}
           </Card>

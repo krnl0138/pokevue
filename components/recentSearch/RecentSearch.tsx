@@ -1,4 +1,14 @@
-export const RecentSearch = () => {
+// import { useEffect } from "react";
+import { TRecentSearch } from "../../utils/types";
+// import { PokemonCard } from "../pokemonCard/PokemonCard";
+
+export const RecentSearch = ({
+  recentSearch,
+  children,
+}: {
+  recentSearch: TRecentSearch[];
+  children?: JSX.Element;
+}) => {
   /*
     1. [ ]- create an array of current search results in the global state
         a. [ ]- array length <=  3 (improvement: should be based on the display dimensions)
@@ -10,5 +20,22 @@ export const RecentSearch = () => {
     4. [ ]- make this component draggable (potentially dracula lib)
     5. [ ]- add Header component
     */
-  return <h1>RecentSearch</h1>;
+
+  // useEffect(() => {
+  //     recentSearch?.map
+  // }, [])
+
+  console.log(recentSearch);
+  return (
+    <>
+      {/* {recentSearch.map((search, index) =>
+        console.log(search)
+        // <PokemonCard
+        //   key={index}
+        //   currentPokemon={search.pokemon}
+        //   currentPokemonSpecies={search.pokemonSpecies}
+        // />
+      )} */}
+    </>
+  );
 };

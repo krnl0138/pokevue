@@ -12,17 +12,22 @@ import { fetchPokemon } from "../../lib/fetch-pokemon";
 import { fetchPokemonSpecies } from "../../lib/fetch-pokemon-species";
 import { Pokemon, PokemonSpecies } from "../../utils/types";
 
+type TSearchForm = {
+  searchValue: string;
+  setSearchValue: (value: string) => void;
+  setCurrentPokemon: (value: Pokemon) => void;
+  setCurrentPokemonSpecies: (value: PokemonSpecies) => void;
+  // TODO change type
+  setRecentSearch: any;
+};
+
 export const SearchForm = ({
   searchValue,
   setSearchValue,
   setCurrentPokemon,
   setCurrentPokemonSpecies,
-}: {
-  searchValue: string;
-  setSearchValue: (value: string) => void;
-  setCurrentPokemon: (value: Pokemon) => void;
-  setCurrentPokemonSpecies: (value: PokemonSpecies) => void;
-}): JSX.Element => {
+  setRecentSearch,
+}: TSearchForm): JSX.Element => {
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     try {
@@ -31,6 +36,9 @@ export const SearchForm = ({
       setCurrentPokemon(pokemon);
       setCurrentPokemonSpecies(pokemonSpecies);
       setSearchValue("");
+
+      const recentSearch: any = [pokemon, pokemonSpecies];
+      setRecentSearch(recentSearch);
     } catch (e: any) {
       console.error(e);
       throw new Error(e.message);

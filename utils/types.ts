@@ -42,3 +42,5 @@ export type PokemonSpecies = {
 };
 
 export type PokemonFlavor = PokemonSpecies["flavor_text_entries"];
+
+export type TRecentSearch = Pokemon & PokemonSpecies;
