@@ -12,6 +12,10 @@ import { fetchPokemon } from "../../lib/fetch-pokemon";
 import { fetchPokemonSpecies } from "../../lib/fetch-pokemon-species";
 import { Pokemon, PokemonSpecies } from "../../utils/types";
 
+import { useDispatch } from "react-redux";
+
+import { recentSearchSlice } from "../../lib/redux/slices/recentSearchSlice";
+
 type TSearchForm = {
   searchValue: string;
   setSearchValue: (value: string) => void;
@@ -28,6 +32,10 @@ export const SearchForm = ({
   setCurrentPokemonSpecies,
   setRecentSearch,
 }: TSearchForm): JSX.Element => {
+  const { actions } = recentSearchSlice;
+  const dispatch = useDispatch();
+
+  // form 'submit' button function
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     try {
@@ -38,7 +46,8 @@ export const SearchForm = ({
       setSearchValue("");
 
       const recentSearch: any = [pokemon, pokemonSpecies];
-      setRecentSearch(recentSearch);
+      // setRecentSearch(recentSearch);
+      dispatch(actions.addRecentCard(recentSearch));
     } catch (e: any) {
       console.error(e);
       throw new Error(e.message);
