@@ -1,4 +1,6 @@
 import Modal from "@mui/material/Modal";
+import { closeModal } from "../../lib/redux/slices/modalSlice";
+import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 
 // const modalStyle = {
 //   position: "absolute" as "absolute",
@@ -13,16 +15,21 @@ import Modal from "@mui/material/Modal";
 // };
 
 type TModal = {
-  open: boolean;
-  onClose: () => void;
+  //   open: boolean;
+  //   onClose: () => void;
   children: JSX.Element;
 };
 
-export const ModalView = ({ open, onClose, children }: TModal) => {
+export const ModalView = ({ children }: TModal) => {
+  const dispatch = useAppDispatch();
+  const setModalClose = () => {
+    dispatch(closeModal());
+  };
+  const isModalOpen = useAppSelector((state) => state.modal.modalOpen);
   return (
     <Modal
-      open={open}
-      onClose={onClose}
+      open={isModalOpen}
+      onClose={setModalClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >

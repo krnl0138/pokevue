@@ -14,20 +14,26 @@ import { blue } from "@mui/material/colors";
 import { MoreVert } from "@mui/icons-material";
 import React from "react";
 import { removeRecentCard } from "../../lib/redux/slices/recentSearchSlice";
-import { useAppDispatch } from "../../utils/hooks";
+import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { Pokemon, PokemonFlavor } from "../../utils/types";
+
+import { openModal } from "../../lib/redux/slices/modalSlice";
 
 type TPokemonCard = {
   data: [Pokemon, PokemonFlavor];
-  openModal?: () => void;
 };
 
-export const PokemonCard = ({ data, openModal }: TPokemonCard): JSX.Element => {
+export const PokemonCard = ({ data }: TPokemonCard): JSX.Element => {
   const dispatch = useAppDispatch();
   const [pokemon, pokemonSpecies] = data;
 
   const removeCard = () => {
     dispatch(removeRecentCard(0));
+  };
+
+  const isModalOpen = useAppSelector((state) => state.modal.modalOpen);
+  const setOpenModal = () => {
+    dispatch(openModal());
   };
 
   const name = pokemon.name;
@@ -62,7 +68,7 @@ export const PokemonCard = ({ data, openModal }: TPokemonCard): JSX.Element => {
             // subheader="September 14, 2016"
           />
 
-          <CardActionArea onClick={openModal}>
+          <CardActionArea onClick={setOpenModal}>
             {/* Change to placeholder image from /public */}
             {avatar ? (
               <Image
@@ -86,7 +92,7 @@ export const PokemonCard = ({ data, openModal }: TPokemonCard): JSX.Element => {
             </CardContent>
           </CardActionArea>
 
-          {openModal ? null : (
+          {isModalOpen ? null : (
             <CardActions>
               <Button onClick={removeCard} size="small">
                 Remove
