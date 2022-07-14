@@ -1,5 +1,5 @@
-import { pokemonAPI } from "../utils/constants";
-import { Pokemon } from "../utils/types";
+import { pokemonAPI } from "../../utils/constants";
+import { Pokemon } from "../../utils/types";
 
 export async function fetchPokemon(name = "persian") {
   const url = `${pokemonAPI}/pokemon/${name}/`;
