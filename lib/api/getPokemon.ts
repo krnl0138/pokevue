@@ -1,5 +1,5 @@
-import { fetchPokemon } from "./fetch-pokemon";
-import { fetchPokemonSpecies } from "./fetch-pokemon-species";
+import { fetchPokemon } from "./fetchPokemon";
+import { fetchPokemonSpecies } from "./fetchPokemonSpecies";
 
 export const getPokemon = async (search) => {
   const pokemon = await fetchPokemon(search);
