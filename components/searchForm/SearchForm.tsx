@@ -8,27 +8,14 @@ import {
   InputLabel,
 } from "@mui/material";
 import { SyntheticEvent } from "react";
-import { fetchPokemon } from "../../lib/fetch-pokemon";
-import { fetchPokemonSpecies } from "../../lib/fetch-pokemon-species";
 import { addRecentCard } from "../../lib/redux/slices/recentSearchSlice";
-import { useAppDispatch } from "../../utils/hooks";
+import { useAppDispatch, useAppSelector } from "../../utils/hooks";
+import { getPokemon } from "../../lib/api/getPokemon";
+import { setSearchValue } from "../../lib/redux/slices/searchSlice";
 
-type TSearchForm = {
-  searchValue: string;
-  setSearchValue: (value: string) => void;
-};
-
-const getPokemon = async (search) => {
-  const pokemon = await fetchPokemon(search);
-  const pokemonSpecies = await fetchPokemonSpecies(search);
-  return [pokemon, pokemonSpecies];
-};
-
-export const SearchForm = ({
-  searchValue,
-  setSearchValue,
-}: TSearchForm): JSX.Element => {
+export const SearchForm = (): JSX.Element => {
   const dispatch = useAppDispatch();
+  const searchValue = useAppSelector((state) => state.search.value);
 
   // form 'submit' button function
   const handleSubmit = async (e: SyntheticEvent) => {
@@ -41,7 +28,7 @@ export const SearchForm = ({
       console.error(e);
       throw new Error(e.message);
     }
-    setSearchValue("");
+    dispatch(setSearchValue(""));
   };
 
   return (
@@ -57,7 +44,7 @@ export const SearchForm = ({
             size="small"
             fullWidth={true}
             onChange={(e) => {
-              setSearchValue(e.target.value);
+              dispatch(setSearchValue(e.target.value));
             }}
           />
           <FormHelperText id="my-helper-text">
