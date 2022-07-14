@@ -11,7 +11,13 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { blue } from "@mui/material/colors";
-import { MoreVert } from "@mui/icons-material";
+import {
+  Delete,
+  Favorite,
+  FavoriteBorder,
+  MoreVert,
+  Output,
+} from "@mui/icons-material";
 import React from "react";
 import { removeRecentCard } from "../../lib/redux/slices/recentSearchSlice";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
@@ -95,7 +101,13 @@ export const PokemonCard = ({ data }: TPokemonCard): JSX.Element => {
           {isModalOpen ? null : (
             <CardActions>
               <Button onClick={removeCard} size="small">
-                Remove
+                <Delete />
+              </Button>
+              <Button onClick={removeCard} size="small">
+                <FavoriteBorder />
+              </Button>
+              <Button onClick={removeCard} size="small">
+                <Output />
               </Button>
             </CardActions>
           )}
