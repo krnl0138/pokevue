@@ -33,7 +33,7 @@ export const PokemonCard = ({ data }: TPokemonCard): JSX.Element => {
 
   const isModalOpen = useAppSelector((state) => state.modal.modalOpen);
   const setOpenModal = () => {
-    dispatch(openModal());
+    dispatch(openModal(data));
   };
 
   const name = pokemon.name;
