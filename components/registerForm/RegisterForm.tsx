@@ -12,6 +12,8 @@ import {
 import { useAppDispatch } from "../../utils/hooks";
 import { useState } from "react";
 import { setRegisterFormValue } from "../../lib/redux/slices/registerFormSlice";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { app } from "../../database";
 
 export const RegisterForm = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +29,12 @@ export const RegisterForm = () => {
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
+  };
+
+  // firebase test functionality
+  const auth = getAuth(app);
+  const handleGoogleAuth = () => {
+    signInWithPopup(auth, new GoogleAuthProvider());
   };
 
   return (
@@ -76,6 +84,15 @@ export const RegisterForm = () => {
           Register
         </Button>
       </FormControl>
+
+      <Button
+        onClick={handleGoogleAuth}
+        type="button"
+        variant="contained"
+        endIcon={<Send />}
+      >
+        Register with Google account
+      </Button>
     </>
   );
 };
