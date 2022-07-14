@@ -1,11 +1,11 @@
 import React from "react";
 import { Layout } from "../components/layout/Layout";
-import { RegistrationForm } from "../components/registrationForm/RegistrationForm";
+import { RegisterForm } from "../components/registerForm/RegisterForm";
 
 export const Registration = () => {
   return (
     <Layout>
-      <RegistrationForm />
+      <RegisterForm />
     </Layout>
   );
 };

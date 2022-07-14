@@ -10,17 +10,16 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import { useAppDispatch } from "../../utils/hooks";
-import { setLoginFormValue } from "../../lib/redux/slices/loginFormSlice";
 import { useState } from "react";
-import Link from "next/link";
+import { setRegisterFormValue } from "../../lib/redux/slices/registerFormSlice";
 
-export const LoginForm = () => {
+export const RegisterForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const result = { [e.currentTarget.id]: e.currentTarget.value };
-    dispatch(setLoginFormValue(result));
+    dispatch(setRegisterFormValue(result));
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -41,7 +40,16 @@ export const LoginForm = () => {
           aria-describedby="username-helper"
           onChange={handleChange}
         />
-        <FormHelperText id="username-helper">
+
+        <InputLabel htmlFor="email" margin="dense">
+          Email
+        </InputLabel>
+        <Input
+          id="email"
+          aria-describedby="email-helper"
+          onChange={handleChange}
+        />
+        <FormHelperText id="email-helper">
           We'll never share your email.
         </FormHelperText>
 
@@ -65,13 +73,9 @@ export const LoginForm = () => {
         />
 
         <Button type="submit" variant="contained" endIcon={<Send />}>
-          Login
+          Register
         </Button>
       </FormControl>
-
-      <p>
-        Are you a new user? <Link href={"/register"}>Register</Link>
-      </p>
     </>
   );
 };
