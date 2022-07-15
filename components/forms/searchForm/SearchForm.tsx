@@ -21,7 +21,12 @@ import {
 
 export const SearchForm = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const searchValue = useAppSelector((state) => state.search.value);
+  const searchValue = useAppSelector((state) => state.search.searchValue);
+
+  const handleChange = (e: React.SyntheticEvent) => {
+    const result = { [e.currentTarget.id]: e.currentTarget.value };
+    dispatch(setSearchValue(result));
+  };
 
   // form 'submit' button function
   const handleSubmit = async (e: SyntheticEvent) => {
@@ -46,13 +51,11 @@ export const SearchForm = (): JSX.Element => {
           <Input
             className={styles.input}
             type="text"
-            id="pokemonInput"
+            id="searchValue"
             aria-describedby="my-helper-text"
             size="small"
             fullWidth={true}
-            onChange={(e) => {
-              dispatch(setSearchValue(e.target.value));
-            }}
+            onChange={handleChange}
             value={searchValue}
           />
           <FormHelperText id="my-helper-text">
