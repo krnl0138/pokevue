@@ -10,10 +10,11 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, actions) => {
-      state.username = actions.payload.username;
-      state.email = actions.payload.email;
-      state.avatar = actions.payload.avatar;
+    setUser: (state, action) => {
+      //   state.username = action.payload.username;
+      //   state.email = action.payload.email;
+      //   state.avatar = action.payload.avatar;
+      return { ...state, ...action.payload };
     },
   },
 });

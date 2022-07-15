@@ -9,8 +9,8 @@ export const loginFormSlice = createSlice({
   name: "loginForm",
   initialState,
   reducers: {
-    setLoginFormValue: (state, actions) => {
-      state = { ...state, ...actions.payload };
+    setLoginFormValue: (state, action) => {
+      state = { ...state, ...action.payload };
     },
   },
 });
