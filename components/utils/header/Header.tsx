@@ -17,7 +17,7 @@ import { PROJECT_URLS as urls, PROJECT_LOGO } from "../../../utils/constants";
 import Image from "next/image";
 import Link from "next/link";
 
-const pages = ["All Pokemons", "About"];
+const pages = ["Pokemons", "About"];
 const settings = ["Favourites", "Profile", "Logout"];
 
 const Header = () => {
@@ -62,14 +62,12 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            {/* <Link href={urls.main}> */}
             <Image
               src={PROJECT_LOGO}
               width="50"
               height="50"
               alt="Pokemon Logo"
             />
-            {/* </Link> */}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -124,18 +122,16 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            {/* <Link href={urls.main}> */}
             <Image
               src={PROJECT_LOGO}
               width="50"
               height="50"
               alt="Pokemon Logo"
             />
-            {/* </Link> */}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => {
-              const url = page.toLowerCase().replaceAll(" ", "_");
+              const url = page.toLowerCase();
               return (
                 <Button
                   key={page}
