@@ -15,8 +15,8 @@ export const recentSearchSlice = createSlice({
   reducers: {
     addRecentCard: (state, action) => {
       // doubling guard clause
-      const double = state.some((item) => item.id === action.payload.id);
-      if (double) return;
+      const doubleId = state.some((item) => item.id === action.payload.id);
+      if (doubleId) return;
 
       // add no more card than the limit
       const limit = 3;

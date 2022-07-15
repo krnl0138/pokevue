@@ -4,6 +4,7 @@ import { PokemonScreen } from "../../components/pokemonScreen/PokemonScreen";
 import { useAppSelector } from "../../utils/hooks";
 
 // Should fetch more pokemon data potentially to provide more info.
+// TODO should be ProtectedRoute with redirect at '/pokemon' if no id was provided
 const PokemonById = () => {
   const router = useRouter();
   const id = Number(router.asPath.split("/")[2]);

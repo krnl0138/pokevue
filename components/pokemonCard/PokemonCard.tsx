@@ -38,6 +38,7 @@ type TPokemonCard = {
     isFavourite: boolean;
     isRecent: boolean;
   };
+  // TODO change to 'isRecentSearch'
   isProfile?: boolean;
 };
 

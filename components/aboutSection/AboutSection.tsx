@@ -16,7 +16,7 @@ export const AboutSection = () => {
       </p>
       <br />
       <p>
-        For this project I've used the following stack:
+        For this project I&apos;ve used the following stack:
         <ul>
           <li>MUI</li>
           <li>React/Redux</li>
