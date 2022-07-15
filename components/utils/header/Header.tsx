@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
-import { PROJECT_URLS as urls } from "../../../utils/constants";
+import { PROJECT_URLS as urls, PROJECT_LOGO } from "../../../utils/constants";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -51,7 +51,7 @@ const Header = () => {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href={urls.main}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -62,14 +62,14 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            <Link href={urls.main}>
-              <Image
-                src="/pokemon-logo-png.png"
-                width="50"
-                height="50"
-                alt="Pokemon Logo"
-              />
-            </Link>
+            {/* <Link href={urls.main}> */}
+            <Image
+              src={PROJECT_LOGO}
+              width="50"
+              height="50"
+              alt="Pokemon Logo"
+            />
+            {/* </Link> */}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -112,7 +112,7 @@ const Header = () => {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href={urls.main}
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -124,14 +124,14 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            <Link href={urls.main}>
-              <Image
-                src="/pokemon-logo-png.png"
-                width="50"
-                height="50"
-                alt="Pokemon Logo"
-              />
-            </Link>
+            {/* <Link href={urls.main}> */}
+            <Image
+              src={PROJECT_LOGO}
+              width="50"
+              height="50"
+              alt="Pokemon Logo"
+            />
+            {/* </Link> */}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => {

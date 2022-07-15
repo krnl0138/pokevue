@@ -13,3 +13,4 @@ export const PROJECT_URLS = {
 };
 
 export const AVATAR_PLACEHOLDER = "/vercel.svg";
+export const PROJECT_LOGO = "/logo.png";
