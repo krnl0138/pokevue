@@ -9,8 +9,11 @@ import {
   InputAdornment,
   OutlinedInput,
 } from "@mui/material";
-import { useAppDispatch } from "../../../utils/hooks";
-import { setLoginFormValue } from "../../../lib/redux/slices/loginFormSlice";
+import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
+import {
+  resetLoginFormValue,
+  setLoginFormValue,
+} from "../../../lib/redux/slices/loginFormSlice";
 import React, { useState } from "react";
 import Link from "next/link";
 import { PROJECT_URLS as urls } from "../../../utils/constants";
@@ -19,9 +22,17 @@ export const LoginForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
+  const { username, password } = useAppSelector((state) => state.loginForm);
+
   const handleChange = (e: React.SyntheticEvent) => {
     const result = { [e.currentTarget.id]: e.currentTarget.value };
+    console.log("result value from handleChange: ", result);
     dispatch(setLoginFormValue(result));
+  };
+
+  const handleSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    dispatch(resetLoginFormValue());
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -31,7 +42,7 @@ export const LoginForm = () => {
 
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <FormControl>
           <InputLabel htmlFor="username" margin="dense">
             Username
@@ -40,6 +51,7 @@ export const LoginForm = () => {
             id="username"
             aria-describedby="username-helper"
             onChange={handleChange}
+            value={username}
           />
           <FormHelperText id="username-helper">
             We&apos;ll never share your email.
@@ -51,6 +63,7 @@ export const LoginForm = () => {
             id="password"
             type={showPassword ? "text" : "password"}
             onChange={handleChange}
+            value={password}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton

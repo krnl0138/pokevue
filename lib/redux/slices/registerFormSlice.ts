@@ -11,11 +11,14 @@ export const registerFormSlice = createSlice({
   initialState,
   reducers: {
     setRegisterFormValue: (state, action) => {
-      state = { ...state, ...action.payload };
+      return { ...state, ...action.payload };
+    },
+    resetRegisterFormValue: () => {
+      return initialState;
     },
   },
 });
 
 export const { actions, reducer: registerFormReducer } = registerFormSlice;
-export const { setRegisterFormValue } = actions;
+export const { setRegisterFormValue, resetRegisterFormValue } = actions;
 export default registerFormReducer;

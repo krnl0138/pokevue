@@ -9,17 +9,29 @@ import {
   InputAdornment,
   OutlinedInput,
 } from "@mui/material";
-import { useAppDispatch } from "../../../utils/hooks";
+import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
 import { useState } from "react";
-import { setRegisterFormValue } from "../../../lib/redux/slices/registerFormSlice";
+import {
+  resetRegisterFormValue,
+  setRegisterFormValue,
+} from "../../../lib/redux/slices/registerFormSlice";
 
 export const RegisterForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
+  const { username, email, password } = useAppSelector(
+    (state) => state.registerForm
+  );
+
   const handleChange = (e: React.SyntheticEvent) => {
     const result = { [e.currentTarget.id]: e.currentTarget.value };
     dispatch(setRegisterFormValue(result));
+  };
+
+  const handleSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    dispatch(resetRegisterFormValue());
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -29,7 +41,7 @@ export const RegisterForm = () => {
 
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <FormControl>
           <InputLabel htmlFor="username" margin="dense">
             Username
@@ -38,6 +50,7 @@ export const RegisterForm = () => {
             id="username"
             aria-describedby="username-helper"
             onChange={handleChange}
+            value={username}
           />
         </FormControl>
 
@@ -49,6 +62,7 @@ export const RegisterForm = () => {
             id="email"
             aria-describedby="email-helper"
             onChange={handleChange}
+            value={email}
           />
           <FormHelperText id="email-helper">
             We&apos;ll never share your email.
@@ -60,6 +74,7 @@ export const RegisterForm = () => {
             id="password"
             type={showPassword ? "text" : "password"}
             onChange={handleChange}
+            value={password}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton

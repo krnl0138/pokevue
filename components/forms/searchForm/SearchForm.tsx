@@ -10,7 +10,10 @@ import {
 import { SyntheticEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
 import { getPokemon } from "../../../lib/api/getPokemon";
-import { setSearchValue } from "../../../lib/redux/slices/searchSlice";
+import {
+  setSearchValue,
+  resetSearchValue,
+} from "../../../lib/redux/slices/searchSlice";
 import {
   addPokemon,
   toggleRecentPokemon,
@@ -32,7 +35,7 @@ export const SearchForm = (): JSX.Element => {
       console.error(e);
       throw new Error(e.message);
     }
-    dispatch(setSearchValue(""));
+    dispatch(resetSearchValue());
   };
 
   return (
@@ -50,6 +53,7 @@ export const SearchForm = (): JSX.Element => {
             onChange={(e) => {
               dispatch(setSearchValue(e.target.value));
             }}
+            value={searchValue}
           />
           <FormHelperText id="my-helper-text">
             Find details about your pokemon

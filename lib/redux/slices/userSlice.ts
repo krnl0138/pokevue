@@ -11,14 +11,14 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      //   state.username = action.payload.username;
-      //   state.email = action.payload.email;
-      //   state.avatar = action.payload.avatar;
       return { ...state, ...action.payload };
+    },
+    resetUser: () => {
+      return initialState;
     },
   },
 });
 
 const { actions, reducer: userReducer } = userSlice;
-export const { setUser } = actions;
+export const { setUser, resetUser } = actions;
 export default userReducer;
