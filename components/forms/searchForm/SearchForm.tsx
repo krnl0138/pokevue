@@ -35,7 +35,6 @@ export const SearchForm = (): JSX.Element => {
       throw new Error(e.message);
     }
     dispatch(setSearchValue(""));
-    e.target.value = "";
   };
 
   return (
@@ -46,7 +45,7 @@ export const SearchForm = (): JSX.Element => {
           <Input
             className={styles.input}
             type="text"
-            id="pokemon"
+            id="pokemonInput"
             aria-describedby="my-helper-text"
             size="small"
             fullWidth={true}

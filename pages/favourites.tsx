@@ -4,7 +4,7 @@ import { Layout } from "../components/layout/Layout";
 import { FavouritePokemons } from "../components/favouritePokemons/FavouritePokemons";
 import { ModalWrapper } from "../components/modalWrapper/modalWrapper";
 
-export const Account = () => {
+export const Favourites = () => {
   return (
     <Layout>
       <FavouritePokemons />
@@ -15,4 +15,4 @@ export const Account = () => {
   );
 };
 
-export default Account;
+export default Favourites;

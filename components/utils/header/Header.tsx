@@ -12,11 +12,13 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
+import { PROJECT_URLS as urls } from "../../utils/constants";
+
 import Image from "next/image";
 import Link from "next/link";
 
 const pages = ["All Pokemons", "About"];
-const settings = ["Profile", "Account", "Logout"];
+const settings = ["Favourites", "Profile", "Logout"];
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -60,7 +62,7 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            <Link href="/pokemon">
+            <Link href={urls.main}>
               <Image
                 src="/pokemon-logo-png.png"
                 width="50"
@@ -122,7 +124,7 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            <Link href="/pokemon">
+            <Link href={urls.main}>
               <Image
                 src="/pokemon-logo-png.png"
                 width="50"

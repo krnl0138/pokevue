@@ -4,7 +4,9 @@ export const PokemonScreen = ({ data }) => {
   const isRecent = data.isRecent;
   const { name, avatar, flavors } = data.pokemonData;
   return (
-  <p>{name}</p>
-  <Image src={avatar} alt />
+    <>
+      <p>{name}</p>
+      <Image src={avatar} alt />
+    </>
   );
 };

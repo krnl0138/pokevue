@@ -31,8 +31,10 @@ import {
 } from "../../lib/redux/slices/pokemonsSlice";
 import { useRouter } from "next/router";
 
+import { PROJECT_URLS as urls } from "../../utils/constants";
+
 type TPokemonCard = {
-  data: {
+  data?: {
     id: number;
     pokemonData: { name: string; avatar: string; flavors: string };
     isFavourite: boolean;
@@ -47,10 +49,10 @@ export const PokemonCard = React.forwardRef(
   ({ data, isProfile }: TPokemonCard): JSX.Element => {
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const id = data.id;
-    const isFavourite = data.isFavourite;
-    const isRecent = data.isRecent;
-    const { name, avatar, flavors } = data.pokemonData;
+    const id = data?.id;
+    const isFavourite = data?.isFavourite;
+    const isRecent = data?.isRecent;
+    const { name, avatar, flavors } = data?.pokemonData;
 
     const handleRecent = () => {
       dispatch(removeRecentCard(id));
@@ -63,7 +65,7 @@ export const PokemonCard = React.forwardRef(
     };
 
     const handleOpenPokemonScreen = () => {
-      router.push(`/pokemon/${id}`);
+      router.push(`${urls.pokemon}${id}`);
     };
 
     // state for modal view of card

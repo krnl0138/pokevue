@@ -13,6 +13,7 @@ import { useAppDispatch } from "../../utils/hooks";
 import { setLoginFormValue } from "../../lib/redux/slices/loginFormSlice";
 import { useState } from "react";
 import Link from "next/link";
+import { PROJECT_URLS as urls } from "../../utils/constants";
 
 export const LoginForm = () => {
   const dispatch = useAppDispatch();
@@ -42,7 +43,7 @@ export const LoginForm = () => {
           onChange={handleChange}
         />
         <FormHelperText id="username-helper">
-          We'll never share your email.
+          We&apos;ll never share your email.
         </FormHelperText>
 
         <OutlinedInput
@@ -70,7 +71,7 @@ export const LoginForm = () => {
       </FormControl>
 
       <p>
-        Are you a new user? <Link href={"/register"}>Register</Link>
+        Are you a new user? <Link href={urls.register}>Register</Link>
       </p>
     </>
   );

@@ -3,12 +3,13 @@ import Link from "next/link";
 import { useAppSelector } from "../../utils/hooks";
 import { Heading } from "../heading/Heading";
 import { PokemonCard } from "../pokemonCard/PokemonCard";
+import { PROJECT_URLS as urls } from "../../utils/constants";
 
 const NoFavourites = () => {
   return (
     <p>
       You have no favourite pokemons.{" "}
-      <Link href={"/pokemon"}>Find and add one!</Link>{" "}
+      <Link href={urls.main}>Find and add one!</Link>{" "}
     </p>
   );
 };

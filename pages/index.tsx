@@ -3,27 +3,16 @@ import { SearchForm } from "../components/searchForm/SearchForm";
 import { PokemonCard } from "../components/pokemonCard/PokemonCard";
 import { Layout } from "../components/layout/Layout";
 import { RecentSearch } from "../components/recentSearch/RecentSearch";
-import { useAppSelector } from "../utils/hooks";
-import { ModalView } from "../components/modalView/ModalView";
 import { ModalWrapper } from "../components/modalWrapper/modalWrapper";
 
 export const Index = () => {
-  // modal state
-  const isModalOpen = useAppSelector((state) => state.modal.modalOpen);
-  const modalData = useAppSelector((state) => state.modal.data);
-
   return (
     <Layout>
       <SearchForm />
       <RecentSearch />
-      {isModalOpen && (
-        <ModalView>
-          <PokemonCard data={modalData} />
-        </ModalView>
-      )}
-      {/* <ModalWrapper>
+      <ModalWrapper>
         <PokemonCard />
-      </ModalWrapper> */}
+      </ModalWrapper>
     </Layout>
   );
 };
