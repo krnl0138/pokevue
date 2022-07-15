@@ -47,13 +47,6 @@ export const PokemonCard = React.forwardRef(
   ({ data, fromRecent, fromModal }: TPokemonCard): JSX.Element => {
     const router = useRouter();
     const dispatch = useAppDispatch();
-    // let id: Pokemon['id'];
-    // let isFavourite: Pokemon['isFavourite']
-    // if (data) {
-    //   id = data?.id;
-    //   isFavourite = data?.isFavourite;
-
-    // }
     if (!data) return <p>no data</p>;
     const id = data.id;
     const isFavourite = data.isFavourite;
@@ -68,7 +61,7 @@ export const PokemonCard = React.forwardRef(
     };
 
     const handleOpenPokemonScreen = () => {
-      router.push(`${urls.pokemon}${id}`);
+      router.push(`${urls.pokemon}/${id}`);
     };
 
     // state for modal view of card
