@@ -18,7 +18,7 @@ import {
   MoreVert,
   Output,
 } from "@mui/icons-material";
-import React, { useState } from "react";
+import React from "react";
 import { removeRecentCard } from "../../lib/redux/slices/recentSearchSlice";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 // import { Pokemon, PokemonFlavor } from "../../utils/types";
@@ -38,11 +38,12 @@ type TPokemonCard = {
     isFavourite: boolean;
     isRecent: boolean;
   };
+  isProfile?: boolean;
 };
 
 // eslint-disable-next-line react/display-name
 export const PokemonCard = React.forwardRef(
-  ({ data }: TPokemonCard): JSX.Element => {
+  ({ data, isProfile }: TPokemonCard): JSX.Element => {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const id = data.id;
@@ -122,9 +123,11 @@ export const PokemonCard = React.forwardRef(
 
             {isModalOpen ? null : (
               <CardActions>
-                <Button onClick={handleRecent} size="small">
-                  <Delete />
-                </Button>
+                {isProfile ? null : (
+                  <Button onClick={handleRecent} size="small">
+                    <Delete />
+                  </Button>
+                )}
                 <Button onClick={handleFavourite} size="small">
                   {isFavourite ? <Favorite /> : <FavoriteBorder />}
                   {/* <FavoriteBorder /> */}

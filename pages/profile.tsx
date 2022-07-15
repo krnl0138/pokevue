@@ -15,7 +15,7 @@ export const Profile = () => {
       <FavouritePokemons />
       {isModalOpen && (
         <ModalView>
-          <PokemonCard data={modalData} />
+          <PokemonCard data={modalData} isProfile={true} />
         </ModalView>
       )}
     </Layout>

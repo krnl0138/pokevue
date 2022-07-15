@@ -24,7 +24,7 @@ export const FavouritePokemons = ({ children }: { children?: JSX.Element }) => {
       <Box>
         {favouritePokemons.length > 0 ? (
           favouritePokemons.map((data) => (
-            <PokemonCard key={data.id} data={data} />
+            <PokemonCard key={data.id} data={data} isProfile={true} />
           ))
         ) : (
           <NoFavourites />
