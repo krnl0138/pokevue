@@ -12,6 +12,10 @@ import { addRecentCard } from "../../lib/redux/slices/recentSearchSlice";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { getPokemon } from "../../lib/api/getPokemon";
 import { setSearchValue } from "../../lib/redux/slices/searchSlice";
+import {
+  addPokemon,
+  toggleRecentPokemon,
+} from "../../lib/redux/slices/pokemonsSlice";
 
 export const SearchForm = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -24,11 +28,14 @@ export const SearchForm = (): JSX.Element => {
     try {
       const recentSearch = await getPokemon(search);
       dispatch(addRecentCard(recentSearch));
+      dispatch(addPokemon(recentSearch));
+      dispatch(toggleRecentPokemon(recentSearch.id));
     } catch (e: any) {
       console.error(e);
       throw new Error(e.message);
     }
     dispatch(setSearchValue(""));
+    e.target.value = "";
   };
 
   return (

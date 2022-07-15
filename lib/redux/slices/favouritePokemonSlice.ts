@@ -8,7 +8,11 @@ export const favouritePokemonSlice = createSlice({
       state.push(action.payload);
     },
     removeFavouritePokemon: (state, action) => {
-      state.filter((pokemon, i) => i !== action.payload.index);
+      return state.filter((item) => item.id !== action.payload);
     },
   },
 });
+
+const { actions, reducer: favouritePokemonReducer } = favouritePokemonSlice;
+export const { addFavouritePokemon, removeFavouritePokemon } = actions;
+export default favouritePokemonReducer;

@@ -1,14 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+type initialState = [
+  {
+    id: null;
+    isFavourite: false;
+    isRecent: false;
+    pokemonData: { name: ""; avatar: ""; flavors: "" };
+  }
+];
+
 export const recentSearchSlice = createSlice({
   name: "recentSearch",
   initialState: [],
   reducers: {
     addRecentCard: (state, action) => {
+      // doubling guard clause
+      const double = state.some((item) => item.id === action.payload.id);
+      if (double) return;
+
+      // add no more card than the limit
+      const limit = 3;
+      if (state.length === limit) {
+        state.splice(0, 1);
+      }
+
       state.push(action.payload);
     },
     removeRecentCard: (state, action) => {
-      state.splice(action.payload, 1);
+      return state.filter((item) => item.id !== action.payload);
     },
   },
 });

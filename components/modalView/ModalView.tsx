@@ -15,21 +15,19 @@ import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 // };
 
 type TModal = {
-  //   open: boolean;
-  //   onClose: () => void;
   children: JSX.Element;
 };
 
 export const ModalView = ({ children }: TModal) => {
   const dispatch = useAppDispatch();
-  const setModalClose = () => {
+  const handleModalClose = () => {
     dispatch(closeModal());
   };
   const isModalOpen = useAppSelector((state) => state.modal.modalOpen);
   return (
     <Modal
       open={isModalOpen}
-      onClose={setModalClose}
+      onClose={handleModalClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
