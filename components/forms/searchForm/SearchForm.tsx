@@ -54,10 +54,10 @@ export const SearchForm = (): JSX.Element => {
           <FormHelperText id="my-helper-text">
             Find details about your pokemon
           </FormHelperText>
-          <Button type="submit" variant="contained" endIcon={<Send />}>
-            Search
-          </Button>
         </FormControl>
+        <Button type="submit" variant="contained" endIcon={<Send />}>
+          Search
+        </Button>
       </form>
     </div>
   );

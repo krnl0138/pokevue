@@ -17,7 +17,7 @@ export const RegisterForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.SyntheticEvent) => {
     const result = { [e.currentTarget.id]: e.currentTarget.value };
     dispatch(setRegisterFormValue(result));
   };
@@ -30,52 +30,58 @@ export const RegisterForm = () => {
   };
 
   return (
-    <>
-      <FormControl>
-        <InputLabel htmlFor="username" margin="dense">
-          Username
-        </InputLabel>
-        <Input
-          id="username"
-          aria-describedby="username-helper"
-          onChange={handleChange}
-        />
+    <div>
+      <form>
+        <FormControl>
+          <InputLabel htmlFor="username" margin="dense">
+            Username
+          </InputLabel>
+          <Input
+            id="username"
+            aria-describedby="username-helper"
+            onChange={handleChange}
+          />
+        </FormControl>
 
-        <InputLabel htmlFor="email" margin="dense">
-          Email
-        </InputLabel>
-        <Input
-          id="email"
-          aria-describedby="email-helper"
-          onChange={handleChange}
-        />
-        <FormHelperText id="email-helper">
-          We&apos;ll never share your email.
-        </FormHelperText>
+        <FormControl>
+          <InputLabel htmlFor="email" margin="dense">
+            Email
+          </InputLabel>
+          <Input
+            id="email"
+            aria-describedby="email-helper"
+            onChange={handleChange}
+          />
+          <FormHelperText id="email-helper">
+            We&apos;ll never share your email.
+          </FormHelperText>
+        </FormControl>
 
-        <OutlinedInput
-          id="password"
-          type={showPassword ? "text" : "password"}
-          onChange={handleChange}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="Password"
-        />
+        <FormControl>
+          <OutlinedInput
+            id="password"
+            type={showPassword ? "text" : "password"}
+            onChange={handleChange}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
+          />
+        </FormControl>
 
         <Button type="submit" variant="contained" endIcon={<Send />}>
           Register
         </Button>
-      </FormControl>
-    </>
+      </form>
+    </div>
   );
 };

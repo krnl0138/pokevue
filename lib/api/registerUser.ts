@@ -1,4 +1,4 @@
-import { writeUserData } from "../../database";
+// import { writeUserData } from "../../database";
 
 export const registerUser = (
   userID: number,
@@ -6,5 +6,5 @@ export const registerUser = (
   email: string,
   avatar: string
 ) => {
-  writeUserData;
+  //   writeUserData;
 };

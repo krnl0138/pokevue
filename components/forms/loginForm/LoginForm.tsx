@@ -32,47 +32,53 @@ export const LoginForm = () => {
   };
 
   return (
-    <>
-      <FormControl>
-        <InputLabel htmlFor="username" margin="dense">
-          Username
-        </InputLabel>
-        <Input
-          id="username"
-          aria-describedby="username-helper"
-          onChange={handleChange}
-        />
-        <FormHelperText id="username-helper">
-          We&apos;ll never share your email.
-        </FormHelperText>
+    <div>
+      <form>
+        <FormControl>
+          <InputLabel htmlFor="username" margin="dense">
+            Username
+          </InputLabel>
+          <Input
+            id="username"
+            aria-describedby="username-helper"
+            onChange={handleChange}
+          />
+          <FormHelperText id="username-helper">
+            We&apos;ll never share your email.
+          </FormHelperText>
+        </FormControl>
 
-        <OutlinedInput
-          id="password"
-          type={showPassword ? "text" : "password"}
-          onChange={handleChange}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="Password"
-        />
+        <FormControl>
+          <OutlinedInput
+            id="password"
+            type={showPassword ? "text" : "password"}
+            onChange={handleChange}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
+          />
+        </FormControl>
 
-        <Button type="submit" variant="contained" endIcon={<Send />}>
-          Login
-        </Button>
-      </FormControl>
+        <FormControl>
+          <Button type="submit" variant="contained" endIcon={<Send />}>
+            Login
+          </Button>
+        </FormControl>
+      </form>
 
       <p>
         Are you a new user? <Link href={urls.register}>Register</Link>
       </p>
-    </>
+    </div>
   );
 };
