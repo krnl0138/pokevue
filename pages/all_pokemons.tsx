@@ -6,6 +6,7 @@ import { RecentSearch } from "../components/recentSearch/RecentSearch";
 import { useAppSelector } from "../utils/hooks";
 import { ModalView } from "../components/modalView/ModalView";
 
+// it should load on start first ~20 pokemons from an API
 export const AllPokemons = () => {
   // modal state
   const isModalOpen = useAppSelector((state) => state.modal.modalOpen);
