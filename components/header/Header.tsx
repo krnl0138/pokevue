@@ -60,12 +60,14 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            <Image
-              src="/pokemon-logo-png.png"
-              width="50"
-              height="50"
-              alt="Pokemon Logo"
-            />
+            <Link href="/pokemon">
+              <Image
+                src="/pokemon-logo-png.png"
+                width="50"
+                height="50"
+                alt="Pokemon Logo"
+              />
+            </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -120,12 +122,14 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            <Image
-              src="/pokemon-logo-png.png"
-              width="50"
-              height="50"
-              alt="Pokemon Logo"
-            />
+            <Link href="/pokemon">
+              <Image
+                src="/pokemon-logo-png.png"
+                width="50"
+                height="50"
+                alt="Pokemon Logo"
+              />
+            </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => {
@@ -165,7 +169,9 @@ const Header = () => {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Link href={`${setting.toLowerCase()}`}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>

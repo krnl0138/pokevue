@@ -1,7 +1,7 @@
 export const Footer = () => {
   return (
     <footer>
-      <p>Made with MUI, React, NextJS and Typescript, 2022</p>
+      <p>Made with MUI, React/Redux, NextJS, Typescript and Firebase, 2022</p>
     </footer>
   );
 };
