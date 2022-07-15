@@ -1,6 +1,3 @@
-// import { useEffect } from "react";
-// import { PokemonCard } from "../pokemonCard/PokemonCard";
-
 import { Box } from "@mui/material";
 import { useAppSelector } from "../../utils/hooks";
 import { Heading } from "../heading/Heading";
@@ -19,7 +16,6 @@ export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
     5. [ ]- add Header component
     */
 
-  const recentSearch = useAppSelector((state) => state.recentSearch);
   const allPokemons = useAppSelector((state) => state.pokemons);
   const recentPokemons = allPokemons.filter((el) => el.isRecent === true);
 
@@ -27,9 +23,6 @@ export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
     <>
       <Heading title={"Recent search"} />
       <Box>
-        {/* {recentSearch.map((data) => (
-          <PokemonCard key={data.id} data={data} />
-        ))} */}
         {recentPokemons.map((data) => (
           <PokemonCard key={data.id} data={data} />
         ))}

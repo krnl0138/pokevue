@@ -29,6 +29,7 @@ import {
   toggleRecentPokemon,
   toggleFavouritePokemon,
 } from "../../lib/redux/slices/pokemonsSlice";
+import { useRouter } from "next/router";
 
 type TPokemonCard = {
   data: {
@@ -42,6 +43,7 @@ type TPokemonCard = {
 // eslint-disable-next-line react/display-name
 export const PokemonCard = React.forwardRef(
   ({ data }: TPokemonCard): JSX.Element => {
+    const router = useRouter();
     const dispatch = useAppDispatch();
     const id = data.id;
     const isFavourite = data.isFavourite;
@@ -56,6 +58,10 @@ export const PokemonCard = React.forwardRef(
     const handleFavourite = () => {
       dispatch(addFavouritePokemon(data));
       dispatch(toggleFavouritePokemon(id));
+    };
+
+    const handleOpenPokemonScreen = () => {
+      router.push(`/pokemon/${id}`);
     };
 
     // state for modal view of card
@@ -123,7 +129,7 @@ export const PokemonCard = React.forwardRef(
                   {isFavourite ? <Favorite /> : <FavoriteBorder />}
                   {/* <FavoriteBorder /> */}
                 </Button>
-                <Button onClick={handleRecent} size="small">
+                <Button onClick={handleOpenPokemonScreen} size="small">
                   <Output />
                 </Button>
               </CardActions>

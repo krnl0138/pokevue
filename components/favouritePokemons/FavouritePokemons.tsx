@@ -13,7 +13,7 @@ const NoFavourites = () => {
   );
 };
 
-export const FavouritePokemon = ({ children }: { children?: JSX.Element }) => {
+export const FavouritePokemons = ({ children }: { children?: JSX.Element }) => {
   const favouritePokemons = useAppSelector((state) => state.pokemons).filter(
     (pokemon) => pokemon.isFavourite === true
   );
