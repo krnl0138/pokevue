@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { useAppSelector } from "../../utils/hooks";
-import { Heading } from "../heading/Heading";
+import { Heading } from "../utils/heading/Heading";
 import { PokemonCard } from "../pokemonCard/PokemonCard";
 
 export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
@@ -24,7 +24,7 @@ export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
       <Heading title={"Recent search"} />
       <Box>
         {recentPokemons.map((data) => (
-          <PokemonCard key={data.id} data={data} />
+          <PokemonCard key={data.id} data={data} fromRecent={true} />
         ))}
       </Box>
     </>

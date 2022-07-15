@@ -9,17 +9,17 @@ import {
   InputAdornment,
   OutlinedInput,
 } from "@mui/material";
-import { useAppDispatch } from "../../utils/hooks";
-import { setLoginFormValue } from "../../lib/redux/slices/loginFormSlice";
-import { useState } from "react";
+import { useAppDispatch } from "../../../utils/hooks";
+import { setLoginFormValue } from "../../../lib/redux/slices/loginFormSlice";
+import React, { useState } from "react";
 import Link from "next/link";
-import { PROJECT_URLS as urls } from "../../utils/constants";
+import { PROJECT_URLS as urls } from "../../../utils/constants";
 
 export const LoginForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.SyntheticEvent) => {
     const result = { [e.currentTarget.id]: e.currentTarget.value };
     dispatch(setLoginFormValue(result));
   };

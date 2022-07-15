@@ -1,5 +1,5 @@
 import React from "react";
-import { useAppSelector } from "../../utils/hooks";
+import { useAppSelector } from "../../../utils/hooks";
 import { ModalView } from "../modalView/ModalView";
 
 export const ModalWrapper = ({

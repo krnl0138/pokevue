@@ -1,10 +1,10 @@
 import React from "react";
-import { SearchForm } from "../components/searchForm/SearchForm";
+import { SearchForm } from "../components/forms/searchForm/SearchForm";
 import { PokemonCard } from "../components/pokemonCard/PokemonCard";
-import { Layout } from "../components/layout/Layout";
+import { Layout } from "../components/utils/layout/Layout";
 
 import { AllPokemons } from "../components/allPokemons/AllPokemons";
-import { ModalWrapper } from "../components/modalWrapper/modalWrapper";
+import { ModalWrapper } from "../components/modal/modalWrapper/modalWrapper";
 
 // it should load on start first ~20 pokemons from an API
 export async function getStaticProps() {
@@ -18,15 +18,13 @@ export async function getStaticProps() {
   // };
 }
 
-export const Pokemons = ({ result }) => {
-  console.log(result);
-
+export const Pokemons = () => {
   return (
     <Layout>
       <SearchForm />
       <AllPokemons />
       <ModalWrapper>
-        <PokemonCard />
+        <PokemonCard fromModal={true} />
       </ModalWrapper>
     </Layout>
   );

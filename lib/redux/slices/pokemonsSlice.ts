@@ -1,17 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-type TInitialState = [
-  {
-    id: null;
-    isFavourite: false;
-    isRecent: false;
-    pokemonData: { name: string; avatar: string; flavors: string };
-  }
-];
+import { Pokemon } from "../../../utils/types";
 
 export const pokemonsSlice = createSlice({
   name: "pokemons",
-  initialState: [],
+  initialState: <Pokemon[]>[],
   reducers: {
     addPokemon: (state, action) => {
       // doubling guard clause
@@ -29,7 +21,9 @@ export const pokemonsSlice = createSlice({
     toggleFavouritePokemon: (state, action) => {
       // action.payload = id: number
       const find = state.find((item) => item.id === action.payload);
-      find.isFavourite = !find?.isFavourite;
+      if (find) {
+        find.isFavourite = !find?.isFavourite;
+      }
     },
     toggleRecentPokemon: (state, action) => {
       // action.payload = id: number
@@ -42,7 +36,9 @@ export const pokemonsSlice = createSlice({
       }
 
       const find = state.find((item) => item.id === action.payload);
-      find.isRecent = !find.isRecent;
+      if (find) {
+        find.isRecent = !find.isRecent;
+      }
     },
     removePokemon: (state, action) => {
       return state.filter((item) => item.id !== action.payload);

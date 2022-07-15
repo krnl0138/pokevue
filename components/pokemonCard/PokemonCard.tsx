@@ -19,48 +19,51 @@ import {
   Output,
 } from "@mui/icons-material";
 import React from "react";
-import { removeRecentCard } from "../../lib/redux/slices/recentSearchSlice";
-import { useAppDispatch, useAppSelector } from "../../utils/hooks";
+import { useAppDispatch } from "../../utils/hooks";
 // import { Pokemon, PokemonFlavor } from "../../utils/types";
 
 import { openModal } from "../../lib/redux/slices/modalSlice";
-import { addFavouritePokemon } from "../../lib/redux/slices/favouritePokemonSlice";
 import {
   toggleRecentPokemon,
   toggleFavouritePokemon,
 } from "../../lib/redux/slices/pokemonsSlice";
 import { useRouter } from "next/router";
 
-import { PROJECT_URLS as urls } from "../../utils/constants";
+import {
+  PROJECT_URLS as urls,
+  AVATAR_PLACEHOLDER as placeholder,
+} from "../../utils/constants";
+import { Pokemon } from "../../utils/types";
 
 type TPokemonCard = {
-  data?: {
-    id: number;
-    pokemonData: { name: string; avatar: string; flavors: string };
-    isFavourite: boolean;
-    isRecent: boolean;
-  };
+  data?: Pokemon;
   // TODO change to 'isRecentSearch'
-  isProfile?: boolean;
+  fromRecent?: boolean;
+  fromModal?: boolean;
 };
 
 // eslint-disable-next-line react/display-name
 export const PokemonCard = React.forwardRef(
-  ({ data, isProfile }: TPokemonCard): JSX.Element => {
+  ({ data, fromRecent, fromModal }: TPokemonCard): JSX.Element => {
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const id = data?.id;
-    const isFavourite = data?.isFavourite;
-    const isRecent = data?.isRecent;
-    const { name, avatar, flavors } = data?.pokemonData;
+    // let id: Pokemon['id'];
+    // let isFavourite: Pokemon['isFavourite']
+    // if (data) {
+    //   id = data?.id;
+    //   isFavourite = data?.isFavourite;
+
+    // }
+    if (!data) return <p>no data</p>;
+    const id = data.id;
+    const isFavourite = data.isFavourite;
+    const { name, avatar, flavors } = data.pokemonData;
 
     const handleRecent = () => {
-      dispatch(removeRecentCard(id));
       dispatch(toggleRecentPokemon(id));
     };
 
     const handleFavourite = () => {
-      dispatch(addFavouritePokemon(data));
       dispatch(toggleFavouritePokemon(id));
     };
 
@@ -69,7 +72,6 @@ export const PokemonCard = React.forwardRef(
     };
 
     // state for modal view of card
-    const isModalOpen = useAppSelector((state) => state.modal.modalOpen);
     const handleOpenModal = () => {
       dispatch(openModal(data));
     };
@@ -81,14 +83,12 @@ export const PokemonCard = React.forwardRef(
             <CardHeader
               avatar={
                 <Avatar sx={{ bgcolor: blue[600] }} aria-label="recipe">
-                  {avatar ? (
-                    <Image
-                      src={avatar}
-                      width="30"
-                      height="30"
-                      alt="avatar pokemon"
-                    />
-                  ) : null}
+                  <Image
+                    src={avatar ? avatar : placeholder}
+                    width="30"
+                    height="30"
+                    alt="avatar pokemon"
+                  />
                 </Avatar>
               }
               action={
@@ -101,17 +101,12 @@ export const PokemonCard = React.forwardRef(
             />
 
             <CardActionArea onClick={handleOpenModal}>
-              {/* Change to placeholder image from /public */}
-              {avatar ? (
-                <Image
-                  // <CardMedia
-                  //   component="img"
-                  height="140"
-                  width="140"
-                  src={avatar}
-                  alt="pokemon avatar"
-                />
-              ) : null}
+              <Image
+                height="140"
+                width="140"
+                src={avatar ? avatar : placeholder}
+                alt="pokemon avatar"
+              />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   {name}
@@ -124,16 +119,15 @@ export const PokemonCard = React.forwardRef(
               </CardContent>
             </CardActionArea>
 
-            {isModalOpen ? null : (
+            {fromModal ? null : (
               <CardActions>
-                {isProfile ? null : (
+                {fromRecent ? (
                   <Button onClick={handleRecent} size="small">
                     <Delete />
                   </Button>
-                )}
+                ) : null}
                 <Button onClick={handleFavourite} size="small">
                   {isFavourite ? <Favorite /> : <FavoriteBorder />}
-                  {/* <FavoriteBorder /> */}
                 </Button>
                 <Button onClick={handleOpenPokemonScreen} size="small">
                   <Output />

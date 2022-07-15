@@ -1,6 +1,6 @@
 import React from "react";
-import { Layout } from "../components/layout/Layout";
-import { LoginForm } from "../components/loginForm/LoginForm";
+import { Layout } from "../components/utils/layout/Layout";
+import { LoginForm } from "../components/forms/loginForm/LoginForm";
 
 export const Login = () => {
   return (

@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
-import { PROJECT_URLS as urls } from "../../utils/constants";
+import { PROJECT_URLS as urls } from "../../../utils/constants";
 
 import Image from "next/image";
 import Link from "next/link";

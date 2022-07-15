@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import Link from "next/link";
 import { useAppSelector } from "../../utils/hooks";
-import { Heading } from "../heading/Heading";
+import { Heading } from "../utils/heading/Heading";
 import { PokemonCard } from "../pokemonCard/PokemonCard";
 import { PROJECT_URLS as urls } from "../../utils/constants";
 
@@ -25,7 +25,7 @@ export const FavouritePokemons = ({ children }: { children?: JSX.Element }) => {
       <Box>
         {favouritePokemons.length > 0 ? (
           favouritePokemons.map((data) => (
-            <PokemonCard key={data.id} data={data} isProfile={true} />
+            <PokemonCard key={data.id} data={data} />
           ))
         ) : (
           <NoFavourites />

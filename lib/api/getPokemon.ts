@@ -1,7 +1,8 @@
-import { fetchPokemon } from "./fetchPokemon";
-import { fetchPokemonSpecies } from "./fetchPokemonSpecies";
-
-const parsePokemon = (data) => {
+import { PokemonResponse, PokemonSpeciesResponse } from "../../utils/types";
+const parsePokemon = (data: {
+  pokemon: PokemonResponse;
+  pokemonSpecies: PokemonSpeciesResponse;
+}) => {
   const { pokemon, pokemonSpecies } = data;
   const id = pokemon.id;
   const name = pokemon.name;
@@ -12,18 +13,16 @@ const parsePokemon = (data) => {
   return { id, pokemonData: { name, avatar, flavors } };
 };
 
-export const getPokemon = async (search) => {
+export const getPokemon = async (search: string) => {
   //   const pokemon = await fetchPokemon(search);
   //   const pokemonSpecies = await fetchPokemonSpecies(search);
   // Offline test variant
   const pokemonRes = await fetch(`/${search}.json`);
-  const pokemon = await pokemonRes.json();
+  const pokemon: PokemonResponse = await pokemonRes.json();
   const pokemonSpeciesRes = await fetch("/pokemonSpeciesReturnedAPI.json");
-  const pokemonSpecies = await pokemonSpeciesRes.json();
+  const pokemonSpecies: PokemonSpeciesResponse = await pokemonSpeciesRes.json();
 
   const data = parsePokemon({ pokemon, pokemonSpecies });
 
-  console.log("from getPokemon resulted value", data);
-  //   return [pokemon, pokemonSpecies];
   return { ...data };
 };

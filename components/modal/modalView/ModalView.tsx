@@ -1,6 +1,6 @@
 import Modal from "@mui/material/Modal";
-import { closeModal } from "../../lib/redux/slices/modalSlice";
-import { useAppDispatch, useAppSelector } from "../../utils/hooks";
+import { closeModal } from "../../../lib/redux/slices/modalSlice";
+import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
 
 // const modalStyle = {
 //   position: "absolute" as "absolute",

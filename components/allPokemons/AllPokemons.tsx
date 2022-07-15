@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
-import { Heading } from "../heading/Heading";
-import { PokemonCard } from "../pokemonCard/PokemonCard";
+import { Heading } from "../utils/heading/Heading";
 
 export const AllPokemons = ({ children }: { children?: JSX.Element }) => {
   return (

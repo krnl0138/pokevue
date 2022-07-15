@@ -9,15 +9,15 @@ import {
   InputAdornment,
   OutlinedInput,
 } from "@mui/material";
-import { useAppDispatch } from "../../utils/hooks";
+import { useAppDispatch } from "../../../utils/hooks";
 import { useState } from "react";
-import { setRegisterFormValue } from "../../lib/redux/slices/registerFormSlice";
+import { setRegisterFormValue } from "../../../lib/redux/slices/registerFormSlice";
 
 export const RegisterForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const result = { [e.currentTarget.id]: e.currentTarget.value };
     dispatch(setRegisterFormValue(result));
   };
@@ -50,7 +50,7 @@ export const RegisterForm = () => {
           onChange={handleChange}
         />
         <FormHelperText id="email-helper">
-          We'll never share your email.
+          We&apos;ll never share your email.
         </FormHelperText>
 
         <OutlinedInput

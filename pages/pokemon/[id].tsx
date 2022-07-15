@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Layout } from "../../components/layout/Layout";
+import { Layout } from "../../components/utils/layout/Layout";
 import { PokemonScreen } from "../../components/pokemonScreen/PokemonScreen";
 import { useAppSelector } from "../../utils/hooks";
 
@@ -10,11 +10,7 @@ const PokemonById = () => {
   const id = Number(router.asPath.split("/")[2]);
   const allPokemons = useAppSelector((state) => state.pokemons);
   const pokemon = allPokemons.find((pokemon) => pokemon.id === id);
-  return (
-    <Layout>
-      <PokemonScreen data={pokemon} />;
-    </Layout>
-  );
+  return <Layout>{pokemon && <PokemonScreen data={pokemon} />}</Layout>;
 };
 
 export default PokemonById;

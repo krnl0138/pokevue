@@ -11,3 +11,5 @@ export const PROJECT_URLS = {
   // for a '/pokemon/[id]' route
   pokemon: "/pokemon",
 };
+
+export const AVATAR_PLACEHOLDER = "/vercel.svg";

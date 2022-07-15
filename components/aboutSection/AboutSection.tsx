@@ -1,4 +1,4 @@
-import { Heading } from "../heading/Heading";
+import { Heading } from "../utils/heading/Heading";
 
 export const AboutSection = () => {
   return (

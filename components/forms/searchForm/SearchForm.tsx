@@ -8,14 +8,13 @@ import {
   InputLabel,
 } from "@mui/material";
 import { SyntheticEvent } from "react";
-import { addRecentCard } from "../../lib/redux/slices/recentSearchSlice";
-import { useAppDispatch, useAppSelector } from "../../utils/hooks";
-import { getPokemon } from "../../lib/api/getPokemon";
-import { setSearchValue } from "../../lib/redux/slices/searchSlice";
+import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
+import { getPokemon } from "../../../lib/api/getPokemon";
+import { setSearchValue } from "../../../lib/redux/slices/searchSlice";
 import {
   addPokemon,
   toggleRecentPokemon,
-} from "../../lib/redux/slices/pokemonsSlice";
+} from "../../../lib/redux/slices/pokemonsSlice";
 
 export const SearchForm = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -26,10 +25,9 @@ export const SearchForm = (): JSX.Element => {
     e.preventDefault();
     const search = searchValue.toLowerCase();
     try {
-      const recentSearch = await getPokemon(search);
-      dispatch(addRecentCard(recentSearch));
-      dispatch(addPokemon(recentSearch));
-      dispatch(toggleRecentPokemon(recentSearch.id));
+      const data = await getPokemon(search);
+      dispatch(addPokemon(data));
+      dispatch(toggleRecentPokemon(data.id));
     } catch (e: any) {
       console.error(e);
       throw new Error(e.message);
