@@ -34,6 +34,11 @@ import {
   AVATAR_PLACEHOLDER as placeholder,
 } from "../../utils/constants";
 import { Pokemon } from "../../utils/types";
+import {
+  getCurrentUserId,
+  getUserFavourites,
+  writeUserFavourite,
+} from "../../database";
 
 type TPokemonCard = {
   data?: Pokemon;
@@ -47,6 +52,8 @@ export const PokemonCard = React.forwardRef(
   ({ data, fromRecent, fromModal }: TPokemonCard): JSX.Element => {
     const router = useRouter();
     const dispatch = useAppDispatch();
+    const currentUserId = getCurrentUserId();
+
     if (!data) return <p>no data</p>;
     const id = data.id;
     const isFavourite = data.isFavourite;
@@ -56,8 +63,14 @@ export const PokemonCard = React.forwardRef(
       dispatch(toggleRecentPokemon(id));
     };
 
-    const handleFavourite = () => {
+    const handleFavourite = async () => {
       dispatch(toggleFavouritePokemon(id));
+      if (currentUserId) {
+        await writeUserFavourite(currentUserId, id);
+      }
+      // TODO test delete
+      const favourites = await getUserFavourites();
+      console.log(favourites);
     };
 
     const handleOpenPokemonScreen = () => {

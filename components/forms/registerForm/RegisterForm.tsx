@@ -15,11 +15,19 @@ import {
   resetRegisterFormValue,
   setRegisterFormValue,
 } from "../../../lib/redux/slices/registerFormSlice";
-import { handleGoogleAuth, writeUserData } from "../../../database";
+import {
+  handleCreateUser,
+  handleGoogleAuth,
+  writeUserData,
+} from "../../../database";
+import { setUser } from "../../../lib/redux/slices/userSlice";
+import { PROJECT_URLS as urls } from "../../../utils/constants";
+import { useRouter } from "next/router";
 
 export const RegisterForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const { username, email, password } = useAppSelector(
     (state) => state.registerForm
@@ -30,10 +38,16 @@ export const RegisterForm = () => {
     dispatch(setRegisterFormValue(result));
   };
 
-  const handleSubmit = (e: React.SyntheticEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    writeUserData(1, { username, email });
+    // TODO abstract to /lib/api as createUser()
+    const authRes = await handleCreateUser(email, password);
+    const { uid } = authRes;
+    const newUser = { username, email };
+    dispatch(setUser(newUser));
+    writeUserData(uid, newUser);
     dispatch(resetRegisterFormValue());
+    router.push(urls.main);
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
