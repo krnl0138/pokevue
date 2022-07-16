@@ -4,6 +4,7 @@ const initialState = {
   username: "",
   email: "",
   avatar: "",
+  favourites: <string[]>[],
 };
 
 export const userSlice = createSlice({

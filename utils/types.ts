@@ -47,3 +47,10 @@ export type Pokemon = {
   isRecent: boolean;
   pokemonData: { name: string; avatar: string; flavors: string };
 };
+
+export type User = {
+  username: string;
+  email: string;
+  avatar?: string;
+  favourites?: [];
+};

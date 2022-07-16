@@ -1,4 +1,4 @@
-import { Send, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Google, Send, Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   FormControl,
   InputLabel,
@@ -15,6 +15,7 @@ import {
   resetRegisterFormValue,
   setRegisterFormValue,
 } from "../../../lib/redux/slices/registerFormSlice";
+import { handleGoogleAuth, writeUserData } from "../../../database";
 
 export const RegisterForm = () => {
   const dispatch = useAppDispatch();
@@ -31,6 +32,7 @@ export const RegisterForm = () => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
+    writeUserData(1, { username, email });
     dispatch(resetRegisterFormValue());
   };
 
@@ -93,6 +95,15 @@ export const RegisterForm = () => {
 
         <Button type="submit" variant="contained" endIcon={<Send />}>
           Register
+        </Button>
+
+        <Button
+          onClick={handleGoogleAuth}
+          type="button"
+          variant="contained"
+          endIcon={<Send />}
+        >
+          <Google />
         </Button>
       </form>
     </div>
