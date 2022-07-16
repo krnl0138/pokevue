@@ -1,21 +1,13 @@
 import React from "react";
-import { SearchForm } from "../components/forms/searchForm/SearchForm";
 import { PokemonCard } from "../components/pokemonCard/PokemonCard";
 import { Layout } from "../components/utils/layout/Layout";
-import { RecentSearch } from "../components/recentSearch/RecentSearch";
+import { FavouritePokemons } from "../components/favouritePokemons/FavouritePokemons";
 import { ModalWrapper } from "../components/modal/modalWrapper/modalWrapper";
 
-export async function getStaticProps() {
-  return {
-    props: {},
-  };
-}
-
-export const Index = () => {
+export const Account = () => {
   return (
     <Layout>
-      <SearchForm />
-      <RecentSearch />
+      <FavouritePokemons />
       <ModalWrapper>
         <PokemonCard fromModal={true} />
       </ModalWrapper>
@@ -23,4 +15,4 @@ export const Index = () => {
   );
 };
 
-export default Index;
+export default Account;

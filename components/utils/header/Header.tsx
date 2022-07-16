@@ -12,24 +12,29 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
-import Image from "next/image";
+import {
+  PROJECT_URLS as urls,
+  PROJECT_LOGO,
+  AVATAR_PLACEHOLDER as placeholder,
+} from "../../../utils/constants";
 
-const pages = ["All Pokemons", "About"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { useAppSelector } from "../../../utils/hooks";
+
+const pages = ["Pokemons", "About"];
+const settings = ["Favourites", "Profile", "Logout"];
 
 const Header = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
+  const handleOpenNavMenu = (e: React.MouseEvent<HTMLElement>) => {
+    setAnchorElNav(e.currentTarget);
   };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
+  const handleOpenUserMenu = (e: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(e.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
@@ -40,6 +45,8 @@ const Header = () => {
     setAnchorElUser(null);
   };
 
+  const { username, avatar } = useAppSelector((state) => state.user);
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -48,7 +55,7 @@ const Header = () => {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href={urls.main}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -60,10 +67,10 @@ const Header = () => {
             }}
           >
             <Image
-              src="/pokemon-logo-png.png"
+              src={PROJECT_LOGO}
               width="50"
               height="50"
-              alt="Pokemon Logo"
+              alt="Project Logo"
             />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -107,7 +114,7 @@ const Header = () => {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href={urls.main}
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -120,27 +127,30 @@ const Header = () => {
             }}
           >
             <Image
-              src="/pokemon-logo-png.png"
+              src={PROJECT_LOGO}
               width="50"
               height="50"
-              alt="Pokemon Logo"
+              alt="Project Logo"
             />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            {pages.map((page) => {
+              const url = page.toLowerCase();
+              return (
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  <Link href={`/${url}`}>{page}</Link>
+                </Button>
+              );
+            })}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="User avatar" src={avatar ? avatar : placeholder} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -159,9 +169,13 @@ const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              <Typography textAlign="center">{username}</Typography>
+
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Link href={`${setting.toLowerCase()}`}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>

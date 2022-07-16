@@ -10,12 +10,15 @@ export const registerFormSlice = createSlice({
   name: "registerForm",
   initialState,
   reducers: {
-    setRegisterFormValue: (state, actions) => {
-      state = { ...state, ...actions.payload };
+    setRegisterFormValue: (state, action) => {
+      return { ...state, ...action.payload };
+    },
+    resetRegisterFormValue: () => {
+      return initialState;
     },
   },
 });
 
 export const { actions, reducer: registerFormReducer } = registerFormSlice;
-export const { setRegisterFormValue } = actions;
+export const { setRegisterFormValue, resetRegisterFormValue } = actions;
 export default registerFormReducer;

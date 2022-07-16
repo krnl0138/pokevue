@@ -8,27 +8,39 @@ import {
   InputLabel,
 } from "@mui/material";
 import { SyntheticEvent } from "react";
-import { addRecentCard } from "../../lib/redux/slices/recentSearchSlice";
-import { useAppDispatch, useAppSelector } from "../../utils/hooks";
-import { getPokemon } from "../../lib/api/getPokemon";
-import { setSearchValue } from "../../lib/redux/slices/searchSlice";
+import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
+import { getPokemon } from "../../../lib/api/getPokemon";
+import {
+  setSearchValue,
+  resetSearchValue,
+} from "../../../lib/redux/slices/searchSlice";
+import {
+  addPokemon,
+  toggleRecentPokemon,
+} from "../../../lib/redux/slices/pokemonsSlice";
 
 export const SearchForm = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const searchValue = useAppSelector((state) => state.search.value);
+  const searchValue = useAppSelector((state) => state.search.searchValue);
+
+  const handleChange = (e: React.SyntheticEvent) => {
+    const result = { [e.currentTarget.id]: e.currentTarget.value };
+    dispatch(setSearchValue(result));
+  };
 
   // form 'submit' button function
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     const search = searchValue.toLowerCase();
     try {
-      const recentSearch = await getPokemon(search);
-      dispatch(addRecentCard(recentSearch));
+      const data = await getPokemon(search);
+      dispatch(addPokemon(data));
+      dispatch(toggleRecentPokemon(data.id));
     } catch (e: any) {
       console.error(e);
       throw new Error(e.message);
     }
-    dispatch(setSearchValue(""));
+    dispatch(resetSearchValue());
   };
 
   return (
@@ -39,21 +51,20 @@ export const SearchForm = (): JSX.Element => {
           <Input
             className={styles.input}
             type="text"
-            id="pokemon"
+            id="searchValue"
             aria-describedby="my-helper-text"
             size="small"
             fullWidth={true}
-            onChange={(e) => {
-              dispatch(setSearchValue(e.target.value));
-            }}
+            onChange={handleChange}
+            value={searchValue}
           />
           <FormHelperText id="my-helper-text">
             Find details about your pokemon
           </FormHelperText>
-          <Button type="submit" variant="contained" endIcon={<Send />}>
-            Search
-          </Button>
         </FormControl>
+        <Button type="submit" variant="contained" endIcon={<Send />}>
+          Search
+        </Button>
       </form>
     </div>
   );

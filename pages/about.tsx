@@ -1,6 +1,6 @@
 import React from "react";
 import { AboutSection } from "../components/aboutSection/AboutSection";
-import { Layout } from "../components/layout/Layout";
+import { Layout } from "../components/utils/layout/Layout";
 
 export const About = () => {
   return (

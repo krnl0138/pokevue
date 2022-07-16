@@ -1,4 +1,4 @@
-export type Pokemon = {
+export type PokemonResponse = {
   abilities: [];
   base_experience: number;
   forms: [];
@@ -27,7 +27,7 @@ export type Pokemon = {
   weight: number;
 };
 
-export type PokemonSpecies = {
+export type PokemonSpeciesResponse = {
   flavor_text_entries: {
     flavor_text: string;
     language: {
@@ -41,6 +41,9 @@ export type PokemonSpecies = {
   }[];
 };
 
-export type PokemonFlavor = PokemonSpecies["flavor_text_entries"];
-
-export type TRecentSearch = Pokemon & PokemonSpecies;
+export type Pokemon = {
+  id: number;
+  isFavourite: boolean;
+  isRecent: boolean;
+  pokemonData: { name: string; avatar: string; flavors: string };
+};

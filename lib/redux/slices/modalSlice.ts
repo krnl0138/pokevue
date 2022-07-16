@@ -6,12 +6,12 @@ export const modalSlice = createSlice({
   name: "modal",
   initialState,
   reducers: {
-    openModal: (state, actions) => {
+    openModal: (state, action) => {
       state.modalOpen = true;
-      state.data = actions.payload;
+      state.data = action.payload;
     },
     closeModal: (state) => {
-      state = initialState;
+      return initialState;
     },
   },
 });

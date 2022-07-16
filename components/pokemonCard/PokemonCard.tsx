@@ -19,100 +19,117 @@ import {
   Output,
 } from "@mui/icons-material";
 import React from "react";
-import { removeRecentCard } from "../../lib/redux/slices/recentSearchSlice";
-import { useAppDispatch, useAppSelector } from "../../utils/hooks";
-import { Pokemon, PokemonFlavor } from "../../utils/types";
+import { useAppDispatch } from "../../utils/hooks";
+// import { Pokemon, PokemonFlavor } from "../../utils/types";
 
 import { openModal } from "../../lib/redux/slices/modalSlice";
+import {
+  toggleRecentPokemon,
+  toggleFavouritePokemon,
+} from "../../lib/redux/slices/pokemonsSlice";
+import { useRouter } from "next/router";
+
+import {
+  PROJECT_URLS as urls,
+  AVATAR_PLACEHOLDER as placeholder,
+} from "../../utils/constants";
+import { Pokemon } from "../../utils/types";
 
 type TPokemonCard = {
-  data: [Pokemon, PokemonFlavor];
+  data?: Pokemon;
+  // TODO change to 'isRecentSearch'
+  fromRecent?: boolean;
+  fromModal?: boolean;
 };
 
-export const PokemonCard = ({ data }: TPokemonCard): JSX.Element => {
-  const dispatch = useAppDispatch();
-  const [pokemon, pokemonSpecies] = data;
+// eslint-disable-next-line react/display-name
+export const PokemonCard = React.forwardRef(
+  ({ data, fromRecent, fromModal }: TPokemonCard): JSX.Element => {
+    const router = useRouter();
+    const dispatch = useAppDispatch();
+    if (!data) return <p>no data</p>;
+    const id = data.id;
+    const isFavourite = data.isFavourite;
+    const { name, avatar, flavors } = data.pokemonData;
 
-  const removeCard = () => {
-    dispatch(removeRecentCard(0));
-  };
+    const handleRecent = () => {
+      dispatch(toggleRecentPokemon(id));
+    };
 
-  const isModalOpen = useAppSelector((state) => state.modal.modalOpen);
-  const setOpenModal = () => {
-    dispatch(openModal(data));
-  };
+    const handleFavourite = () => {
+      dispatch(toggleFavouritePokemon(id));
+    };
 
-  const name = pokemon.name;
-  const avatar = pokemon.sprites?.other["official-artwork"].front_default;
-  const flavors = pokemonSpecies.flavor_text_entries
-    .slice(1, 3)
-    .map((flavor) => `${flavor.flavor_text}\n`);
+    const handleOpenPokemonScreen = () => {
+      router.push(`${urls.pokemon}/${id}`);
+    };
 
-  return (
-    <>
-      <article>
-        <Card variant="outlined" sx={{ maxWidth: 345 }}>
-          <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: blue[600] }} aria-label="recipe">
-                {avatar ? (
+    // state for modal view of card
+    const handleOpenModal = () => {
+      dispatch(openModal(data));
+    };
+
+    return (
+      <>
+        <article>
+          <Card variant="outlined" sx={{ maxWidth: 345 }}>
+            <CardHeader
+              avatar={
+                <Avatar sx={{ bgcolor: blue[600] }} aria-label="recipe">
                   <Image
-                    src={avatar}
+                    src={avatar ? avatar : placeholder}
                     width="30"
                     height="30"
                     alt="avatar pokemon"
                   />
-                ) : null}
-              </Avatar>
-            }
-            action={
-              <IconButton aria-label="settings">
-                <MoreVert />
-              </IconButton>
-            }
-            title={name}
-            // subheader="September 14, 2016"
-          />
+                </Avatar>
+              }
+              action={
+                <IconButton aria-label="settings">
+                  <MoreVert />
+                </IconButton>
+              }
+              title={name}
+              // subheader="September 14, 2016"
+            />
 
-          <CardActionArea onClick={setOpenModal}>
-            {/* Change to placeholder image from /public */}
-            {avatar ? (
+            <CardActionArea onClick={handleOpenModal}>
               <Image
-                // <CardMedia
-                //   component="img"
                 height="140"
                 width="140"
-                src={avatar}
+                src={avatar ? avatar : placeholder}
                 alt="pokemon avatar"
               />
-            ) : null}
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {name}
-              </Typography>
-              {pokemonSpecies ? (
-                <Typography variant="body2" color="text.secondary">
-                  {flavors}
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {name}
                 </Typography>
-              ) : null}
-            </CardContent>
-          </CardActionArea>
+                {flavors ? (
+                  <Typography variant="body2" color="text.secondary">
+                    {flavors}
+                  </Typography>
+                ) : null}
+              </CardContent>
+            </CardActionArea>
 
-          {isModalOpen ? null : (
-            <CardActions>
-              <Button onClick={removeCard} size="small">
-                <Delete />
-              </Button>
-              <Button onClick={removeCard} size="small">
-                <FavoriteBorder />
-              </Button>
-              <Button onClick={removeCard} size="small">
-                <Output />
-              </Button>
-            </CardActions>
-          )}
-        </Card>
-      </article>
-    </>
-  );
-};
+            {fromModal ? null : (
+              <CardActions>
+                {fromRecent ? (
+                  <Button onClick={handleRecent} size="small">
+                    <Delete />
+                  </Button>
+                ) : null}
+                <Button onClick={handleFavourite} size="small">
+                  {isFavourite ? <Favorite /> : <FavoriteBorder />}
+                </Button>
+                <Button onClick={handleOpenPokemonScreen} size="small">
+                  <Output />
+                </Button>
+              </CardActions>
+            )}
+          </Card>
+        </article>
+      </>
+    );
+  }
+);
