@@ -20,7 +20,6 @@ import {
 } from "@mui/icons-material";
 import React from "react";
 import { useAppDispatch } from "../../utils/hooks";
-// import { Pokemon, PokemonFlavor } from "../../utils/types";
 
 import { openModal } from "../../lib/redux/slices/modalSlice";
 import {
@@ -36,8 +35,8 @@ import {
 import { Pokemon } from "../../utils/types";
 import {
   getCurrentUserId,
-  getUserFavourites,
-  writeUserFavourite,
+  removeFavourite,
+  writeFavourite,
 } from "../../database";
 
 type TPokemonCard = {
@@ -54,7 +53,7 @@ export const PokemonCard = React.forwardRef(
     const dispatch = useAppDispatch();
     const currentUserId = getCurrentUserId();
 
-    if (!data) return <p>no data</p>;
+    if (!data) return <p>Something is wrong there is no data available.</p>;
     const id = data.id;
     const isFavourite = data.isFavourite;
     const { name, avatar, flavors } = data.pokemonData;
@@ -63,21 +62,20 @@ export const PokemonCard = React.forwardRef(
       dispatch(toggleRecentPokemon(id));
     };
 
-    const handleFavourite = async () => {
+    const handleFavourite = () => {
       dispatch(toggleFavouritePokemon(id));
       if (currentUserId) {
-        await writeUserFavourite(currentUserId, id);
+        isFavourite
+          ? // TODO on removing clear modalData slice; Modal stays open if no.
+            removeFavourite(currentUserId, id)
+          : writeFavourite(currentUserId, id);
       }
-      // TODO test delete
-      const favourites = await getUserFavourites();
-      console.log(favourites);
     };
 
     const handleOpenPokemonScreen = () => {
       router.push(`${urls.pokemon}/${id}`);
     };
 
-    // state for modal view of card
     const handleOpenModal = () => {
       dispatch(openModal(data));
     };

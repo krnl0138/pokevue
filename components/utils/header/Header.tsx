@@ -22,6 +22,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useAppSelector } from "../../../utils/hooks";
+import { handleLogout } from "../../../database";
 
 const pages = ["Pokemons", "About"];
 const settings = ["Favourites", "Profile", "Logout"];
@@ -172,7 +173,12 @@ const Header = () => {
               <Typography textAlign="center">{username}</Typography>
 
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={
+                    setting === "logout" ? handleLogout : handleCloseUserMenu
+                  }
+                >
                   <Link href={`${setting.toLowerCase()}`}>
                     <Typography textAlign="center">{setting}</Typography>
                   </Link>

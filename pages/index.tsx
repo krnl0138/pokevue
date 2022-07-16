@@ -4,22 +4,19 @@ import { PokemonCard } from "../components/pokemonCard/PokemonCard";
 import { Layout } from "../components/utils/layout/Layout";
 import { RecentSearch } from "../components/recentSearch/RecentSearch";
 import { ModalWrapper } from "../components/modal/modalWrapper/modalWrapper";
-
-export async function getStaticProps() {
-  return {
-    props: {},
-  };
-}
+import { ProtectedRoute } from "../components/protectedRoute/protectedRoute";
 
 export const Index = () => {
   return (
-    <Layout>
-      <SearchForm />
-      <RecentSearch />
-      <ModalWrapper>
-        <PokemonCard fromModal={true} />
-      </ModalWrapper>
-    </Layout>
+    <ProtectedRoute>
+      <Layout>
+        <SearchForm />
+        <RecentSearch />
+        <ModalWrapper>
+          <PokemonCard fromModal={true} />
+        </ModalWrapper>
+      </Layout>
+    </ProtectedRoute>
   );
 };
 

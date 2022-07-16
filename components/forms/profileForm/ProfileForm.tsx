@@ -1,4 +1,4 @@
-import { Send, Visibility, VisibilityOff } from "@mui/icons-material";
+import { FileUpload, Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   FormControl,
   InputLabel,
@@ -10,39 +10,30 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
+import { useState } from "react";
 import {
-  resetLoginFormValue,
-  setLoginFormValue,
-} from "../../../lib/redux/slices/loginFormSlice";
-import React, { useState } from "react";
-import Link from "next/link";
-import { PROJECT_URLS as urls } from "../../../utils/constants";
-import { setUser } from "../../../lib/redux/slices/userSlice";
-import { getUser, hanldeSignInWithEmailPassword } from "../../../database";
-import { useRouter } from "next/router";
+  resetProfileFormValue,
+  setProfileFormValue,
+} from "../../../lib/redux/slices/profileFormSlice";
+// import { writeUserData } from "../../../database";
 
-export const LoginForm = () => {
-  const router = useRouter();
+export const ProfileForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
-  const { email, password } = useAppSelector((state) => state.loginForm);
+  const { username, email, password } = useAppSelector(
+    (state) => state.profileForm
+  );
 
   const handleChange = (e: React.SyntheticEvent) => {
     const result = { [e.currentTarget.id]: e.currentTarget.value };
-    dispatch(setLoginFormValue(result));
+    dispatch(setProfileFormValue(result));
   };
 
-  const handleSubmit = async (e: React.SyntheticEvent) => {
+  const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    // sign in with firebase/auth
-    const signIn = await hanldeSignInWithEmailPassword(email, password);
-    // pull data by returned uid from firebase/database
-    const user = await getUser(signIn.user.uid);
-    // populate returned data as redux user slice
-    dispatch(setUser(user));
-    dispatch(resetLoginFormValue());
-    router.push(urls.main);
+    // writeUserData(1, { username, email });
+    dispatch(resetProfileFormValue());
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -52,10 +43,23 @@ export const LoginForm = () => {
 
   return (
     <div>
+      <p>Below you can change you data</p>
       <form onSubmit={handleSubmit}>
         <FormControl>
+          <InputLabel htmlFor="username" margin="dense">
+            Username
+          </InputLabel>
+          <Input
+            id="username"
+            aria-describedby="username-helper"
+            onChange={handleChange}
+            value={username}
+          />
+        </FormControl>
+
+        <FormControl>
           <InputLabel htmlFor="email" margin="dense">
-            email
+            Email
           </InputLabel>
           <Input
             id="email"
@@ -66,6 +70,11 @@ export const LoginForm = () => {
           <FormHelperText id="email-helper">
             We&apos;ll never share your email.
           </FormHelperText>
+        </FormControl>
+
+        <FormControl>
+          <p>Upload your avatar</p>
+          <FileUpload></FileUpload>
         </FormControl>
 
         <FormControl>
@@ -90,16 +99,10 @@ export const LoginForm = () => {
           />
         </FormControl>
 
-        <FormControl>
-          <Button type="submit" variant="contained" endIcon={<Send />}>
-            Login
-          </Button>
-        </FormControl>
+        <Button type="submit" variant="contained">
+          Change
+        </Button>
       </form>
-
-      <p>
-        Are you a new user? <Link href={urls.register}>Register</Link>
-      </p>
     </div>
   );
 };

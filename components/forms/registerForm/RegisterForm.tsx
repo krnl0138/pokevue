@@ -40,12 +40,11 @@ export const RegisterForm = () => {
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    // TODO abstract to /lib/api as createUser()
+    // TODO abstract to /lib/api as registerUser()
     const authRes = await handleCreateUser(email, password);
-    const { uid } = authRes;
     const newUser = { username, email };
+    writeUserData(authRes.uid, newUser);
     dispatch(setUser(newUser));
-    writeUserData(uid, newUser);
     dispatch(resetRegisterFormValue());
     router.push(urls.main);
   };

@@ -5,33 +5,21 @@ import { Layout } from "../components/utils/layout/Layout";
 
 import { AllPokemons } from "../components/allPokemons/AllPokemons";
 import { ModalWrapper } from "../components/modal/modalWrapper/modalWrapper";
-import { getUserFavourites } from "../database";
 
 // it should load on start first ~20 pokemons from an API
-export async function getServerProps() {
-  // userFavourites: Array<number>
-  let userFavourites;
-  let data;
-  try {
-    userFavourites = await getUserFavourites();
-  } catch (e) {
-    throw new Error();
-  }
-  // if (userFavourites) {
+// export async function getServerProps() {
+//   let userFavourites;
+//   try {
+//     userFavourites = await getUserFavourites();
+//   } catch (e) {
+//     throw new Error();
+//   }
+//   return {
+//     props: { userFavourites },
+//   };
+// }
 
-  // }
-  //   const result = await Promise.all([
-  //     fetcher("/t.json"),
-  //     fetcher("/tt.json"),
-  //     fetcher("/ttt.json"),
-  //   ]);
-  return {
-    props: { userFavourites },
-  };
-}
-
-export const Pokemons = (props) => {
-  console.log(props);
+export const Pokemons = () => {
   return (
     <Layout>
       <SearchForm />
