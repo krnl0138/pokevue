@@ -17,6 +17,8 @@ import {
 import React, { useState } from "react";
 import Link from "next/link";
 import { PROJECT_URLS as urls } from "../../../utils/constants";
+import { setUser } from "../../../lib/redux/slices/userSlice";
+import users from "../../../public/fakeUsers.json";
 
 export const LoginForm = () => {
   const dispatch = useAppDispatch();
@@ -33,6 +35,8 @@ export const LoginForm = () => {
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     dispatch(resetLoginFormValue());
+    // TODO fake auth delete
+    dispatch(setUser(users.users[0]));
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);

@@ -4,6 +4,7 @@ import searchReducer from "./slices/searchSlice";
 import loginFormReducer from "./slices/loginFormSlice";
 import registerFormReducer from "./slices/registerFormSlice";
 import pokemonsReducer from "./slices/pokemonsSlice";
+import userReducer from "./slices/userSlice";
 
 const rootReducer = combineReducers({
   modal: modalReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   loginForm: loginFormReducer,
   registerForm: registerFormReducer,
   pokemons: pokemonsReducer,
+  user: userReducer,
 });
 
 export default rootReducer;

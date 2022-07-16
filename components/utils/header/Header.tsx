@@ -21,6 +21,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useAppSelector } from "../../../utils/hooks";
 
 const pages = ["Pokemons", "About"];
 const settings = ["Favourites", "Profile", "Logout"];
@@ -43,6 +44,8 @@ const Header = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const { username, avatar } = useAppSelector((state) => state.user);
 
   return (
     <AppBar position="static">
@@ -147,7 +150,7 @@ const Header = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User avatar" src={placeholder} />
+                <Avatar alt="User avatar" src={avatar ? avatar : placeholder} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -166,6 +169,8 @@ const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              <Typography textAlign="center">{username}</Typography>
+
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Link href={`${setting.toLowerCase()}`}>

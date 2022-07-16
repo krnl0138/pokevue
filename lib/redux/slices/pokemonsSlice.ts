@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Pokemon } from "../../../utils/types";
 
-type TInitialState = {
-  pokemons: Pokemon[];
-  isLoading: boolean;
-  isFailed: boolean;
-};
+// type TInitialState = {
+//   pokemons: Pokemon[];
+//   isLoading: boolean;
+//   isFailed: boolean;
+// };
 
 export const pokemonsSlice = createSlice({
   name: "pokemons",
