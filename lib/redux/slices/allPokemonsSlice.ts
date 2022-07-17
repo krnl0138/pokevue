@@ -16,11 +16,11 @@ export const pokemonsSlice = createSlice({
       const double = state.some((item) => item.id === action.payload.id);
       if (double) return;
 
-      // const pokemon: Pokemon = {
-      //   ...action.payload,
-      //   isFavourite: false,
-      //   isRecent: false,
-      // };
+      //   const pokemon: Pokemon = {
+      //     ...action.payload,
+      //     isFavourite: false,
+      //     isRecent: false,
+      //   };
 
       state.push(action.payload);
     },
