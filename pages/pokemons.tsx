@@ -5,6 +5,7 @@ import { Layout } from "../components/utils/layout/Layout";
 
 import { AllPokemons } from "../components/allPokemons/AllPokemons";
 import { ModalWrapper } from "../components/modal/modalWrapper/modalWrapper";
+import { ProtectedRoute } from "../components/protectedRoute/ProtectedRoute";
 
 // it should load on start first ~20 pokemons from an API
 // export async function getServerProps() {

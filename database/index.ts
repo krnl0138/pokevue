@@ -7,8 +7,18 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateEmail,
+  updatePassword,
 } from "firebase/auth";
-import { get, getDatabase, onValue, ref, remove, set } from "firebase/database";
+import {
+  get,
+  getDatabase,
+  onValue,
+  ref,
+  remove,
+  set,
+  update,
+} from "firebase/database";
 import { User } from "../utils/types";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -35,7 +45,17 @@ const userRef = (userId: string) => ref(db, `users/${userId}`);
 const favouritesRef = (userId: string) => ref(db, `users/${userId}`);
 
 export const writeUserData = (userId: string, data: User) => {
+  // TODO error handling
   set(userRef(userId), data);
+};
+export const updateUserData = async (userId: string, data: User) => {
+  const newUser = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (value !== "") newUser[key] = value;
+  }
+  const res = await update(userRef(userId), newUser);
+  console.log(res);
+  return res;
 };
 export const writeFavourite = async (userId: string, favourite: number) => {
   const favouriteRef = ref(db, `users/${userId}/favourites/${favourite}`);
@@ -47,16 +67,14 @@ export const removeFavourite = (userId: string, favourite: number) => {
   remove(favouriteRef);
 };
 
-export const readUserData = (userId: string) => {
-  if (userId === undefined && auth.currentUser) {
-    userId = auth.currentUser.uid;
-  }
-  onValue(userRef(userId), (snapshot) => {
-    const data = snapshot.val();
-    console.log(data);
-    return data;
-  });
-};
+// export const readUserData = (userId: string) => {
+//   if (userId === undefined && auth.currentUser) {
+//     userId = auth.currentUser.uid;
+//   }
+//   onValue(userRef(userId), (snapshot) => {
+//     const data = snapshot.val();
+//   });
+// };
 
 export const getUser = async (userId: string) => {
   console.log("userId passed in getUser: ", userId);
@@ -126,3 +144,22 @@ export const handleLogout = () => {
 };
 
 export const getAuthInterface = () => auth;
+
+export const handleUpdatePassword = async (user, newPassword) => {
+  try {
+    updatePassword(user, newPassword);
+  } catch (e: any) {
+    const errorCode = e.code;
+    const errorMessage = e.message;
+    throw new Error(`${errorCode}: ${errorMessage}`);
+  }
+};
+export const handleUpdateEmail = async (user, newEmail) => {
+  try {
+    updateEmail(user, newEmail);
+  } catch (e: any) {
+    const errorCode = e.code;
+    const errorMessage = e.message;
+    throw new Error(`${errorCode}: ${errorMessage}`);
+  }
+};

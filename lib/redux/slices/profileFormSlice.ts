@@ -4,7 +4,7 @@ const initialState = {
   email: "",
   username: "",
   password: "",
-  file: "",
+  avatar: "",
 };
 
 export const profileFormSlice = createSlice({

@@ -15,24 +15,47 @@ import {
   resetProfileFormValue,
   setProfileFormValue,
 } from "../../../lib/redux/slices/profileFormSlice";
+import {
+  app,
+  getAuthInterface,
+  getUser,
+  handleUpdateEmail,
+  handleUpdatePassword,
+  readUserData,
+  updateUserData,
+  writeUserData,
+} from "../../../database";
+import { getAuth } from "firebase/auth";
+import { setUser } from "../../../lib/redux/slices/userSlice";
 // import { writeUserData } from "../../../database";
 
 export const ProfileForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const auth = getAuth(app);
 
-  const { username, email, password } = useAppSelector(
+  const { username, email, password, avatar } = useAppSelector(
     (state) => state.profileForm
   );
 
-  const handleChange = (e: React.SyntheticEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const result = { [e.currentTarget.id]: e.currentTarget.value };
     dispatch(setProfileFormValue(result));
   };
 
-  const handleSubmit = (e: React.SyntheticEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    // writeUserData(1, { username, email });
+    if (!auth?.currentUser?.uid) return;
+    if (!username && !email && !avatar && !password) return;
+    email && handleUpdateEmail(auth.currentUser, email);
+    password && handleUpdatePassword(auth.currentUser, password);
+    await updateUserData(auth.currentUser.uid, {
+      username,
+      email,
+      avatar,
+    });
+    const user = await getUser(auth.currentUser.uid);
+    dispatch(setUser(user));
     dispatch(resetProfileFormValue());
   };
 
@@ -49,12 +72,7 @@ export const ProfileForm = () => {
           <InputLabel htmlFor="username" margin="dense">
             Username
           </InputLabel>
-          <Input
-            id="username"
-            aria-describedby="username-helper"
-            onChange={handleChange}
-            value={username}
-          />
+          <Input id="username" onChange={handleChange} value={username} />
         </FormControl>
 
         <FormControl>
@@ -73,8 +91,11 @@ export const ProfileForm = () => {
         </FormControl>
 
         <FormControl>
-          <p>Upload your avatar</p>
-          <FileUpload></FileUpload>
+          <InputLabel htmlFor="avatar" margin="dense">
+            Url image
+          </InputLabel>
+          {/* <Input id="file" type="file" value={file} onChange={handleChange} /> */}
+          <Input id="avatar" value={avatar} onChange={handleChange} />
         </FormControl>
 
         <FormControl>
