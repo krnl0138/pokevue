@@ -4,7 +4,7 @@ import { PokemonCard } from "../components/pokemonCard/PokemonCard";
 import { Layout } from "../components/utils/layout/Layout";
 import { RecentSearch } from "../components/recentSearch/RecentSearch";
 import { ModalWrapper } from "../components/modal/modalWrapper/modalWrapper";
-import { ProtectedRoute } from "../components/protectedRoute/protectedRoute";
+import { ProtectedRoute } from "../components/protectedRoute/ProtectedRoute";
 
 export const Index = () => {
   return (
