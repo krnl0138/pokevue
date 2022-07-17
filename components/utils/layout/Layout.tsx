@@ -1,3 +1,4 @@
+import { Container } from "@mui/material";
 import Head from "next/head";
 import { Footer } from "../footer/Footer";
 import Header from "../header/Header";
@@ -15,9 +16,10 @@ export const Layout = ({
       </Head>
       <Header />
       <main>
-        <h1>Find your pokemons!</h1>
-        {children}
-        <Footer />
+        <Container>
+          {children}
+          <Footer />
+        </Container>
       </main>
     </>
   );

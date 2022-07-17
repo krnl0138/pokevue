@@ -98,6 +98,7 @@ export const ProfileForm = () => {
           <Input id="avatar" value={avatar} onChange={handleChange} />
         </FormControl>
 
+        {/* // TODO should be 2 passwords input: 1st to check 2nd to change */}
         <FormControl>
           <OutlinedInput
             id="password"
@@ -121,7 +122,7 @@ export const ProfileForm = () => {
         </FormControl>
 
         <Button type="submit" variant="contained">
-          Change
+          Submit
         </Button>
       </form>
     </div>

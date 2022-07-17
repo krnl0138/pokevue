@@ -117,7 +117,11 @@ export const PokemonCard = React.forwardRef(
             // subheader="September 14, 2016"
           />
 
-          <CardActionArea onClick={handleOpenModal}>
+          {/* // card middle area */}
+          <CardActionArea
+            onClick={handleOpenModal}
+            sx={{ display: "flex", flexDirection: "column" }}
+          >
             <Image
               height="140"
               width="140"
@@ -132,10 +136,13 @@ export const PokemonCard = React.forwardRef(
                 <Typography variant="body2" color="text.secondary">
                   {flavors}
                 </Typography>
-              ) : null}
+              ) : (
+                <p>No flavors were provided. Something is wrong :(</p>
+              )}
             </CardContent>
           </CardActionArea>
 
+          {/* // card footer buttons */}
           {fromModal ? null : (
             <CardActions>
               {isHovered ? (

@@ -1,15 +1,17 @@
 import styles from "./searchForm.module.scss";
-import { Send } from "@mui/icons-material";
+import { Search, Send } from "@mui/icons-material";
 import {
   Button,
+  Container,
   FormControl,
   FormHelperText,
   Input,
   InputLabel,
+  Typography,
 } from "@mui/material";
 import { SyntheticEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
-import { getPokemon } from "../../../lib/api/getPokemon";
+import { getPokemon, getPokemonTest } from "../../../lib/api/getPokemon";
 import {
   setSearchValue,
   resetSearchValue,
@@ -33,7 +35,7 @@ export const SearchForm = (): JSX.Element => {
     e.preventDefault();
     const search = searchValue.toLowerCase();
     try {
-      const data = await getPokemon(search);
+      const data = await getPokemonTest(search);
       dispatch(addPokemon(data));
       dispatch(toggleRecentPokemon(data.id));
     } catch (e: any) {
@@ -44,7 +46,8 @@ export const SearchForm = (): JSX.Element => {
   };
 
   return (
-    <div>
+    <Container sx={{ display: "flex", flexDirection: "column" }}>
+      <Typography>Find some pokemons!</Typography>
       <form onSubmit={handleSubmit}>
         <FormControl>
           <InputLabel htmlFor="my-input">Pokemon Name</InputLabel>
@@ -58,14 +61,14 @@ export const SearchForm = (): JSX.Element => {
             onChange={handleChange}
             value={searchValue}
           />
-          <FormHelperText id="my-helper-text">
+          {/* <FormHelperText id="my-helper-text">
             Find details about your pokemon
-          </FormHelperText>
+          </FormHelperText> */}
         </FormControl>
-        <Button type="submit" variant="contained" endIcon={<Send />}>
+        <Button type="submit" variant="contained" endIcon={<Search />}>
           Search
         </Button>
       </form>
-    </div>
+    </Container>
   );
 };

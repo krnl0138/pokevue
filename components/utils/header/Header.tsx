@@ -52,6 +52,7 @@ const Header = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          {/* Logo part */}
           <Typography
             variant="h6"
             noWrap
@@ -59,7 +60,7 @@ const Header = () => {
             href={urls.home}
             sx={{
               mr: 2,
-              display: { xs: "none", md: "flex" },
+              display: { xs: "none", md: "flex", alignItems: "center" },
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
@@ -73,7 +74,9 @@ const Header = () => {
               height="50"
               alt="Project Logo"
             />
+            Pokevue
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -111,6 +114,7 @@ const Header = () => {
             </Menu>
           </Box>
 
+          {/* large screen */}
           <Typography
             variant="h5"
             noWrap
@@ -134,7 +138,12 @@ const Header = () => {
               alt="Project Logo"
             />
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex", justifyContent: "flex-end" },
+            }}
+          >
             {pages.map((page) => {
               const url = page.toLowerCase();
               return (
@@ -148,6 +157,8 @@ const Header = () => {
               );
             })}
           </Box>
+
+          {/* settings */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -171,7 +182,6 @@ const Header = () => {
               onClose={handleCloseUserMenu}
             >
               <Typography textAlign="center">{username}</Typography>
-
               {settings.map((setting) => (
                 <MenuItem
                   key={setting}
