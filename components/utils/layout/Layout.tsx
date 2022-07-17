@@ -10,15 +10,15 @@ export const Layout = ({
   return (
     <>
       <Head>
-        <title>Pokemon</title>
+        <title>Pokevue</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <Header />
-      <div>
+      <main>
         <h1>Find your pokemons!</h1>
-        <main>{children}</main>
+        {children}
         <Footer />
-      </div>
+      </main>
     </>
   );
 };

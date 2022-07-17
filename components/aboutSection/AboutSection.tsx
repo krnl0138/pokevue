@@ -3,7 +3,7 @@ import { Heading } from "../utils/heading/Heading";
 export const AboutSection = () => {
   return (
     <div>
-      <Heading title={"A fun way to find pokemons"} />
+      <Heading title={"Welcome to Pokevue"} />
       <p>
         I built this website <s>just for fun</s> for my CV as a pet-project of
         mine. Feel free to use the source code on{" "}
