@@ -23,7 +23,7 @@ export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
     <>
       <Heading title={"Recent search"} />
       {/* // TODO abstract ? */}
-      <Box id="box" sx={{ display: "flex" }} ref={boxRef}>
+      <Box sx={{ display: "flex" }} ref={boxRef}>
         {recentPokemons.map((data) => (
           <PokemonCard key={data.id} data={data} fromRecent={true} />
         ))}

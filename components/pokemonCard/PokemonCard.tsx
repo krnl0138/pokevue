@@ -7,6 +7,7 @@ import {
   CardContent,
   CardHeader,
   IconButton,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import Image from "next/image";
@@ -17,8 +18,9 @@ import {
   FavoriteBorder,
   MoreVert,
   Output,
+  Search,
 } from "@mui/icons-material";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useAppDispatch } from "../../utils/hooks";
 
 import { openModal } from "../../lib/redux/slices/modalSlice";
@@ -51,6 +53,7 @@ export const PokemonCard = React.forwardRef(
     const router = useRouter();
     const dispatch = useAppDispatch();
     const currentUserId = useMemo(() => getCurrentUserId(), []);
+    const [isHovered, setIsHovered] = useState(false);
 
     if (!data) return <p>Something is wrong there is no data available.</p>;
     const id = data.id;
@@ -79,9 +82,21 @@ export const PokemonCard = React.forwardRef(
       dispatch(openModal(data));
     };
 
+    const handleMouseEnter = () => {
+      setIsHovered(!isHovered);
+    };
+    const handleMouseLeave = () => {
+      setIsHovered(!isHovered);
+    };
+
     return (
       <article>
-        <Card variant="outlined" sx={{ maxWidth: 345, m: 1 }}>
+        <Card
+          variant="outlined"
+          sx={{ maxWidth: 345, m: 1 }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           <CardHeader
             avatar={
               <Avatar sx={{ bgcolor: blue[600] }} aria-label="recipe">
@@ -123,17 +138,29 @@ export const PokemonCard = React.forwardRef(
 
           {fromModal ? null : (
             <CardActions>
-              {fromRecent ? (
-                <Button onClick={handleRecent} size="small">
-                  <Delete />
-                </Button>
-              ) : null}
-              <Button onClick={handleFavourite} size="small">
-                {isFavourite ? <Favorite /> : <FavoriteBorder />}
-              </Button>
-              <Button onClick={handleOpenPokemonScreen} size="small">
-                <Output />
-              </Button>
+              {isHovered ? (
+                <>
+                  {fromRecent ? (
+                    <Tooltip title="Delete from recent">
+                      <Button onClick={handleRecent} size="small">
+                        <Delete />
+                      </Button>
+                    </Tooltip>
+                  ) : null}
+                  <Tooltip title="Add to favourites">
+                    <Button onClick={handleFavourite} size="small">
+                      {isFavourite ? <Favorite /> : <FavoriteBorder />}
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="Learn more">
+                    <Button onClick={handleOpenPokemonScreen} size="small">
+                      <Search />
+                    </Button>
+                  </Tooltip>
+                </>
+              ) : (
+                <p></p>
+              )}
             </CardActions>
           )}
         </Card>
