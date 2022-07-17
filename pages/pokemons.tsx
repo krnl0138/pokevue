@@ -21,13 +21,15 @@ import { ModalWrapper } from "../components/modal/modalWrapper/modalWrapper";
 
 export const Pokemons = () => {
   return (
-    <Layout>
-      <SearchForm />
-      <AllPokemons />
-      <ModalWrapper>
-        <PokemonCard fromModal={true} />
-      </ModalWrapper>
-    </Layout>
+    <ProtectedRoute>
+      <Layout>
+        <SearchForm />
+        <AllPokemons />
+        <ModalWrapper>
+          <PokemonCard fromModal={true} />
+        </ModalWrapper>
+      </Layout>
+    </ProtectedRoute>
   );
 };
 
