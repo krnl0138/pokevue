@@ -52,7 +52,7 @@ export const PokemonCard = React.forwardRef(
     const dispatch = useAppDispatch();
     const currentUserId = useMemo(() => getCurrentUserId(), []);
 
-    // if (!data) return <p>Something is wrong there is no data available.</p>;
+    if (!data) return <p>Something is wrong there is no data available.</p>;
     const id = data.id;
     const isFavourite = data.isFavourite;
     const { name, avatar, flavors } = data.pokemonData;

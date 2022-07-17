@@ -4,20 +4,11 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   GoogleAuthProvider,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import {
-  get,
-  getDatabase,
-  onValue,
-  push,
-  ref,
-  remove,
-  set,
-} from "firebase/database";
+import { get, getDatabase, onValue, ref, remove, set } from "firebase/database";
 import { User } from "../utils/types";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -38,33 +29,29 @@ export const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-export const getAuthInterface = () => auth;
-
 //
 // db
-// export const writeNewUserData = (userId: number, user: User) => {
-const getUserRef = (userId: string) => ref(db, `users/${userId}`);
-const getFavouritesRef = (userId: string) => ref(db, `users/${userId}`);
+const userRef = (userId: string) => ref(db, `users/${userId}`);
+const favouritesRef = (userId: string) => ref(db, `users/${userId}`);
 
 export const writeUserData = (userId: string, data: User) => {
-  set(getUserRef(userId), data);
+  set(userRef(userId), data);
 };
 export const writeFavourite = async (userId: string, favourite: number) => {
   const favouriteRef = ref(db, `users/${userId}/favourites/${favourite}`);
   set(favouriteRef, favourite);
 };
 
-// TODO
 export const removeFavourite = (userId: string, favourite: number) => {
   const favouriteRef = ref(db, `users/${userId}/favourites/${favourite}`);
   remove(favouriteRef);
 };
 
 export const readUserData = (userId: string) => {
-  if (userId === undefined) {
-    userId = auth?.currentUser?.uid;
+  if (userId === undefined && auth.currentUser) {
+    userId = auth.currentUser.uid;
   }
-  onValue(getUserRef(userId), (snapshot) => {
+  onValue(userRef(userId), (snapshot) => {
     const data = snapshot.val();
     console.log(data);
     return data;
@@ -73,14 +60,15 @@ export const readUserData = (userId: string) => {
 
 export const getUser = async (userId: string) => {
   console.log("userId passed in getUser: ", userId);
-  const userSnapshot = await get(getUserRef(userId));
+  const userSnapshot = await get(userRef(userId));
   return userSnapshot.val();
 };
 
-// return user favourites from db
 export const getUserFavourites = async () => {
   const userId = getCurrentUserId();
-  const snapshot = await get(getFavouritesRef(userId));
+  if (!userId) return;
+
+  const snapshot = await get(favouritesRef(userId));
   console.log("snapshot value is: ", snapshot);
   const favourites = await snapshot.val();
   console.log("favourites value is: ", favourites);
@@ -97,7 +85,7 @@ export const handleGoogleAuth = () => {
   signInWithPopup(auth, new GoogleAuthProvider());
 };
 
-export const handleCreateUser = async (email, password) => {
+export const handleCreateUser = async (email: string, password: string) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -106,7 +94,7 @@ export const handleCreateUser = async (email, password) => {
     );
     const user = userCredential.user;
     return user;
-  } catch (e) {
+  } catch (e: any) {
     const errorCode = e.code;
     const errorMessage = e.message;
     throw new Error(`${errorCode}: ${errorMessage}`);
@@ -119,28 +107,14 @@ export const getCurrentUserId = () => {
   return data;
 };
 
-export const handleCurrentUser = () => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      const uid = user.uid;
-      console.log("uid from onAuthStateChanged is:", uid);
-      return uid;
-      // ...
-    } else {
-      // User is signed out
-      // ...
-      return "No user is signed in";
-    }
-  });
-};
-
-export const hanldeSignInWithEmailPassword = async (email, password) => {
+export const hanldeSignInWithEmailPassword = async (
+  email: string,
+  password: string
+) => {
   try {
     const user = await signInWithEmailAndPassword(auth, email, password);
     return user;
-  } catch (e) {
+  } catch (e: any) {
     const errorCode = e.code;
     const errorMessage = e.message;
     throw new Error(`${errorCode}: ${errorMessage}`);
@@ -151,4 +125,4 @@ export const handleLogout = () => {
   signOut(auth);
 };
 
-export const handleAuth = () => auth;
+export const getAuthInterface = () => auth;

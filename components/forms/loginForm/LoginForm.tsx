@@ -28,7 +28,7 @@ export const LoginForm = () => {
 
   const { email, password } = useAppSelector((state) => state.loginForm);
 
-  const handleChange = (e: React.SyntheticEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const result = { [e.currentTarget.id]: e.currentTarget.value };
     dispatch(setLoginFormValue(result));
   };

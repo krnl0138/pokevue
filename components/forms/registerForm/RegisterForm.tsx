@@ -33,7 +33,7 @@ export const RegisterForm = () => {
     (state) => state.registerForm
   );
 
-  const handleChange = (e: React.SyntheticEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const result = { [e.currentTarget.id]: e.currentTarget.value };
     dispatch(setRegisterFormValue(result));
   };

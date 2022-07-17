@@ -9,12 +9,14 @@ export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
   const allPokemons = useAppSelector((state) => state.pokemons);
   const recentPokemons = allPokemons.filter((el) => el.isRecent === true);
 
-  const boxRef = useRef(null);
+  const boxRef = useRef<null | HTMLElement>(null);
   useEffect(() => {
-    Sortable.create(boxRef.current, {
-      animation: 220,
-      easing: "cubic-bezier(ease)",
-    });
+    if (boxRef.current) {
+      Sortable.create(boxRef.current, {
+        animation: 220,
+        easing: "cubic-bezier(ease)",
+      });
+    }
   }, []);
 
   return (
