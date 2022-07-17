@@ -9,7 +9,7 @@ const NoFavourites = () => {
   return (
     <p>
       You have no favourite pokemons.{" "}
-      <Link href={urls.main}>Find and add one!</Link>{" "}
+      <Link href={urls.home}>Find and add one!</Link>{" "}
     </p>
   );
 };

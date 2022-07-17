@@ -1,7 +1,7 @@
 export const POKEMON_API = "https://pokeapi.co/api/v2";
 
 export const PROJECT_URLS = {
-  main: "/",
+  home: "/",
   favourites: "/favourites",
   profile: "/profile",
   allPokemons: "/pokemons",

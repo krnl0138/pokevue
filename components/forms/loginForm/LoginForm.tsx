@@ -42,7 +42,7 @@ export const LoginForm = () => {
     // populate returned data as redux user slice
     dispatch(setUser(user));
     dispatch(resetLoginFormValue());
-    router.push(urls.main);
+    router.push(urls.home);
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);

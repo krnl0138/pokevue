@@ -11,7 +11,7 @@ export const Login = () => {
   const user = useAppSelector((state) => state.user);
   // guard protected route
   if (user.username) {
-    router.push(urls.main);
+    router.push(urls.home);
   }
   return (
     <Layout>

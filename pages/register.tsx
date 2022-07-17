@@ -12,7 +12,7 @@ export const Registration = () => {
   console.log(user.username);
   // guard protected route
   if (user.username) {
-    router.push(urls.main);
+    router.push(urls.home);
   }
   return (
     <Layout>

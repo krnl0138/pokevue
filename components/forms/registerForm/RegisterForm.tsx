@@ -46,7 +46,7 @@ export const RegisterForm = () => {
     writeUserData(authRes.uid, newUser);
     dispatch(setUser(newUser));
     dispatch(resetRegisterFormValue());
-    router.push(urls.main);
+    router.push(urls.home);
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
