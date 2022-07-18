@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { useRef, useEffect } from "react";
 import Sortable from "sortablejs";
+import { NUM_ALL_POKEMONS_CADS } from "../../utils/constants";
 import { Pokemon } from "../../utils/types";
 import { PokemonCard } from "../pokemonCard/PokemonCard";
 import { Heading } from "../utils/heading/Heading";
@@ -24,7 +25,7 @@ export const AllPokemons = ({
 
   return (
     <>
-      <Heading title={"All pokemons"} />
+      <Heading title={`${NUM_ALL_POKEMONS_CADS} random pokemons are served!`} />
       <Box
         sx={{
           display: "flex",

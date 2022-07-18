@@ -14,3 +14,4 @@ export const PROJECT_URLS = {
 
 export const AVATAR_PLACEHOLDER = "/vercel.svg";
 export const PROJECT_LOGO = "/logo.png";
+export const NUM_ALL_POKEMONS_CADS = 3;

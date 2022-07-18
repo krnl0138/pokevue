@@ -14,7 +14,6 @@ const NoPokemonScreen = () => {
 // Should fetch more pokemon data potentially to provide more info.
 const PokemonById = () => {
   const router = useRouter();
-  // TODO on first returns [id]; Should run on useEffect?
   const id = router.asPath.split("/")[2];
   const [pokemon, setPokemon] = useState<null | Pokemon>();
   const pokemonRedux = useAppSelector((state) => state.pokemons).find(
@@ -22,6 +21,7 @@ const PokemonById = () => {
   );
 
   useEffect(() => {
+    // TODO hotfix, sometimes router returns '[id]' string
     if (id === "[id]") return;
     if (pokemonRedux) return setPokemon(pokemonRedux);
     const getAsync = async (id: string) => {
@@ -29,7 +29,6 @@ const PokemonById = () => {
       setPokemon(pokemon);
     };
 
-    // TODO hotfix
     getAsync(id);
   }, [pokemonRedux, id]);
 

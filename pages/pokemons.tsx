@@ -8,20 +8,9 @@ import { ProtectedRoute } from "../components/protectedRoute/ProtectedRoute";
 import { SearchAllPokemons } from "../components/searchAllPokemons/SearchAllPokemons";
 import { Pokemon } from "../utils/types";
 import { getPokemon } from "../lib/api/getPokemon";
+import { NUM_ALL_POKEMONS_CADS } from "../utils/constants";
 
-// it should load on start first ~20 pokemons from an API
-// export async function getServerProps() {
-//   let userFavourites;
-//   try {
-//     userFavourites = await getUserFavourites();
-//   } catch (e) {
-//     throw new Error();
-//   }
-//   return {
-//     props: { userFavourites },
-//   };
-// }
-
+// it should load on start first ~20 pokemons from an API, ServerProps??
 export const Pokemons = () => {
   // TODO basic implementation => move to redux slice
   // TODO is it possible to populate filtered List diffently?
@@ -40,7 +29,7 @@ export const Pokemons = () => {
 
   // TODO save to redux once it is loaded to speed up ?
   // Load pokemons from client-side
-  const getRandomIds = (limit: number) => {
+  const createRandomIds = (limit: number) => {
     const arr = [];
     for (let i = 0; i < limit; i++) {
       arr[i] = Math.floor(Math.random() * 905);
@@ -48,17 +37,14 @@ export const Pokemons = () => {
     return arr;
   };
   useEffect(() => {
-    async function getAllPokemons() {
-      const cardsToLoad = 10;
-      const ids = getRandomIds(cardsToLoad);
-      const result: Promise<Pokemon>[] = [];
-      ids.forEach((id) => {
-        result.push(new Promise((resolve) => resolve(getPokemon(id))));
-      });
-      const pokemons = await Promise.all(result);
+    const getAllPokemons = async () => {
+      const ids = createRandomIds(NUM_ALL_POKEMONS_CADS);
+      const pokemons = await Promise.all(
+        ids.map(async (id) => await getPokemon(id))
+      );
       setPokemonsList(pokemons);
       setFilteredList(pokemons);
-    }
+    };
     getAllPokemons();
   }, []);
 
