@@ -28,7 +28,8 @@ export const getPokemonTest = async (search: string) => {
 
   const data = parsePokemon({ pokemon, pokemonSpecies });
 
-  return { ...data };
+  const result = { ...data, isFavourite: false, isRecent: false };
+  return { ...result };
 };
 export const getPokemon = async (search: string) => {
   const pokemon = await fetchPokemon(search);

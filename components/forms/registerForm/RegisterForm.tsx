@@ -18,7 +18,7 @@ import {
 import {
   handleCreateUser,
   handleGoogleAuth,
-  writeUserData,
+  dbWriteUserData,
 } from "../../../database";
 import { setUser } from "../../../lib/redux/slices/userSlice";
 import { PROJECT_URLS as urls } from "../../../utils/constants";
@@ -41,9 +41,9 @@ export const RegisterForm = () => {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     // TODO abstract to /lib/api as registerUser()
-    const authRes = await handleCreateUser(email, password);
+    await handleCreateUser(email, password);
     const newUser = { username, email };
-    writeUserData(authRes.uid, newUser);
+    dbWriteUserData(newUser);
     dispatch(setUser(newUser));
     dispatch(resetRegisterFormValue());
     router.push(urls.home);

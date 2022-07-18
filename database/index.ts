@@ -9,17 +9,9 @@ import {
   signOut,
   updateEmail,
   updatePassword,
+  User,
 } from "firebase/auth";
-import {
-  get,
-  getDatabase,
-  onValue,
-  ref,
-  remove,
-  set,
-  update,
-} from "firebase/database";
-import { User } from "../utils/types";
+import { get, getDatabase, ref, remove, set, update } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -42,59 +34,72 @@ const db = getDatabase(app);
 //
 // db
 const userRef = (userId: string) => ref(db, `users/${userId}`);
-const favouritesRef = (userId: string) => ref(db, `users/${userId}`);
+const favouritesRef = (userId: string) => ref(db, `users/${userId}/favourites`);
 
-export const writeUserData = (userId: string, data: User) => {
+export const dbWriteUserData = (data: User) => {
+  if (!auth?.currentUser?.uid) {
+    throw new Error(`No user is logged in. Function call cannot be made.`);
+  }
   // TODO error handling
+  // TODO dangerous should be listenable per docs.
+  const userId = auth.currentUser.uid;
   set(userRef(userId), data);
 };
-export const updateUserData = async (userId: string, data: User) => {
+
+export const dbUpdateUserData = async (data: User) => {
+  if (!auth?.currentUser?.uid) {
+    throw new Error(`No user is logged in. Function call cannot be made.`);
+  }
   const newUser = {};
-  for (const [key, value] of Object.entries(data)) {
-    if (value !== "") newUser[key] = value;
+
+  // TODO dangerous should be listenable per docs.
+  const userId = auth.currentUser.uid;
+  // drop empty fields on passed object
+  for (const [prop, value] of Object.entries(data)) {
+    if (value) newUser[prop] = value;
   }
   const res = await update(userRef(userId), newUser);
-  console.log(res);
   return res;
 };
-export const writeFavourite = async (userId: string, favourite: number) => {
+export const dbWriteFavourite = async (favourite: number) => {
+  if (!auth?.currentUser?.uid) {
+    throw new Error(`No user is logged in. Function call cannot be made.`);
+  }
+  // TODO dangerous should be listenable per docs.
+  const userId = auth.currentUser.uid;
   const favouriteRef = ref(db, `users/${userId}/favourites/${favourite}`);
   set(favouriteRef, favourite);
 };
 
-export const removeFavourite = (userId: string, favourite: number) => {
+export const dbRemoveFavourite = (favourite: number) => {
+  if (!auth?.currentUser?.uid) {
+    throw new Error(`No user is logged in. Function call cannot be made.`);
+  }
+  // TODO dangerous should be listenable per docs.
+  const userId = auth.currentUser.uid;
   const favouriteRef = ref(db, `users/${userId}/favourites/${favourite}`);
   remove(favouriteRef);
 };
 
-// export const readUserData = (userId: string) => {
-//   if (userId === undefined && auth.currentUser) {
-//     userId = auth.currentUser.uid;
-//   }
-//   onValue(userRef(userId), (snapshot) => {
-//     const data = snapshot.val();
-//   });
-// };
-
-export const getUser = async (userId: string) => {
-  console.log("userId passed in getUser: ", userId);
+export const dbGetUser = async () => {
+  if (!auth?.currentUser?.uid) {
+    throw new Error(`No user is logged in. Function call cannot be made.`);
+  }
+  // TODO dangerous should be listenable per docs.
+  const userId = auth.currentUser.uid;
   const userSnapshot = await get(userRef(userId));
   return userSnapshot.val();
 };
 
-export const getUserFavourites = async () => {
-  const userId = getCurrentUserId();
-  if (!userId) return;
-
+export const dbGetFavourites = async () => {
+  if (!auth?.currentUser?.uid) {
+    throw new Error(`No user is logged in. Function call cannot be made.`);
+  }
+  // TODO dangerous should be listenable per docs.
+  const userId = auth.currentUser.uid;
   const snapshot = await get(favouritesRef(userId));
-  console.log("snapshot value is: ", snapshot);
-  const favourites = await snapshot.val();
-  console.log("favourites value is: ", favourites);
-  console.log("typeof favourites value is: ", typeof favourites);
-  const data = await JSON.parse(JSON.stringify(favourites));
-  console.log("data value is: ", data);
-  return data;
-  // return favourites;
+  const favourites = snapshot.val();
+  return favourites;
 };
 
 //
@@ -119,19 +124,12 @@ export const handleCreateUser = async (email: string, password: string) => {
   }
 };
 
-export const getCurrentUserId = () => {
-  const data = auth?.currentUser?.uid;
-  console.log("data value from getCurrentUserId is:", data);
-  return data;
-};
-
 export const hanldeSignInWithEmailPassword = async (
   email: string,
   password: string
 ) => {
   try {
-    const user = await signInWithEmailAndPassword(auth, email, password);
-    return user;
+    return await signInWithEmailAndPassword(auth, email, password);
   } catch (e: any) {
     const errorCode = e.code;
     const errorMessage = e.message;
@@ -145,18 +143,28 @@ export const handleLogout = () => {
 
 export const getAuthInterface = () => auth;
 
-export const handleUpdatePassword = async (user, newPassword) => {
+export const handleUpdatePassword = async (newPassword: string) => {
+  if (!auth?.currentUser?.uid) {
+    throw new Error(
+      `No user is logged in. ${handleUpdateEmail.name} call cannot be made.`
+    );
+  }
   try {
-    updatePassword(user, newPassword);
+    updatePassword(auth.currentUser, newPassword);
   } catch (e: any) {
     const errorCode = e.code;
     const errorMessage = e.message;
     throw new Error(`${errorCode}: ${errorMessage}`);
   }
 };
-export const handleUpdateEmail = async (user, newEmail) => {
+export const handleUpdateEmail = async (newEmail: string) => {
+  if (!auth?.currentUser?.uid) {
+    throw new Error(
+      `No user is logged in. ${handleUpdateEmail.name} call cannot be made.`
+    );
+  }
   try {
-    updateEmail(user, newEmail);
+    updateEmail(auth.currentUser, newEmail);
   } catch (e: any) {
     const errorCode = e.code;
     const errorMessage = e.message;

@@ -17,13 +17,12 @@ import {
   Favorite,
   FavoriteBorder,
   MoreVert,
-  Output,
   Search,
 } from "@mui/icons-material";
 import React, { useMemo, useState } from "react";
 import { useAppDispatch } from "../../utils/hooks";
 
-import { openModal } from "../../lib/redux/slices/modalSlice";
+import { closeModal, openModal } from "../../lib/redux/slices/modalSlice";
 import {
   toggleRecentPokemon,
   toggleFavouritePokemon,
@@ -35,11 +34,7 @@ import {
   AVATAR_PLACEHOLDER as placeholder,
 } from "../../utils/constants";
 import { Pokemon } from "../../utils/types";
-import {
-  getCurrentUserId,
-  removeFavourite,
-  writeFavourite,
-} from "../../database";
+import { dbRemoveFavourite, dbWriteFavourite } from "../../database";
 
 type TPokemonCard = {
   data?: Pokemon;
@@ -52,9 +47,9 @@ export const PokemonCard = React.forwardRef(
   ({ data, fromRecent, fromModal }: TPokemonCard): JSX.Element => {
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const currentUserId = useMemo(() => getCurrentUserId(), []);
     const [isHovered, setIsHovered] = useState(false);
 
+    // TODO refactor
     if (!data) return <p>Something is wrong there is no data available.</p>;
     const id = data.id;
     const isFavourite = data.isFavourite;
@@ -66,12 +61,11 @@ export const PokemonCard = React.forwardRef(
 
     const handleFavourite = () => {
       dispatch(toggleFavouritePokemon(id));
-      if (currentUserId) {
-        isFavourite
-          ? // TODO on removing clear modalData slice; Modal stays open if no.
-            removeFavourite(currentUserId, id)
-          : writeFavourite(currentUserId, id);
+      if (isFavourite) {
+        dbRemoveFavourite(id);
+        dispatch(closeModal());
       }
+      dbWriteFavourite(id);
     };
 
     const handleOpenPokemonScreen = () => {
@@ -154,7 +148,13 @@ export const PokemonCard = React.forwardRef(
                       </Button>
                     </Tooltip>
                   ) : null}
-                  <Tooltip title="Add to favourites">
+                  <Tooltip
+                    title={
+                      isFavourite
+                        ? "Remove from favourites"
+                        : "Add to favourites"
+                    }
+                  >
                     <Button onClick={handleFavourite} size="small">
                       {isFavourite ? <Favorite /> : <FavoriteBorder />}
                     </Button>

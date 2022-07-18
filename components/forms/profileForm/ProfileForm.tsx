@@ -1,4 +1,4 @@
-import { FileUpload, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   FormControl,
   InputLabel,
@@ -16,23 +16,17 @@ import {
   setProfileFormValue,
 } from "../../../lib/redux/slices/profileFormSlice";
 import {
-  app,
-  getAuthInterface,
-  getUser,
+  dbGetUser,
   handleUpdateEmail,
   handleUpdatePassword,
-  readUserData,
-  updateUserData,
-  writeUserData,
+  dbUpdateUserData,
 } from "../../../database";
-import { getAuth } from "firebase/auth";
 import { setUser } from "../../../lib/redux/slices/userSlice";
-// import { writeUserData } from "../../../database";
 
 export const ProfileForm = () => {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const auth = getAuth(app);
+  const [isChanged, setIsChanged] = useState(false);
 
   const { username, email, password, avatar } = useAppSelector(
     (state) => state.profileForm
@@ -45,17 +39,17 @@ export const ProfileForm = () => {
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!auth?.currentUser?.uid) return;
     if (!username && !email && !avatar && !password) return;
-    email && handleUpdateEmail(auth.currentUser, email);
-    password && handleUpdatePassword(auth.currentUser, password);
-    await updateUserData(auth.currentUser.uid, {
+    email && handleUpdateEmail(email);
+    password && handleUpdatePassword(password);
+    await dbUpdateUserData({
       username,
       email,
       avatar,
     });
-    const user = await getUser(auth.currentUser.uid);
+    const user = await dbGetUser();
     dispatch(setUser(user));
+    setIsChanged(true);
     dispatch(resetProfileFormValue());
   };
 
@@ -67,6 +61,7 @@ export const ProfileForm = () => {
   return (
     <div>
       <p>Below you can change you data</p>
+      {isChanged && <p>Data was successfully changed</p>}
       <form onSubmit={handleSubmit}>
         <FormControl>
           <InputLabel htmlFor="username" margin="dense">

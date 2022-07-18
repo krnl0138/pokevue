@@ -1,11 +1,4 @@
-import { Send } from "@mui/icons-material";
-import {
-  Button,
-  FormControl,
-  FormHelperText,
-  Input,
-  InputLabel,
-} from "@mui/material";
+import { FormControl, FormHelperText, Input, InputLabel } from "@mui/material";
 
 export const SearchAllPokemons = ({
   onChange,

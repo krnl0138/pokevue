@@ -1,25 +1,21 @@
 import styles from "./searchForm.module.scss";
-import { Search, Send } from "@mui/icons-material";
+import { Search } from "@mui/icons-material";
 import {
   Button,
   Container,
   FormControl,
-  FormHelperText,
   Input,
   InputLabel,
   Typography,
 } from "@mui/material";
 import { SyntheticEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
-import { getPokemon, getPokemonTest } from "../../../lib/api/getPokemon";
+import { getPokemonTest } from "../../../lib/api/getPokemon";
 import {
   setSearchValue,
   resetSearchValue,
 } from "../../../lib/redux/slices/searchSlice";
-import {
-  addPokemon,
-  toggleRecentPokemon,
-} from "../../../lib/redux/slices/pokemonsSlice";
+import { addPokemon } from "../../../lib/redux/slices/pokemonsSlice";
 
 export const SearchForm = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -30,16 +26,14 @@ export const SearchForm = (): JSX.Element => {
     dispatch(setSearchValue(result));
   };
 
-  // form 'submit' button function
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     const search = searchValue.toLowerCase();
     try {
-      const data = await getPokemonTest(search);
-      dispatch(addPokemon(data));
-      dispatch(toggleRecentPokemon(data.id));
+      const pokemon = await getPokemonTest(search);
+      pokemon.isRecent = true;
+      dispatch(addPokemon(pokemon));
     } catch (e: any) {
-      console.error(e);
       throw new Error(e.message);
     }
     dispatch(resetSearchValue());
@@ -61,9 +55,6 @@ export const SearchForm = (): JSX.Element => {
             onChange={handleChange}
             value={searchValue}
           />
-          {/* <FormHelperText id="my-helper-text">
-            Find details about your pokemon
-          </FormHelperText> */}
         </FormControl>
         <Button type="submit" variant="contained" endIcon={<Search />}>
           Search

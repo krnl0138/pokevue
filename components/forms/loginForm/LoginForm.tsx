@@ -18,7 +18,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { PROJECT_URLS as urls } from "../../../utils/constants";
 import { setUser } from "../../../lib/redux/slices/userSlice";
-import { getUser, hanldeSignInWithEmailPassword } from "../../../database";
+import { dbGetUser, hanldeSignInWithEmailPassword } from "../../../database";
 import { useRouter } from "next/router";
 
 export const LoginForm = () => {
@@ -35,11 +35,8 @@ export const LoginForm = () => {
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    // sign in with firebase/auth
-    const signIn = await hanldeSignInWithEmailPassword(email, password);
-    // pull data by returned uid from firebase/database
-    const user = await getUser(signIn.user.uid);
-    // populate returned data as redux user slice
+    await hanldeSignInWithEmailPassword(email, password);
+    const user = await dbGetUser();
     dispatch(setUser(user));
     dispatch(resetLoginFormValue());
     router.push(urls.home);

@@ -1,52 +1,29 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Pokemon } from "../../../utils/types";
 
-// type TInitialState = {
-//   pokemons: Pokemon[];
-//   isLoading: boolean;
-//   isFailed: boolean;
-// };
-
 export const pokemonsSlice = createSlice({
   name: "pokemons",
   initialState: <Pokemon[]>[],
   reducers: {
-    addPokemon: (state, action) => {
+    addPokemon: (state, action: { payload: Pokemon }) => {
       // doubling guard clause
-      const double = state.some((item) => item.id === action.payload.id);
-      if (double) return;
-
-      // const pokemon: Pokemon = {
-      //   ...action.payload,
-      //   isFavourite: false,
-      //   isRecent: false,
-      // };
-
+      if (state.some((item) => item.id === action.payload.id)) return;
       state.push(action.payload);
     },
-    toggleFavouritePokemon: (state, action) => {
-      // action.payload = id: number
+    toggleFavouritePokemon: (state, action: { payload: number }) => {
       const find = state.find((item) => item.id === action.payload);
-      if (find) {
-        find.isFavourite = !find?.isFavourite;
-      }
+      if (find) find.isFavourite = !find.isFavourite;
     },
-    toggleRecentPokemon: (state, action) => {
-      // action.payload = id: number
-
-      // add no more than the limit in recents
+    toggleRecentPokemon: (state, action: { payload: number }) => {
+      // if more than limit remove the oldest one
       const limit = 3;
-      const allRecent = state.filter((item) => item.isRecent === true);
-      if (allRecent.length === limit) {
-        allRecent[0].isRecent = false;
-      }
+      const recents = state.filter((item) => item.isRecent === true);
+      if (recents.length === limit) recents[0].isRecent = false;
 
       const find = state.find((item) => item.id === action.payload);
-      if (find) {
-        find.isRecent = !find.isRecent;
-      }
+      if (find) find.isRecent = !find.isRecent;
     },
-    removePokemon: (state, action) => {
+    removePokemon: (state, action: { payload: number }) => {
       return state.filter((item) => item.id !== action.payload);
     },
   },

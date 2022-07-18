@@ -53,11 +53,10 @@ const Header = () => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* Logo part */}
+
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href={urls.home}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex", alignItems: "center" },
@@ -68,13 +67,15 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            <Image
-              src={PROJECT_LOGO}
-              width="50"
-              height="50"
-              alt="Project Logo"
-            />
-            Pokevue
+            <Link href={urls.home}>
+              <Image
+                src={PROJECT_LOGO}
+                width="50"
+                height="50"
+                alt="Project Logo"
+              />
+            </Link>
+            <Link href={urls.home}>Pokevue</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -118,8 +119,6 @@ const Header = () => {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href={urls.home}
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -131,12 +130,14 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            <Image
-              src={PROJECT_LOGO}
-              width="50"
-              height="50"
-              alt="Project Logo"
-            />
+            <Link href={urls.home}>
+              <Image
+                src={PROJECT_LOGO}
+                width="50"
+                height="50"
+                alt="Project Logo"
+              />
+            </Link>
           </Typography>
           <Box
             sx={{
