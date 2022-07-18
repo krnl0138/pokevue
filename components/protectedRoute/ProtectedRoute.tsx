@@ -16,13 +16,13 @@ type TProtectedRoute = {
 export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const userStore = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user);
 
   const pokemons = useAppSelector((state) => state.pokemons);
 
   // listen on auth events, redirect if not logged in
   useEffect(() => {
-    if (userStore.username) return;
+    if (user.username) return;
     const auth = getAuth(app);
     auth.onAuthStateChanged(async (user) => {
       if (user) {
@@ -32,26 +32,31 @@ export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
       }
     });
     // TODO unsubscribe ?
-  }, [userStore.username, router, dispatch, userStore.favourites, pokemons]);
+  }, [user.username, router, dispatch, user.favourites, pokemons]);
 
   useEffect(() => {
-    if (!userStore.favourites) return;
+    if (!user.favourites) return;
     const populateFavourites = async () => {
-      const result: Promise<Pokemon>[] = [];
-      for (const val of Object.values(userStore.favourites)) {
-        if (pokemons.some((pokemon) => pokemon.id === val)) continue;
-        result.push(new Promise((resolve) => resolve(getPokemon(val))));
-      }
-      const res = await Promise.all(result);
-      res.forEach((pok) => {
+      const promises = await Promise.all(
+        Object.values(user.favourites)
+          .filter((id) => {
+            if (pokemons.some((pokemon) => pokemon.id === id)) return false;
+            return true;
+          })
+          .map(async (id) => await getPokemon(id))
+      );
+
+      const fetchedPokemons = await Promise.all(promises);
+
+      promises.forEach((pok) => {
         pok.isFavourite = true;
         dispatch(addPokemon(pok));
       });
     };
     populateFavourites();
-  }, [dispatch, pokemons, userStore.favourites]);
+  }, [dispatch, pokemons, user.favourites]);
 
-  if (!userStore.username) {
+  if (!user.username) {
     return (
       <Box maxWidth={"xl"} sx={{ backgroundColor: "primary.dark" }}>
         <Container>
