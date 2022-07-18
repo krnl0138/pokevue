@@ -36,8 +36,8 @@ export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
 
   useEffect(() => {
     if (!user.favourites) return;
-    const populateFavourites = async () => {
-      const promises = await Promise.all(
+    const addFavouritesToStore = async () => {
+      const fetchedFavourites = await Promise.all(
         Object.values(user.favourites)
           .filter((id) => {
             if (pokemons.some((pokemon) => pokemon.id === id)) return false;
@@ -46,14 +46,12 @@ export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
           .map(async (id) => await getPokemon(id))
       );
 
-      const fetchedPokemons = await Promise.all(promises);
-
-      promises.forEach((pok) => {
+      fetchedFavourites.forEach((pok) => {
         pok.isFavourite = true;
         dispatch(addPokemon(pok));
       });
     };
-    populateFavourites();
+    addFavouritesToStore();
   }, [dispatch, pokemons, user.favourites]);
 
   if (!user.username) {

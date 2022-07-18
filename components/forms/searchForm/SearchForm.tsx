@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { SyntheticEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
-import { getPokemonTest } from "../../../lib/api/getPokemon";
+import { getPokemon, getPokemonTest } from "../../../lib/api/getPokemon";
 import {
   setSearchValue,
   resetSearchValue,
@@ -30,7 +30,7 @@ export const SearchForm = (): JSX.Element => {
     e.preventDefault();
     const search = searchValue.toLowerCase();
     try {
-      const pokemon = await getPokemonTest(search);
+      const pokemon = await getPokemon(search);
       pokemon.isRecent = true;
       dispatch(addPokemon(pokemon));
     } catch (e: any) {

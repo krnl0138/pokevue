@@ -45,6 +45,7 @@ export type Pokemon = {
   id: number;
   isFavourite: boolean;
   isRecent: boolean;
+  isRandom: boolean;
   pokemonData: { name: string; avatar: string; flavors: string };
 };
 
