@@ -17,7 +17,6 @@ import {
 import React, { useState } from "react";
 import Link from "next/link";
 import { PROJECT_URLS as urls } from "../../../utils/constants";
-import { setUser } from "../../../lib/redux/slices/userSlice";
 import { dbGetUser, hanldeSignInWithEmailPassword } from "../../../database";
 import { useRouter } from "next/router";
 
@@ -36,8 +35,7 @@ export const LoginForm = () => {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     await hanldeSignInWithEmailPassword(email, password);
-    const user = await dbGetUser();
-    dispatch(setUser(user));
+    await dbGetUser();
     dispatch(resetLoginFormValue());
     router.push(urls.home);
   };

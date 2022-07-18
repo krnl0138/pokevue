@@ -21,7 +21,6 @@ import {
   handleUpdatePassword,
   dbUpdateUserData,
 } from "../../../database";
-import { setUser } from "../../../lib/redux/slices/userSlice";
 
 export const ProfileForm = () => {
   const dispatch = useAppDispatch();
@@ -47,8 +46,7 @@ export const ProfileForm = () => {
       email,
       avatar,
     });
-    const user = await dbGetUser();
-    dispatch(setUser(user));
+    await dbGetUser();
     setIsChanged(true);
     dispatch(resetProfileFormValue());
   };

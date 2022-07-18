@@ -12,6 +12,8 @@ import {
   User,
 } from "firebase/auth";
 import { get, getDatabase, ref, remove, set, update } from "firebase/database";
+import store from "../lib/redux";
+import { setUser } from "../lib/redux/slices/userSlice";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -34,72 +36,63 @@ const db = getDatabase(app);
 //
 // db
 const userRef = (userId: string) => ref(db, `users/${userId}`);
-const favouritesRef = (userId: string) => ref(db, `users/${userId}/favourites`);
 
 export const dbWriteUserData = (data: User) => {
-  if (!auth?.currentUser?.uid) {
-    throw new Error(`No user is logged in. Function call cannot be made.`);
-  }
-  // TODO error handling
-  // TODO dangerous should be listenable per docs.
-  const userId = auth.currentUser.uid;
-  set(userRef(userId), data);
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      set(userRef(user.uid), data);
+    } else {
+      throw new Error(`No user is logged in. Function call cannot be made.`);
+    }
+  });
 };
 
 export const dbUpdateUserData = async (data: User) => {
-  if (!auth?.currentUser?.uid) {
-    throw new Error(`No user is logged in. Function call cannot be made.`);
-  }
-  const newUser = {};
-
-  // TODO dangerous should be listenable per docs.
-  const userId = auth.currentUser.uid;
-  // drop empty fields on passed object
-  for (const [prop, value] of Object.entries(data)) {
-    if (value) newUser[prop] = value;
-  }
-  const res = await update(userRef(userId), newUser);
-  return res;
+  auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      const newUser = {};
+      for (const [prop, value] of Object.entries(data)) {
+        if (value) {
+          newUser[prop] = value;
+        }
+      }
+      await update(userRef(user.uid), newUser);
+    } else {
+      throw new Error(`No user is logged in. Function call cannot be made.`);
+    }
+  });
 };
 export const dbWriteFavourite = async (favourite: number) => {
-  if (!auth?.currentUser?.uid) {
-    throw new Error(`No user is logged in. Function call cannot be made.`);
-  }
-  // TODO dangerous should be listenable per docs.
-  const userId = auth.currentUser.uid;
-  const favouriteRef = ref(db, `users/${userId}/favourites/${favourite}`);
-  set(favouriteRef, favourite);
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      const favouriteRef = ref(db, `users/${user.uid}/favourites/${favourite}`);
+      set(favouriteRef, favourite);
+    } else {
+      throw new Error(`No user is logged in. Function call cannot be made.`);
+    }
+  });
 };
 
 export const dbRemoveFavourite = (favourite: number) => {
-  if (!auth?.currentUser?.uid) {
-    throw new Error(`No user is logged in. Function call cannot be made.`);
-  }
-  // TODO dangerous should be listenable per docs.
-  const userId = auth.currentUser.uid;
-  const favouriteRef = ref(db, `users/${userId}/favourites/${favourite}`);
-  remove(favouriteRef);
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      const favouriteRef = ref(db, `users/${user.uid}/favourites/${favourite}`);
+      remove(favouriteRef);
+    } else {
+      throw new Error(`No user is logged in. Function call cannot be made.`);
+    }
+  });
 };
 
 export const dbGetUser = async () => {
-  if (!auth?.currentUser?.uid) {
-    throw new Error(`No user is logged in. Function call cannot be made.`);
-  }
-  // TODO dangerous should be listenable per docs.
-  const userId = auth.currentUser.uid;
-  const userSnapshot = await get(userRef(userId));
-  return userSnapshot.val();
-};
-
-export const dbGetFavourites = async () => {
-  if (!auth?.currentUser?.uid) {
-    throw new Error(`No user is logged in. Function call cannot be made.`);
-  }
-  // TODO dangerous should be listenable per docs.
-  const userId = auth.currentUser.uid;
-  const snapshot = await get(favouritesRef(userId));
-  const favourites = snapshot.val();
-  return favourites;
+  auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      const userSnapshot = await get(userRef(user.uid));
+      store.dispatch(setUser(userSnapshot.val()));
+    } else {
+      throw new Error(`No user is logged in. Function call cannot be made.`);
+    }
+  });
 };
 
 //
@@ -141,33 +134,33 @@ export const handleLogout = () => {
   signOut(auth);
 };
 
-export const getAuthInterface = () => auth;
-
 export const handleUpdatePassword = async (newPassword: string) => {
-  if (!auth?.currentUser?.uid) {
-    throw new Error(
-      `No user is logged in. ${handleUpdateEmail.name} call cannot be made.`
-    );
-  }
-  try {
-    updatePassword(auth.currentUser, newPassword);
-  } catch (e: any) {
-    const errorCode = e.code;
-    const errorMessage = e.message;
-    throw new Error(`${errorCode}: ${errorMessage}`);
-  }
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      try {
+        updatePassword(user, newPassword);
+      } catch (e: any) {
+        const errorCode = e.code;
+        const errorMessage = e.message;
+        throw new Error(`${errorCode}: ${errorMessage}`);
+      }
+    } else {
+      throw new Error(`No user is logged in. Function call cannot be made.`);
+    }
+  });
 };
 export const handleUpdateEmail = async (newEmail: string) => {
-  if (!auth?.currentUser?.uid) {
-    throw new Error(
-      `No user is logged in. ${handleUpdateEmail.name} call cannot be made.`
-    );
-  }
-  try {
-    updateEmail(auth.currentUser, newEmail);
-  } catch (e: any) {
-    const errorCode = e.code;
-    const errorMessage = e.message;
-    throw new Error(`${errorCode}: ${errorMessage}`);
-  }
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      try {
+        updateEmail(user, newEmail);
+      } catch (e: any) {
+        const errorCode = e.code;
+        const errorMessage = e.message;
+        throw new Error(`${errorCode}: ${errorMessage}`);
+      }
+    } else {
+      throw new Error(`No user is logged in. Function call cannot be made.`);
+    }
+  });
 };
