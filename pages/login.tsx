@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Layout } from "../components/utils/layout/Layout";
 import { LoginForm } from "../components/forms/loginForm/LoginForm";
 import { useRouter } from "next/router";

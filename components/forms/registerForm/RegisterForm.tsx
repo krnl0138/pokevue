@@ -19,8 +19,8 @@ import {
   handleCreateUser,
   handleGoogleAuth,
   dbWriteUserData,
+  dbGetUser,
 } from "../../../database";
-import { setUser } from "../../../lib/redux/slices/userSlice";
 import { PROJECT_URLS as urls } from "../../../utils/constants";
 import { useRouter } from "next/router";
 
@@ -43,8 +43,8 @@ export const RegisterForm = () => {
     // TODO abstract to /lib/api as registerUser()
     await handleCreateUser(email, password);
     const newUser = { username, email };
-    dbWriteUserData(newUser);
-    dispatch(setUser(newUser));
+    await dbWriteUserData(newUser);
+    await dbGetUser();
     dispatch(resetRegisterFormValue());
     router.push(urls.home);
   };

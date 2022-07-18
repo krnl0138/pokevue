@@ -10,6 +10,7 @@ import {
   updateEmail,
   updatePassword,
   User,
+  UserInfo,
 } from "firebase/auth";
 import { get, getDatabase, ref, remove, set, update } from "firebase/database";
 import store from "../lib/redux";
@@ -37,10 +38,10 @@ const db = getDatabase(app);
 // db
 const userRef = (userId: string) => ref(db, `users/${userId}`);
 
-export const dbWriteUserData = (data: User) => {
-  auth.onAuthStateChanged((user) => {
+export const dbWriteUserData = async (data: UserInfo) => {
+  auth.onAuthStateChanged(async (user) => {
     if (user) {
-      set(userRef(user.uid), data);
+      await set(userRef(user.uid), data);
     } else {
       throw new Error(`No user is logged in. Function call cannot be made.`);
     }
