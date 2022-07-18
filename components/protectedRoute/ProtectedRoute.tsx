@@ -3,11 +3,11 @@ import { useEffect } from "react";
 import { app, dbGetUser } from "../../database";
 import { PROJECT_URLS as urls } from "../../utils/constants";
 import { useRouter } from "next/router";
-import { setUser } from "../../lib/redux/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { Box, CircularProgress, Container, Typography } from "@mui/material";
 import { getPokemon } from "../../lib/api/getPokemon";
 import { addPokemon } from "../../lib/redux/slices/pokemonsSlice";
+import { Pokemon } from "../../utils/types";
 
 type TProtectedRoute = {
   children: JSX.Element;
@@ -16,55 +16,42 @@ type TProtectedRoute = {
 export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user);
+  const userStore = useAppSelector((state) => state.user);
 
-  const favouritePokemons = useAppSelector((state) => state.pokemons).filter(
-    (pokemon) => pokemon.isFavourite === true
-  );
+  const pokemons = useAppSelector((state) => state.pokemons);
 
   // listen on auth events, redirect if not logged in
   useEffect(() => {
-    if (user.username) return;
+    if (userStore.username) return;
     const auth = getAuth(app);
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged(async (user) => {
       if (user) {
-        // ...
+        await dbGetUser();
       } else {
         router.push(urls.login);
       }
     });
     // TODO unsubscribe ?
-  }, [user.username, router]);
+  }, [userStore.username, router, dispatch, userStore.favourites, pokemons]);
 
-  // populate user in redux store
   useEffect(() => {
-    if (user.username) return;
-
-    const populateUser = async () => {
-      const data = await dbGetUser();
-      dispatch(setUser(data));
-    };
-
-    if (!user.username) populateUser();
-  }, [dispatch, user.username]);
-
-  // populate favourites
-  useEffect(() => {
-    if (!user.favourites) return;
-    // TODO should be memoized?
+    if (!userStore.favourites) return;
     const populateFavourites = async () => {
-      for (const val of Object.values(user.favourites)) {
-        if (favouritePokemons.some((fav) => fav.id === val)) return;
-
-        const pokemon = await getPokemon(val);
-        pokemon.isFavourite = true;
-        dispatch(addPokemon(pokemon));
+      const result: Promise<Pokemon>[] = [];
+      for (const val of Object.values(userStore.favourites)) {
+        if (pokemons.some((pokemon) => pokemon.id === val)) continue;
+        result.push(new Promise((resolve) => resolve(getPokemon(val))));
       }
+      const res = await Promise.all(result);
+      res.forEach((pok) => {
+        pok.isFavourite = true;
+        dispatch(addPokemon(pok));
+      });
     };
     populateFavourites();
-  }, [dispatch, user.favourites, favouritePokemons]);
+  }, [dispatch, pokemons, userStore.favourites]);
 
-  if (!user.username) {
+  if (!userStore.username) {
     return (
       <Box maxWidth={"xl"} sx={{ backgroundColor: "primary.dark" }}>
         <Container>

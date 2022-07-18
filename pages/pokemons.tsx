@@ -40,17 +40,24 @@ export const Pokemons = () => {
 
   // TODO save to redux once it is loaded to speed up ?
   // Load pokemons from client-side
-  const cardsToLoad = 5;
+  const getRandomIds = (limit: number) => {
+    const arr = [];
+    for (let i = 0; i < limit; i++) {
+      arr[i] = Math.floor(Math.random() * 905);
+    }
+    return arr;
+  };
   useEffect(() => {
     async function getAllPokemons() {
-      // TODO refactor with Promise.all ?
-      // TODO fire all functions at once ?
-      for (let i = 1; i < cardsToLoad + 1; i++) {
-        const pokemon = await getPokemon(i);
-        // const pokemon = { ...res, isFavourite: false, isRecent: false };
-        setPokemonsList((prev) => [...prev, pokemon]);
-        setFilteredList((prev) => [...prev, pokemon]);
-      }
+      const cardsToLoad = 10;
+      const ids = getRandomIds(cardsToLoad);
+      const result: Promise<Pokemon>[] = [];
+      ids.forEach((id) => {
+        result.push(new Promise((resolve) => resolve(getPokemon(id))));
+      });
+      const pokemons = await Promise.all(result);
+      setPokemonsList(pokemons);
+      setFilteredList(pokemons);
     }
     getAllPokemons();
   }, []);
