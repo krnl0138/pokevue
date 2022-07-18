@@ -19,7 +19,7 @@ import {
   MoreVert,
   Search,
 } from "@mui/icons-material";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch } from "../../utils/hooks";
 
 import { closeModal, openModal } from "../../lib/redux/slices/modalSlice";
@@ -64,8 +64,10 @@ export const PokemonCard = React.forwardRef(
       if (isFavourite) {
         dbRemoveFavourite(id);
         dispatch(closeModal());
+        dispatch(toggleFavouritePokemon(id));
       }
       dbWriteFavourite(id);
+      dispatch(toggleFavouritePokemon(id));
     };
 
     const handleOpenPokemonScreen = () => {

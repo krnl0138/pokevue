@@ -1,8 +1,9 @@
+import { Box } from "@mui/material";
 import { Heading } from "../utils/heading/Heading";
 
 export const AboutSection = () => {
   return (
-    <div>
+    <Box component="section">
       <Heading title={"Welcome to Pokevue"} />
       <p>
         I built this website <s>just for fun</s> for my CV as a pet-project of
@@ -16,15 +17,9 @@ export const AboutSection = () => {
       </p>
       <br />
       <p>
-        For this project I&apos;ve used the following stack:
-        <ul>
-          <li>MUI</li>
-          <li>React/Redux</li>
-          <li>NextJS</li>
-          <li>Typescript</li>
-          <li>Firebase</li>
-        </ul>
+        For this project I&apos;ve used the following stack: MaterialUI +
+        React/Redux + NextJS + Typescript + Firebase.
       </p>
-    </div>
+    </Box>
   );
 };

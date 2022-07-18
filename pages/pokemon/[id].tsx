@@ -16,13 +16,13 @@ const PokemonById = () => {
   const router = useRouter();
   // TODO on first returns [id]; Should run on useEffect?
   const id = router.asPath.split("/")[2];
-  console.log(id);
   const [pokemon, setPokemon] = useState<null | Pokemon>();
   const pokemonRedux = useAppSelector((state) => state.pokemons).find(
     (pokemon) => pokemon.id === Number(id)
   );
 
   useEffect(() => {
+    if (id === "[id]") return;
     if (pokemonRedux) return setPokemon(pokemonRedux);
     const getAsync = async (id: string) => {
       const pokemon = await getPokemon(id);
@@ -30,9 +30,7 @@ const PokemonById = () => {
     };
 
     // TODO hotfix
-    if (id !== "[id]") {
-      getAsync(id);
-    }
+    getAsync(id);
   }, [pokemonRedux, id]);
 
   return (

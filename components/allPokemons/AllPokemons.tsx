@@ -12,8 +12,6 @@ export const AllPokemons = ({
   pokemons: Pokemon[];
   children?: JSX.Element;
 }) => {
-  console.log("pokemons from props of AllPokemons component:", pokemons);
-
   const boxRef = useRef<null | HTMLElement>(null);
   useEffect(() => {
     if (boxRef.current) {
