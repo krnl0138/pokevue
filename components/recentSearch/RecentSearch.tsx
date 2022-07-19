@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import Sortable from "sortablejs";
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../../lib/redux";
+import { CardsWrapper } from "../utils/cardsWrapper/CardsWrapper";
 
 const selectPokemons = (state: RootState) => state.pokemons.byId;
 const selectRecentIds = (state: RootState) => state.pokemons.recentIds;
@@ -18,25 +19,16 @@ const selectRecentPokemons = createSelector(
 export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
   const recentPokemons = useAppSelector(selectRecentPokemons);
 
-  const boxRef = useRef<null | HTMLElement>(null);
-  useEffect(() => {
-    if (boxRef.current) {
-      Sortable.create(boxRef.current, {
-        animation: 220,
-        easing: "cubic-bezier(ease)",
-      });
-    }
-  }, []);
-
   return (
     recentPokemons && (
       <>
         <Heading title={"Recent search"} />
-        {/* // TODO abstract ? */}
-        <Box sx={{ display: "flex" }} ref={boxRef}>
-          {recentPokemons.map((data) => (
-            <PokemonCard key={data.id} data={data} fromRecent={true} />
-          ))}
+        <Box sx={{ display: "flex" }}>
+          <CardsWrapper>
+            {recentPokemons.map((data) => (
+              <PokemonCard key={data.id} data={data} fromRecent={true} />
+            ))}
+          </CardsWrapper>
         </Box>
       </>
     )

@@ -8,11 +8,11 @@ export const PROJECT_URLS = {
   about: "/about",
   login: "/login",
   register: "/register",
-  // for a '/pokemon/[id]' route
+  // /pokemon/[id]
   pokemon: "/pokemon",
 };
 
 export const AVATAR_PLACEHOLDER = "/vercel.svg";
 export const PROJECT_LOGO = "/logo.png";
-export const NUM_RANDOM_POKEMONS_CADS = 3;
-export const NUM_RECENT_POKEMONS_CADS = 3;
+export const NUM_RANDOM_POKEMON_CADRS = 3;
+export const NUM_RECENT_POKEMON_CARDS = 3;

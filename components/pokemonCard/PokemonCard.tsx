@@ -27,6 +27,7 @@ import {
   addRecentPokemon,
   removeFavouritePokemon,
   addFavouritePokemon,
+  removeRecentPokemon,
 } from "../../lib/redux/slices/pokemonsSlice";
 import { useRouter } from "next/router";
 
@@ -57,15 +58,17 @@ export const PokemonCard = React.forwardRef(
     const id = data.id;
     const isFavourite = data.isFavourite;
     const isRecent = data.isRecent;
+    const isRandom = data.isRandom;
     const { name, avatar, flavors } = data.pokemonData;
 
     const handleRecent = () => {
-      dispatch(addRecentPokemon(id));
+      isRecent
+        ? dispatch(addRecentPokemon(id))
+        : dispatch(removeRecentPokemon(id));
     };
 
     const handleFavourite = () => {
       if (isFavourite) {
-        console.log(`for id:${id} isFavourite was true`);
         dbRemoveFavourite(id);
         dispatch(closeModal());
         dispatch(removeFavouritePokemon(id));
