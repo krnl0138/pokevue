@@ -28,7 +28,10 @@
     "**/*.ts",
     "**/*.tsx",
     "lib/prisma/index.ts",
-    "pages/test.js"
+    "pages/test.js",
+    "lib/redux/slices/test.js",
+    "lib/redux/slices/test.js",
+    "components/recentSearch/test.js"
   ],
   "exclude": ["node_modules"]
 }

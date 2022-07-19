@@ -10,12 +10,15 @@ import {
 } from "@mui/material";
 import { SyntheticEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
-import { getPokemonTest } from "../../../lib/api/getPokemon";
+import { getPokemon } from "../../../lib/api/getPokemon";
 import {
   setSearchValue,
   resetSearchValue,
 } from "../../../lib/redux/slices/searchSlice";
-import { addPokemon } from "../../../lib/redux/slices/pokemonsSlice";
+import {
+  addPokemon,
+  addRecentPokemon,
+} from "../../../lib/redux/slices/pokemonsSlice";
 
 export const SearchForm = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -30,9 +33,9 @@ export const SearchForm = (): JSX.Element => {
     e.preventDefault();
     const search = searchValue.toLowerCase();
     try {
-      const pokemon = await getPokemonTest(search);
-      pokemon.isRecent = true;
+      const pokemon = await getPokemon(search);
       dispatch(addPokemon(pokemon));
+      dispatch(addRecentPokemon(pokemon.id));
     } catch (e: any) {
       throw new Error(e.message);
     }

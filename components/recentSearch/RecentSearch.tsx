@@ -4,10 +4,19 @@ import { Heading } from "../utils/heading/Heading";
 import { PokemonCard } from "../pokemonCard/PokemonCard";
 import { useEffect, useRef } from "react";
 import Sortable from "sortablejs";
+import { createSelector } from "@reduxjs/toolkit";
+import { RootState } from "../../lib/redux";
+
+const selectPokemons = (state: RootState) => state.pokemons.byId;
+const selectRecentIds = (state: RootState) => state.pokemons.recentIds;
+const selectRecentPokemons = createSelector(
+  selectPokemons,
+  selectRecentIds,
+  (pokemons, recentIds) => recentIds?.map((r) => pokemons[r])
+);
 
 export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
-  const allPokemons = useAppSelector((state) => state.pokemons);
-  const recentPokemons = allPokemons.filter((el) => el.isRecent === true);
+  const recentPokemons = useAppSelector(selectRecentPokemons);
 
   const boxRef = useRef<null | HTMLElement>(null);
   useEffect(() => {
@@ -20,14 +29,16 @@ export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
   }, []);
 
   return (
-    <>
-      <Heading title={"Recent search"} />
-      {/* // TODO abstract ? */}
-      <Box sx={{ display: "flex" }} ref={boxRef}>
-        {recentPokemons.map((data) => (
-          <PokemonCard key={data.id} data={data} fromRecent={true} />
-        ))}
-      </Box>
-    </>
+    recentPokemons && (
+      <>
+        <Heading title={"Recent search"} />
+        {/* // TODO abstract ? */}
+        <Box sx={{ display: "flex" }} ref={boxRef}>
+          {recentPokemons.map((data) => (
+            <PokemonCard key={data.id} data={data} fromRecent={true} />
+          ))}
+        </Box>
+      </>
+    )
   );
 };

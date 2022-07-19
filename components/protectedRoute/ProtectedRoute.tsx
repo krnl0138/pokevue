@@ -6,8 +6,10 @@ import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { Box, CircularProgress, Container, Typography } from "@mui/material";
 import { getPokemon } from "../../lib/api/getPokemon";
-import { addPokemon } from "../../lib/redux/slices/pokemonsSlice";
-import { Pokemon } from "../../utils/types";
+import {
+  addFavouritePokemon,
+  addPokemon,
+} from "../../lib/redux/slices/pokemonsSlice";
 
 type TProtectedRoute = {
   children: JSX.Element;
@@ -17,10 +19,10 @@ export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
+  const pokemons = useAppSelector((state) => state.pokemons.byId);
+  const pokemonsIds = useAppSelector((state) => state.pokemons.allIds);
 
-  const pokemons = useAppSelector((state) => state.pokemons);
-
-  // listen on auth events, redirect if not logged in
+  // Populate user in the global state if logged in or redirect to /login
   useEffect(() => {
     if (user.username) return;
     const auth = getAuth(app);
@@ -34,27 +36,31 @@ export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
     // TODO unsubscribe ?
   }, [user.username, router, dispatch, user.favourites, pokemons]);
 
+  // Populate user's favourites in the global state
   useEffect(() => {
     if (!user.favourites) return;
     const populateFavourites = async () => {
-      const promises = await Promise.all(
-        Object.values(user.favourites)
-          .filter((id) => {
-            if (pokemons.some((pokemon) => pokemon.id === id)) return false;
-            return true;
-          })
-          .map(async (id) => await getPokemon(id))
-      );
+      let result;
+      const favs = Object.values(user.favourites);
+      const duplicate = (id: number) => !pokemonsIds.includes(id);
 
-      const fetchedPokemons = await Promise.all(promises);
+      if (!pokemonsIds) {
+        result = await Promise.all(
+          favs.map(async (id) => await getPokemon(id))
+        );
+      } else {
+        result = await Promise.all(
+          favs.filter(duplicate).map(async (id) => await getPokemon(id))
+        );
+      }
 
-      promises.forEach((pok) => {
-        pok.isFavourite = true;
+      result.forEach((pok) => {
         dispatch(addPokemon(pok));
+        dispatch(addFavouritePokemon(pok.id));
       });
     };
     populateFavourites();
-  }, [dispatch, pokemons, user.favourites]);
+  }, [dispatch, pokemonsIds, user.favourites]);
 
   if (!user.username) {
     return (

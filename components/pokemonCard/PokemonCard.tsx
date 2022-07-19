@@ -26,6 +26,9 @@ import { closeModal, openModal } from "../../lib/redux/slices/modalSlice";
 import {
   toggleRecentPokemon,
   toggleFavouritePokemon,
+  addRecentPokemon,
+  removeFavouritePokemon,
+  addFavouritePokemon,
 } from "../../lib/redux/slices/pokemonsSlice";
 import { useRouter } from "next/router";
 
@@ -53,21 +56,22 @@ export const PokemonCard = React.forwardRef(
     if (!data) return <p>Something is wrong there is no data available.</p>;
     const id = data.id;
     const isFavourite = data.isFavourite;
+    const isRecent = data.isRecent;
     const { name, avatar, flavors } = data.pokemonData;
 
     const handleRecent = () => {
-      dispatch(toggleRecentPokemon(id));
+      dispatch(addRecentPokemon(id));
     };
 
     const handleFavourite = () => {
-      dispatch(toggleFavouritePokemon(id));
       if (isFavourite) {
         dbRemoveFavourite(id);
         dispatch(closeModal());
-        dispatch(toggleFavouritePokemon(id));
+        dispatch(removeFavouritePokemon(id));
+        return;
       }
       dbWriteFavourite(id);
-      dispatch(toggleFavouritePokemon(id));
+      dispatch(addFavouritePokemon(id));
     };
 
     const handleOpenPokemonScreen = () => {
