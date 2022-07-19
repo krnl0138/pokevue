@@ -9,51 +9,72 @@ import { SearchAllPokemons } from "../components/searchAllPokemons/SearchAllPoke
 import { Pokemon } from "../utils/types";
 import { getPokemon } from "../lib/api/getPokemon";
 import { NUM_ALL_POKEMONS_CADS } from "../utils/constants";
+import { createRandomIds } from "../utils/functions";
+import { useAppDispatch, useAppSelector } from "../utils/hooks";
+import { addPokemon, removePokemon } from "../lib/redux/slices/pokemonsSlice";
 
 // it should load on start first ~20 pokemons from an API, ServerProps??
 export const Pokemons = () => {
-  // TODO basic implementation => move to redux slice
+  const dispatch = useAppDispatch();
   // TODO is it possible to populate filtered List diffently?
-  const [pokemonsList, setPokemonsList] = useState<Array<Pokemon>>([]);
   const [filteredList, setFilteredList] = useState<Array<Pokemon>>([]);
+  const pokemons = useAppSelector((state) => state.pokemons);
+  const randomPokemons = pokemons.filter((pok) => pok.isRandom === true);
 
   const handleOnChange = (query: string) => {
-    if (!query) {
-      return setFilteredList(pokemonsList);
-    }
-    const pokemonsFromQuery = pokemonsList.filter((pokemon) =>
+    if (!query) return setFilteredList(randomPokemons);
+
+    const pokemonsFromQuery = randomPokemons.filter((pokemon) =>
       pokemon.pokemonData.name.includes(query)
     );
     setFilteredList(pokemonsFromQuery);
   };
 
-  // TODO save to redux once it is loaded to speed up ?
   // Load pokemons from client-side
-  const createRandomIds = (limit: number) => {
-    const arr = [];
-    for (let i = 0; i < limit; i++) {
-      arr[i] = Math.floor(Math.random() * 905);
-    }
-    return arr;
-  };
   useEffect(() => {
-    const getAllPokemons = async () => {
+    const getRandomPokemons = async () => {
       const ids = createRandomIds(NUM_ALL_POKEMONS_CADS);
-      const pokemons = await Promise.all(
+      const fetchedPokemons = await Promise.all(
         ids.map(async (id) => await getPokemon(id))
       );
-      setPokemonsList(pokemons);
-      setFilteredList(pokemons);
+      fetchedPokemons.forEach((pok) => {
+        pok.isRandom = true;
+        dispatch(addPokemon(pok));
+      });
+      setFilteredList(fetchedPokemons);
     };
-    getAllPokemons();
-  }, []);
+    getRandomPokemons();
+    console.log("fired getRandomPokemons");
+  }, [dispatch]);
 
-  if (!pokemonsList.length) {
+  // remove randoms from store
+  useEffect(() => {
+    console.log("pokemons are:", pokemons);
+    console.log(
+      "favourites are:",
+      pokemons.filter((p) => p.isFavourite === true)
+    );
+    return () => {
+      console.log("pokemons are:", pokemons);
+      pokemons
+        .filter(
+          (pok) =>
+            pok.isRandom === true && pok.isFavourite === false && pok.isRecent
+        )
+        .map((pok) => {
+          console.log("pokemon to remove: ", pok);
+          dispatch(removePokemon(pok.id));
+        });
+      console.log("randoms were removed.");
+    };
+  }, [dispatch]);
+
+  if (!randomPokemons.length) {
     return <p>Loading pokemons...</p>;
   }
 
   return (
-    pokemonsList.length > 0 && (
+    randomPokemons.length > 0 && (
       <ProtectedRoute>
         <Layout>
           <SearchAllPokemons onChange={handleOnChange} />

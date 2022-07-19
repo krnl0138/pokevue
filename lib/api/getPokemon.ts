@@ -9,7 +9,12 @@ export const getPokemon = async (search: string) => {
 
   // TODO no await?
   const data = parsePokemon({ pokemon, pokemonSpecies });
-  const result = { ...data, isFavourite: false, isRecent: false };
+  const result = {
+    ...data,
+    isRandom: false,
+    isFavourite: false,
+    isRecent: false,
+  };
   return { ...result };
 };
 
@@ -22,6 +27,11 @@ export const getPokemonTest = async (search: string | number) => {
 
   const data = parsePokemon({ pokemon, pokemonSpecies });
 
-  const result = { ...data, isFavourite: false, isRecent: false };
+  const result = {
+    ...data,
+    isRandom: false,
+    isFavourite: false,
+    isRecent: false,
+  };
   return { ...result };
 };

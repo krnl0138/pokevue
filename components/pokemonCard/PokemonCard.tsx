@@ -24,8 +24,6 @@ import { useAppDispatch } from "../../utils/hooks";
 
 import { closeModal, openModal } from "../../lib/redux/slices/modalSlice";
 import {
-  toggleRecentPokemon,
-  toggleFavouritePokemon,
   addRecentPokemon,
   removeFavouritePokemon,
   addFavouritePokemon,
@@ -45,9 +43,11 @@ type TPokemonCard = {
   fromModal?: boolean;
 };
 
+// TODO forward ref problem for modal, need ref?
 // eslint-disable-next-line react/display-name
 export const PokemonCard = React.forwardRef(
   ({ data, fromRecent, fromModal }: TPokemonCard): JSX.Element => {
+    console.log(`render PokemonCard with id: ${data.id}`);
     const router = useRouter();
     const dispatch = useAppDispatch();
     const [isHovered, setIsHovered] = useState(false);
@@ -65,6 +65,7 @@ export const PokemonCard = React.forwardRef(
 
     const handleFavourite = () => {
       if (isFavourite) {
+        console.log(`for id:${id} isFavourite was true`);
         dbRemoveFavourite(id);
         dispatch(closeModal());
         dispatch(removeFavouritePokemon(id));
@@ -82,10 +83,7 @@ export const PokemonCard = React.forwardRef(
       dispatch(openModal(data));
     };
 
-    const handleMouseEnter = () => {
-      setIsHovered(!isHovered);
-    };
-    const handleMouseLeave = () => {
+    const toggleSetIsHovered = () => {
       setIsHovered(!isHovered);
     };
 
@@ -94,8 +92,8 @@ export const PokemonCard = React.forwardRef(
         <Card
           variant="outlined"
           sx={{ maxWidth: 345, m: 1 }}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          onMouseEnter={toggleSetIsHovered}
+          onMouseLeave={toggleSetIsHovered}
         >
           <CardHeader
             avatar={
@@ -113,7 +111,7 @@ export const PokemonCard = React.forwardRef(
                 <MoreVert />
               </IconButton>
             }
-            title={name}
+            title={`${name} ${id} fav:${isFavourite} rec:${isRecent} rand:${isRandom}`}
             // subheader="September 14, 2016"
           />
 
