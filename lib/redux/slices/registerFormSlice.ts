@@ -21,4 +21,3 @@ export const registerFormSlice = createSlice({
 
 export const { actions, reducer: registerFormReducer } = registerFormSlice;
 export const { setRegisterFormValue, resetRegisterFormValue } = actions;
-export default registerFormReducer;

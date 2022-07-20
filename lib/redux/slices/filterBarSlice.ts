@@ -17,6 +17,5 @@ export const filterBarSlice = createSlice({
   },
 });
 
-export const { reducer: filterBarReducer } = filterBarSlice;
-export const { setFilterBarValue, resetFilterBarValue } =
-  filterBarSlice.actions;
+export const { actions, reducer: filterBarReducer } = filterBarSlice;
+export const { setFilterBarValue, resetFilterBarValue } = actions;

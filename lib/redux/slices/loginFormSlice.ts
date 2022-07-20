@@ -20,4 +20,3 @@ export const loginFormSlice = createSlice({
 
 export const { actions, reducer: loginFormReducer } = loginFormSlice;
 export const { setLoginFormValue, resetLoginFormValue } = actions;
-export default loginFormReducer;

@@ -75,7 +75,7 @@ export const pokemonsSlice = createSlice({
   },
 });
 
-const { actions, reducer: pokemonsReducer } = pokemonsSlice;
+export const { actions, reducer: pokemonsReducer } = pokemonsSlice;
 export const {
   addPokemon,
   removePokemon,
@@ -86,4 +86,3 @@ export const {
   addRandomPokemon,
   removeRandomPokemon,
 } = actions;
-export default pokemonsReducer;
