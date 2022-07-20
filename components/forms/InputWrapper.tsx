@@ -20,6 +20,7 @@ export const InputWrapper = ({
   const dispatch = useAppDispatch();
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const result = { [e.currentTarget.id]: e.currentTarget.value };
+    console.log("result is: ", result);
     dispatch(action(result));
   };
   return (

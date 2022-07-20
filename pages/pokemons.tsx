@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { PokemonCard } from "../components/pokemonCard/PokemonCard";
 import { Layout } from "../components/utils/layout/Layout";
 
@@ -26,6 +26,11 @@ const selectRandomsToRemove = createSelector(
   (randIds, favIds, recentIds) =>
     randIds?.filter((id) => !recentIds.includes(id) && !favIds.includes(id))
 );
+
+// const selectRandomIds = createSelector(
+//   (state: RootState) => state.pokemons.randomIds,
+//   (randIds) => randIds
+// );
 
 export async function getServerSideProps() {
   const ids = createRandomIds(NUM_RANDOM_POKEMON_CADRS);
@@ -57,7 +62,13 @@ export const Pokemons = ({
 
   // remove unused randoms from store on unmount
   // replace to test createSelector() -> still not working
+  // const randomIds = useAppSelector(selectRandomIds);
   const randomIds = useAppSelector((state) => state.pokemons.randomIds);
+  const rIds = useMemo(() => randomIds, [randomIds]);
+
+  console.log("randomIds fired", randomIds);
+  console.log("rIds fired", rIds);
+
   const favIds = useAppSelector((state) => state.pokemons.favouriteIds);
   const recIds = useAppSelector((state) => state.pokemons.recentIds);
   const randomsToRemove = randomIds?.filter(
@@ -78,9 +89,14 @@ export const Pokemons = ({
   const filter = useAppSelector((state) => state.filterBar.value);
   const pokemons = useAppSelector((state) => state.pokemons.byId);
   const randoms = randomIds.map((id) => pokemons[id]);
-  const filteredIds = randoms
-    .filter((r) => r.pokemonData.name.includes(filter))
-    .map((r) => r.id);
+  // TODO is it helpful?
+  const filteredIds = useMemo(
+    () =>
+      randoms
+        .filter((r) => r.pokemonData.name.includes(filter))
+        .map((r) => r.id),
+    [filter]
+  );
 
   return (
     <ProtectedRoute>

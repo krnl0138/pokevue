@@ -12,7 +12,6 @@ export const profileFormSlice = createSlice({
   initialState,
   reducers: {
     setProfileFormValue: (state, action) => {
-      console.log("payload from profileSlice: ", action.payload);
       return { ...state, ...action.payload };
     },
     resetProfileFormValue: () => {

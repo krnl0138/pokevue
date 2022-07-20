@@ -11,7 +11,8 @@ export const Favourites = () => {
   const favIds = useAppSelector((state) => state.pokemons.favouriteIds);
 
   // filter logic
-  const filter = useAppSelector((state) => state.filterBar.value);
+
+  const filter = useAppSelector((state) => state.filterBar.filterValue);
   const pokemons = useAppSelector((state) => state.pokemons.byId);
   const favs = favIds.map((id) => pokemons[id]);
   const filterIds = favs

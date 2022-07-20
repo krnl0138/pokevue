@@ -18,11 +18,12 @@ export const FilterBar = ({
   withSearch?: boolean;
 }): JSX.Element => {
   const dispatch = useAppDispatch();
-  const filterValue = useAppSelector((state) => state.filterBar.value);
+  const { filterValue } = useAppSelector((state) => state.filterBar);
 
   const handleOnSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     const search = filterValue.toLowerCase();
+    dispatch(resetFilterBarValue());
     try {
       const pokemon = await getPokemon(search);
       dispatch(addPokemon(pokemon));
@@ -30,7 +31,6 @@ export const FilterBar = ({
     } catch (e: any) {
       throw new Error(e.message);
     }
-    dispatch(resetFilterBarValue());
   };
 
   const notOnSubmit = (e: SyntheticEvent) => {
