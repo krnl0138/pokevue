@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { PokemonCard } from "../components/pokemonCard/PokemonCard";
 import { Layout } from "../components/utils/layout/Layout";
 
-import { AllPokemons } from "../components/allPokemons/AllPokemons";
+import { PokemonCards } from "../components/pokemonCards/PokemonCards";
 import { ModalWrapper } from "../components/modal/modalWrapper/modalWrapper";
 import { ProtectedRoute } from "../components/protectedRoute/ProtectedRoute";
-import { SearchAllPokemons } from "../components/searchAllPokemons/SearchAllPokemons";
+import { FilterRandoms } from "../components/filterRandoms/FilterRandoms";
 import { Pokemon } from "../utils/types";
 import { getPokemon } from "../lib/api/getPokemon";
 import { NUM_RANDOM_POKEMON_CADRS } from "../utils/constants";
@@ -56,22 +56,13 @@ export const Pokemons = ({
 }) => {
   const dispatch = useAppDispatch();
   // TODO is it possible to populate filtered List diffently?
-  const [filteredList, setFilteredList] = useState<Array<Pokemon>>([]);
+  // const [filteredList, setFilteredList] = useState<Array<Pokemon>>([]);
   const randomPokemons = useAppSelector(selectRandomPokemons);
   const pokemonsToRemove = useAppSelector(selectPokemonsToRemove);
   console.log("randomPokemons is: ", randomPokemons);
   console.log("pokemonsToRemove is: ", pokemonsToRemove);
 
-  const handleOnChange = (query: string) => {
-    if (!query) return setFilteredList(randomPokemons);
-
-    const pokemonsFromQuery = randomPokemons.filter((pokemon) =>
-      pokemon.pokemonData.name.includes(query)
-    );
-    setFilteredList(pokemonsFromQuery);
-  };
-
-  // Dispatch fetched from client-side
+  // Dispatch pokemons from client-side
   // TODO error handling
   useEffect(() => {
     const getRandomPokemons = async () => {
@@ -79,33 +70,34 @@ export const Pokemons = ({
         dispatch(addPokemon(pok));
         dispatch(addRandomPokemon(pok.id));
       });
-      setFilteredList(fetchedPokemons);
     };
     getRandomPokemons();
   }, []);
 
-  // remove randoms from store
-  // TODO it doesn't listen correctly
-  useEffect(
-    () => () => {
-      console.log(
-        "start return useeffect with pokemonsToRemove:",
-        pokemonsToRemove
-      );
-      // randomPokemons?.forEach((pok) => {
-      //   if (pok.isFavourite === true || pok.isRecent === true) {
-      pokemonsToRemove?.forEach((id) => dispatch(removePokemon(id)));
-    },
-    []
-  );
+  // // remove randoms from store
+  // // TODO it doesn't listen correctly
+  // useEffect(
+  //   () => () => {
+  //     console.log(
+  //       "start return useeffect with pokemonsToRemove:",
+  //       pokemonsToRemove
+  //     );
+  //     // randomPokemons?.forEach((pok) => {
+  //     //   if (pok.isFavourite === true || pok.isRecent === true) {
+  //     pokemonsToRemove?.forEach((id) => dispatch(removePokemon(id)));
+  //   },
+  //   []
+  // );
+
+  const randomIds = useAppSelector((state) => state.pokemons.randomIds);
 
   return (
     <ProtectedRoute>
       <Layout>
-        <SearchAllPokemons onChange={handleOnChange} />
-        {randomPokemons.length > 0 && (
+        <FilterRandoms />
+        {randomIds.length > 0 && (
           <>
-            <AllPokemons pokemons={filteredList} />
+            <PokemonCards ids={randomIds} />
             <ModalWrapper>
               <PokemonCard fromModal={true} />
             </ModalWrapper>

@@ -1,36 +1,68 @@
-import { Box } from "@mui/material";
-import { useAppSelector } from "../../utils/hooks";
-import { Heading } from "../utils/heading/Heading";
-import { PokemonCard } from "../pokemonCard/PokemonCard";
-import { useEffect, useRef } from "react";
-import Sortable from "sortablejs";
-import { createSelector } from "@reduxjs/toolkit";
-import { RootState } from "../../lib/redux";
-import { CardsWrapper } from "../utils/cardsWrapper/CardsWrapper";
+import styles from "./searchForm.module.scss";
+import { Search } from "@mui/icons-material";
+import {
+  Button,
+  Container,
+  FormControl,
+  Input,
+  InputLabel,
+  Typography,
+} from "@mui/material";
+import { SyntheticEvent } from "react";
+import { useAppDispatch, useAppSelector } from "../../utils/hooks";
+import { getPokemon } from "../../lib/api/getPokemon";
+import {
+  setSearchValue,
+  resetSearchValue,
+} from "../../lib/redux/slices/searchSlice";
+import {
+  addPokemon,
+  addRecentPokemon,
+} from "../../lib/redux/slices/pokemonsSlice";
 
-const selectPokemons = (state: RootState) => state.pokemons.byId;
-const selectRecentIds = (state: RootState) => state.pokemons.recentIds;
-const selectRecentPokemons = createSelector(
-  selectPokemons,
-  selectRecentIds,
-  (pokemons, recentIds) => recentIds?.map((r) => pokemons[r])
-);
+export const RecentSearch = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const searchValue = useAppSelector((state) => state.search.searchValue);
 
-export const RecentSearch = ({ children }: { children?: JSX.Element }) => {
-  const recentPokemons = useAppSelector(selectRecentPokemons);
+  const handleChange = (e: React.SyntheticEvent) => {
+    const result = { [e.currentTarget.id]: e.currentTarget.value };
+    dispatch(setSearchValue(result));
+  };
+
+  const handleSubmit = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    const search = searchValue.toLowerCase();
+    try {
+      const pokemon = await getPokemon(search);
+      dispatch(addPokemon(pokemon));
+      dispatch(addRecentPokemon(pokemon.id));
+    } catch (e: any) {
+      throw new Error(e.message);
+    }
+    dispatch(resetSearchValue());
+  };
 
   return (
-    recentPokemons && (
-      <>
-        <Heading title={"Recent search"} />
-        <Box sx={{ display: "flex" }}>
-          <CardsWrapper>
-            {recentPokemons.map((data) => (
-              <PokemonCard key={data.id} data={data} fromRecent={true} />
-            ))}
-          </CardsWrapper>
-        </Box>
-      </>
-    )
+    <Container sx={{ display: "flex", flexDirection: "column" }}>
+      <Typography>Find some pokemons!</Typography>
+      <form onSubmit={handleSubmit}>
+        <FormControl>
+          <InputLabel htmlFor="my-input">Pokemon Name</InputLabel>
+          <Input
+            className={styles.input}
+            type="text"
+            id="searchValue"
+            aria-describedby="my-helper-text"
+            size="small"
+            fullWidth={true}
+            onChange={handleChange}
+            value={searchValue}
+          />
+        </FormControl>
+        <Button type="submit" variant="contained" endIcon={<Search />}>
+          Search
+        </Button>
+      </form>
+    </Container>
   );
 };

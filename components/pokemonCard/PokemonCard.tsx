@@ -20,7 +20,7 @@ import {
   Search,
 } from "@mui/icons-material";
 import React, { useState } from "react";
-import { useAppDispatch } from "../../utils/hooks";
+import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 
 import { closeModal, openModal } from "../../lib/redux/slices/modalSlice";
 import {
@@ -35,11 +35,10 @@ import {
   PROJECT_URLS as urls,
   AVATAR_PLACEHOLDER as placeholder,
 } from "../../utils/constants";
-import { Pokemon } from "../../utils/types";
 import { dbRemoveFavourite, dbWriteFavourite } from "../../database";
 
 type TPokemonCard = {
-  data?: Pokemon;
+  id: number;
   fromRecent?: boolean;
   fromModal?: boolean;
 };
@@ -47,19 +46,22 @@ type TPokemonCard = {
 // TODO forward ref problem for modal, need ref?
 // eslint-disable-next-line react/display-name
 export const PokemonCard = React.forwardRef(
-  ({ data, fromRecent, fromModal }: TPokemonCard): JSX.Element => {
-    console.log(`render PokemonCard with id: ${data.id}`);
+  ({ id: pokemonId, fromRecent, fromModal }: TPokemonCard): JSX.Element => {
+    console.log(`render PokemonCard with id: ${pokemonId}`);
     const router = useRouter();
     const dispatch = useAppDispatch();
     const [isHovered, setIsHovered] = useState(false);
 
-    // TODO refactor
-    if (!data) return <p>Something is wrong there is no data available.</p>;
-    const id = data.id;
-    const isFavourite = data.isFavourite;
-    const isRecent = data.isRecent;
-    const isRandom = data.isRandom;
-    const { name, avatar, flavors } = data.pokemonData;
+    const pokemon = useAppSelector((state) => state.pokemons.byId[pokemonId]);
+    // TODO refactor this case
+    if (!pokemon)
+      return <p>Something is wrong there is no pokemon data available.</p>;
+
+    const { id } = pokemon;
+    const isFavourite = pokemon.isFavourite;
+    const isRecent = pokemon.isRecent;
+    const isRandom = pokemon.isRandom;
+    const { name, avatar, flavors } = pokemon.pokemonData;
 
     const handleRecent = () => {
       isRecent
@@ -83,7 +85,7 @@ export const PokemonCard = React.forwardRef(
     };
 
     const handleOpenModal = () => {
-      dispatch(openModal(data));
+      dispatch(openModal(pokemon));
     };
 
     const toggleSetIsHovered = () => {

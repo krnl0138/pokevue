@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { Layout } from "../../components/utils/layout/Layout";
-import { PokemonScreen } from "../../components/pokemonScreen/PokemonScreen";
+import { PokemonDetailed } from "../../components/pokemonDetailed/PokemonDetailed";
 import { useAppSelector } from "../../utils/hooks";
 import { ProtectedRoute } from "../../components/protectedRoute/ProtectedRoute";
 import { getPokemon } from "../../lib/api/getPokemon";
@@ -35,7 +35,7 @@ const PokemonById = () => {
   return (
     <ProtectedRoute>
       <Layout>
-        {pokemon ? <PokemonScreen data={pokemon} /> : <NoPokemonScreen />}
+        {pokemon ? <PokemonDetailed data={pokemon} /> : <NoPokemonScreen />}
       </Layout>
     </ProtectedRoute>
   );

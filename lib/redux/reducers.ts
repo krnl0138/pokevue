@@ -1,7 +1,7 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import modalReducer from "./slices/modalSlice";
 import searchReducer from "./slices/searchSlice";
-import searchAllReducer from "./slices/searchAllSlice";
+import searchAllReducer from "./slices/filterRandomsSlice";
 import loginFormReducer from "./slices/loginFormSlice";
 import registerFormReducer from "./slices/registerFormSlice";
 import profileFormReducer from "./slices/profileFormSlice";
