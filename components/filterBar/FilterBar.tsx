@@ -1,21 +1,12 @@
 import { FormControl, FormHelperText, Input, InputLabel } from "@mui/material";
-import { setFilterRandomsValue } from "../../lib/redux/slices/filterRandomsSlice";
+import { setFilterRandomsValue } from "../../lib/redux/slices/filterBarSlice";
 import { useAppDispatch } from "../../utils/hooks";
 
-export const FilterRandoms = ({}: {}): JSX.Element => {
+export const FilterBar = ({}: {}): JSX.Element => {
   const dispatch = useAppDispatch();
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setFilterRandomsValue(e.target.value));
   };
-
-  // TODO refactor
-  // const handleOnChange = (query: string) => {
-  //   if (!query) return setFilteredList(randomPokemons);
-  //   const pokemonsFromQuery = randomPokemons.filter((pokemon) =>
-  //     pokemon.pokemonData.name.includes(query)
-  //   );
-  //   setFilteredList(pokemonsFromQuery);
-  // };
 
   return (
     <div>

@@ -19,7 +19,7 @@ import {
   MoreVert,
   Search,
 } from "@mui/icons-material";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 
 import { closeModal, openModal } from "../../lib/redux/slices/modalSlice";
@@ -53,9 +53,21 @@ export const PokemonCard = React.forwardRef(
     const [isHovered, setIsHovered] = useState(false);
 
     const pokemon = useAppSelector((state) => state.pokemons.byId[pokemonId]);
-    // TODO refactor this case
-    if (!pokemon)
-      return <p>Something is wrong there is no pokemon data available.</p>;
+    // // TODO refactor this case
+    // if (!pokemon)
+    //   return <p>Something is wrong there is no pokemon data available.</p>;
+
+    // const { id } = pokemon;
+    // const isFavourite = useMemo(
+    //   () => pokemon.isFavourite,
+    //   [pokemon.isFavourite]
+    // );
+    // const isRecent = useMemo(() => pokemon.isRecent, [pokemon.isRecent]);
+    // const isRandom = useMemo(() => pokemon.isRandom, [pokemon.isRandom]);
+    // const { name, avatar, flavors } = useMemo(
+    //   () => pokemon.pokemonData,
+    //   [pokemon.pokemonData]
+    // );
 
     const { id } = pokemon;
     const isFavourite = pokemon.isFavourite;

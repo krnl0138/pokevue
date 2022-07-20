@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { PokemonCard } from "../components/pokemonCard/PokemonCard";
 import { Layout } from "../components/utils/layout/Layout";
 
 import { PokemonCards } from "../components/pokemonCards/PokemonCards";
 import { ModalWrapper } from "../components/modal/modalWrapper/modalWrapper";
 import { ProtectedRoute } from "../components/protectedRoute/ProtectedRoute";
-import { FilterRandoms } from "../components/filterRandoms/FilterRandoms";
+import { FilterBar } from "../components/filterBar/FilterBar";
 import { Pokemon } from "../utils/types";
 import { getPokemon } from "../lib/api/getPokemon";
 import { NUM_RANDOM_POKEMON_CADRS } from "../utils/constants";
@@ -19,25 +19,12 @@ import {
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../lib/redux";
 
-const selectRandomPokemons = createSelector(
-  (state: RootState) => state.pokemons.byId,
-  (state: RootState) => state.pokemons.randomIds,
-  (pokemons, randomIds) => randomIds?.map((id) => pokemons[id])
-);
-
-const selectPokemonsToRemove = createSelector(
+const selectRandomsToRemove = createSelector(
   (state: RootState) => state.pokemons.randomIds,
   (state: RootState) => state.pokemons.favouriteIds,
   (state: RootState) => state.pokemons.recentIds,
-  (randIds, favIds, recentIds) => {
-    console.log("FIRED selectPokemonsToRemove");
-    console.log("randIds: ", randIds);
-    const selected = randIds?.filter(
-      (id) => !recentIds.includes(id) && !favIds.includes(id)
-    );
-    console.log("selected: ", selected);
-    return selected;
-  }
+  (randIds, favIds, recentIds) =>
+    randIds?.filter((id) => !recentIds.includes(id) && !favIds.includes(id))
 );
 
 export async function getServerSideProps() {
@@ -55,14 +42,8 @@ export const Pokemons = ({
   fetchedPokemons: Pokemon[];
 }) => {
   const dispatch = useAppDispatch();
-  // TODO is it possible to populate filtered List diffently?
-  // const [filteredList, setFilteredList] = useState<Array<Pokemon>>([]);
-  const randomPokemons = useAppSelector(selectRandomPokemons);
-  const pokemonsToRemove = useAppSelector(selectPokemonsToRemove);
-  console.log("randomPokemons is: ", randomPokemons);
-  console.log("pokemonsToRemove is: ", pokemonsToRemove);
 
-  // Dispatch pokemons from client-side
+  // Dispatch random pokemons to store
   // TODO error handling
   useEffect(() => {
     const getRandomPokemons = async () => {
@@ -74,28 +55,42 @@ export const Pokemons = ({
     getRandomPokemons();
   }, []);
 
-  // // remove randoms from store
-  // // TODO it doesn't listen correctly
-  // useEffect(
-  //   () => () => {
-  //     console.log(
-  //       "start return useeffect with pokemonsToRemove:",
-  //       pokemonsToRemove
-  //     );
-  //     // randomPokemons?.forEach((pok) => {
-  //     //   if (pok.isFavourite === true || pok.isRecent === true) {
-  //     pokemonsToRemove?.forEach((id) => dispatch(removePokemon(id)));
-  //   },
-  //   []
-  // );
+  // remove unused randoms from store on unmount
 
   const randomIds = useAppSelector((state) => state.pokemons.randomIds);
+  const favIds = useAppSelector((state) => state.pokemons.favouriteIds);
+  const recIds = useAppSelector((state) => state.pokemons.recentIds);
+  const randomsToRemove = randomIds?.filter(
+    (id) => !recIds.includes(id) && !favIds.includes(id)
+  );
+
+  // // TODO it doesn't listen correctly
+  // const randomsToRemove = useAppSelector(selectRandomsToRemove);
+  useEffect(
+    () => () => {
+      console.log("randomsToRemove: ", randomsToRemove);
+      return randomsToRemove.forEach((id) => dispatch(removePokemon(id)));
+    },
+    []
+  );
+
+  // filter logic
+  const filter = useAppSelector((state) => state.filterRandoms.value);
+  const pokemons = useAppSelector((state) => state.pokemons.byId);
+  const randoms = randomIds.map((id) => pokemons[id]);
+  const filteredIds = randoms
+    .filter((r) => r.pokemonData.name.includes(filter))
+    .map((r) => r.id);
 
   return (
     <ProtectedRoute>
       <Layout>
-        <FilterRandoms />
-        {randomIds.length > 0 && <PokemonCards ids={randomIds} />}
+        <FilterBar />
+        {randomIds.length > 0 && (
+          <PokemonCards
+            ids={filteredIds.length > 0 ? filteredIds : randomIds}
+          />
+        )}
         <ModalWrapper>
           <PokemonCard fromModal={true} />
         </ModalWrapper>
