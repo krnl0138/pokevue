@@ -1,4 +1,4 @@
-import styles from "./searchForm.module.scss";
+import styles from "./RecentSearch.module.scss";
 import { Search } from "@mui/icons-material";
 import {
   Button,

@@ -1,44 +1,40 @@
 import { useRouter } from "next/router";
 import { Layout } from "../../components/utils/layout/Layout";
 import { PokemonDetailed } from "../../components/pokemonDetailed/PokemonDetailed";
-import { useAppSelector } from "../../utils/hooks";
+import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { ProtectedRoute } from "../../components/protectedRoute/ProtectedRoute";
 import { getPokemon } from "../../lib/api/getPokemon";
-import { Pokemon } from "../../utils/types";
 import { useEffect, useState } from "react";
-
-const NoPokemonScreen = () => {
-  return <p>Something is wrong. No pokemon was found.</p>;
-};
+import { addPokemon } from "../../lib/redux/slices/pokemonsSlice";
 
 // Should fetch more pokemon data potentially to provide more info.
-const PokemonById = () => {
+const Pokemon = () => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
-  const id = router.asPath.split("/")[2];
-  const [pokemon, setPokemon] = useState<null | Pokemon>();
-  const pokemonRedux = useAppSelector((state) => state.pokemons).find(
-    (pokemon) => pokemon.id === Number(id)
-  );
+  const pathId = Number(router.asPath.split("/")[2]);
+  const pokemonIds = useAppSelector((state) => state.pokemons.allIds);
+  const [hasPokemon, setHasPokemon] = useState(false);
 
   useEffect(() => {
     // TODO hotfix, sometimes router returns '[id]' string
-    if (id === "[id]") return;
-    if (pokemonRedux) return setPokemon(pokemonRedux);
-    const getAsync = async (id: string) => {
+    // if (pathId === "[id]") return;
+    if (!pathId) return;
+    if (pokemonIds.includes(pathId)) setHasPokemon(true);
+
+    const loadPokemon = async (id: number) => {
       const pokemon = await getPokemon(id);
-      setPokemon(pokemon);
+      dispatch(addPokemon(pokemon));
+      setHasPokemon(true);
     };
 
-    getAsync(id);
-  }, [pokemonRedux, id]);
+    loadPokemon(pathId);
+  }, [pathId]);
 
   return (
     <ProtectedRoute>
-      <Layout>
-        {pokemon ? <PokemonDetailed data={pokemon} /> : <NoPokemonScreen />}
-      </Layout>
+      <Layout>{hasPokemon && <PokemonDetailed id={pathId} />}</Layout>
     </ProtectedRoute>
   );
 };
 
-export default PokemonById;
+export default Pokemon;

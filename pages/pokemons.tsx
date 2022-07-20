@@ -95,14 +95,10 @@ export const Pokemons = ({
     <ProtectedRoute>
       <Layout>
         <FilterRandoms />
-        {randomIds.length > 0 && (
-          <>
-            <PokemonCards ids={randomIds} />
-            <ModalWrapper>
-              <PokemonCard fromModal={true} />
-            </ModalWrapper>
-          </>
-        )}
+        {randomIds.length > 0 && <PokemonCards ids={randomIds} />}
+        <ModalWrapper>
+          <PokemonCard fromModal={true} />
+        </ModalWrapper>
       </Layout>
     </ProtectedRoute>
   );
