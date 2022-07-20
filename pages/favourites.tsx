@@ -14,7 +14,7 @@ export const Favourites = () => {
   const filter = useAppSelector((state) => state.filterBar.value);
   const pokemons = useAppSelector((state) => state.pokemons.byId);
   const favs = favIds.map((id) => pokemons[id]);
-  const filteredIds = favs
+  const filterIds = favs
     .filter((r) => r.pokemonData.name.includes(filter))
     .map((r) => r.id);
 
@@ -22,9 +22,11 @@ export const Favourites = () => {
     <ProtectedRoute>
       <Layout>
         <FilterBar />
-        <PokemonCards ids={favouriteIds} />
+        {favIds.length > 0 && (
+          <PokemonCards ids={filterIds.length > 0 ? filterIds : favIds} />
+        )}
         <ModalWrapper>
-          <PokemonCard />
+          <PokemonCard fromModal={true} />
         </ModalWrapper>
       </Layout>
     </ProtectedRoute>

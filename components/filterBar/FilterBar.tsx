@@ -1,30 +1,58 @@
-import { FormControl, FormHelperText, Input, InputLabel } from "@mui/material";
-import { setFilterRandomsValue } from "../../lib/redux/slices/filterBarSlice";
-import { useAppDispatch } from "../../utils/hooks";
+import { SyntheticEvent } from "react";
+import { getPokemon } from "../../lib/api/getPokemon";
+import {
+  resetFilterBarValue,
+  setFilterBarValue,
+} from "../../lib/redux/slices/filterBarSlice";
+import {
+  addPokemon,
+  addRecentPokemon,
+} from "../../lib/redux/slices/pokemonsSlice";
+import { useAppDispatch, useAppSelector } from "../../utils/hooks";
+import { InputWrapper } from "../forms/InputWrapper";
+import { SubmitButtonWrapper } from "../forms/SubmitButtonWrapper";
 
-export const FilterBar = ({}: {}): JSX.Element => {
+export const FilterBar = ({
+  withSearch,
+}: {
+  withSearch?: boolean;
+}): JSX.Element => {
   const dispatch = useAppDispatch();
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setFilterRandomsValue(e.target.value));
+  const filterValue = useAppSelector((state) => state.filterBar.value);
+
+  const handleOnSubmit = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    const search = filterValue.toLowerCase();
+    try {
+      const pokemon = await getPokemon(search);
+      dispatch(addPokemon(pokemon));
+      dispatch(addRecentPokemon(pokemon.id));
+    } catch (e: any) {
+      throw new Error(e.message);
+    }
+    dispatch(resetFilterBarValue());
+  };
+
+  const notOnSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
   };
 
   return (
     <div>
-      <form>
-        <FormControl>
-          <InputLabel htmlFor="my-input">Pokemon Name</InputLabel>
-          <Input
-            type="text"
-            id="searchAllValue"
-            aria-describedby="my-helper-text"
-            size="small"
-            fullWidth={true}
-            onChange={onChange}
-          />
-          <FormHelperText id="my-helper-text">
-            Search pokemons by names!
-          </FormHelperText>
-        </FormControl>
+      <form
+        onSubmit={
+          (withSearch ? handleOnSubmit : notOnSubmit) as typeof handleOnSubmit
+        }
+      >
+        <InputWrapper
+          label="Pokemon name"
+          id="filterValue"
+          action={setFilterBarValue}
+          value={filterValue}
+          helperText="Search pokemons by names!"
+        />
+
+        {withSearch && <SubmitButtonWrapper title="Search" />}
       </form>
     </div>
   );

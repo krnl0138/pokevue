@@ -56,7 +56,7 @@ export const Pokemons = ({
   }, []);
 
   // remove unused randoms from store on unmount
-
+  // replace to test createSelector() -> still not working
   const randomIds = useAppSelector((state) => state.pokemons.randomIds);
   const favIds = useAppSelector((state) => state.pokemons.favouriteIds);
   const recIds = useAppSelector((state) => state.pokemons.recentIds);
@@ -64,7 +64,7 @@ export const Pokemons = ({
     (id) => !recIds.includes(id) && !favIds.includes(id)
   );
 
-  // // TODO it doesn't listen correctly
+  // TODO it doesn't listen correctly
   // const randomsToRemove = useAppSelector(selectRandomsToRemove);
   useEffect(
     () => () => {
@@ -75,7 +75,7 @@ export const Pokemons = ({
   );
 
   // filter logic
-  const filter = useAppSelector((state) => state.filterRandoms.value);
+  const filter = useAppSelector((state) => state.filterBar.value);
   const pokemons = useAppSelector((state) => state.pokemons.byId);
   const randoms = randomIds.map((id) => pokemons[id]);
   const filteredIds = randoms

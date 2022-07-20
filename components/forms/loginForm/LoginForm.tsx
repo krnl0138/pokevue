@@ -1,36 +1,22 @@
-import { Send, Visibility, VisibilityOff } from "@mui/icons-material";
-import {
-  FormControl,
-  InputLabel,
-  Input,
-  FormHelperText,
-  Button,
-  IconButton,
-  InputAdornment,
-  OutlinedInput,
-} from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
 import {
   resetLoginFormValue,
   setLoginFormValue,
 } from "../../../lib/redux/slices/loginFormSlice";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { PROJECT_URLS as urls } from "../../../utils/constants";
 import { dbGetUser, hanldeSignInWithEmailPassword } from "../../../database";
 import { useRouter } from "next/router";
+import { InputWrapper } from "../InputWrapper";
+import { PasswordInputWrapper } from "../PasswordInputWrapper";
+import { SubmitButtonWrapper } from "../SubmitButtonWrapper";
 
 export const LoginForm = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [showPassword, setShowPassword] = useState(false);
 
   const { email, password } = useAppSelector((state) => state.loginForm);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const result = { [e.currentTarget.id]: e.currentTarget.value };
-    dispatch(setLoginFormValue(result));
-  };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -40,56 +26,21 @@ export const LoginForm = () => {
     router.push(urls.home);
   };
 
-  const handleClickShowPassword = () => setShowPassword(!showPassword);
-  const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-  };
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <FormControl>
-          <InputLabel htmlFor="email" margin="dense">
-            email
-          </InputLabel>
-          <Input
-            id="email"
-            aria-describedby="email-helper"
-            onChange={handleChange}
-            value={email}
-          />
-          <FormHelperText id="email-helper">
-            We&apos;ll never share your email.
-          </FormHelperText>
-        </FormControl>
-
-        <FormControl>
-          <OutlinedInput
-            id="password"
-            type={showPassword ? "text" : "password"}
-            onChange={handleChange}
-            value={password}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="Password"
-          />
-        </FormControl>
-
-        <FormControl>
-          <Button type="submit" variant="contained" endIcon={<Send />}>
-            Login
-          </Button>
-        </FormControl>
+        <InputWrapper
+          label="Enter your email"
+          id="email"
+          action={setLoginFormValue}
+          value={email}
+        />
+        <PasswordInputWrapper
+          id="password"
+          action={setLoginFormValue}
+          value={password}
+        />
+        <SubmitButtonWrapper title="Login" />
       </form>
 
       <p>
