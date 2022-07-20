@@ -1,26 +1,26 @@
 import { Box } from "@mui/material";
 import { useRef, useEffect } from "react";
 import Sortable from "sortablejs";
-import { withDraggable } from "../hoc/withDraggable";
 
-const CardsWrapper = ({
+export const CardsWrapper = ({
   children,
 }: {
   children: JSX.Element | JSX.Element[];
 }) => {
-  // const dragRef = useRef<any>(null);
-  // useEffect(() => {
-  //   if (dragRef.current) {
-  //     Sortable.create(dragRef.current, {
-  //       animation: 220,
-  //       easing: "cubic-bezier(ease)",
-  //     });
-  //   }
-  // }, []);
+  // ? can be HOC but it's complicated with forwardRef
+  const dragRef = useRef<any>(null);
+  useEffect(() => {
+    if (dragRef.current) {
+      Sortable.create(dragRef.current, {
+        animation: 220,
+        easing: "cubic-bezier(ease)",
+      });
+    }
+  }, []);
 
   return (
     <Box
-      // ref={dragRef}
+      ref={dragRef}
       sx={{
         display: "flex",
         flexDirection: "row",
@@ -32,5 +32,3 @@ const CardsWrapper = ({
     </Box>
   );
 };
-
-export const CardsWrapperWithDraggable = withDraggable(CardsWrapper);

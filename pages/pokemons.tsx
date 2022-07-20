@@ -26,18 +26,41 @@ const selectRandomPokemons = createSelector(
 );
 
 const selectPokemonsToRemove = createSelector(
-  selectRandomPokemons,
-  (pokemons) =>
-    pokemons?.filter((p) => p.isFavourite === false && p.isRecent === false)
+  (state: RootState) => state.pokemons.randomIds,
+  (state: RootState) => state.pokemons.favouriteIds,
+  (state: RootState) => state.pokemons.recentIds,
+  (randIds, favIds, recentIds) => {
+    console.log("FIRED selectPokemonsToRemove");
+    console.log("randIds: ", randIds);
+    const selected = randIds?.filter(
+      (id) => !recentIds.includes(id) && !favIds.includes(id)
+    );
+    console.log("selected: ", selected);
+    return selected;
+  }
 );
 
-// it should load on start first ~20 pokemons from an API, ServerProps??
-export const Pokemons = () => {
+export async function getServerSideProps() {
+  const ids = createRandomIds(NUM_RANDOM_POKEMON_CADRS);
+  const fetchedPokemons = await Promise.all(
+    ids.map(async (id) => await getPokemon(id))
+  );
+
+  return { props: { fetchedPokemons } };
+}
+
+export const Pokemons = ({
+  fetchedPokemons,
+}: {
+  fetchedPokemons: Pokemon[];
+}) => {
   const dispatch = useAppDispatch();
   // TODO is it possible to populate filtered List diffently?
   const [filteredList, setFilteredList] = useState<Array<Pokemon>>([]);
   const randomPokemons = useAppSelector(selectRandomPokemons);
   const pokemonsToRemove = useAppSelector(selectPokemonsToRemove);
+  console.log("randomPokemons is: ", randomPokemons);
+  console.log("pokemonsToRemove is: ", pokemonsToRemove);
 
   const handleOnChange = (query: string) => {
     if (!query) return setFilteredList(randomPokemons);
@@ -48,13 +71,10 @@ export const Pokemons = () => {
     setFilteredList(pokemonsFromQuery);
   };
 
-  // Load pokemons from client-side
+  // Dispatch fetched from client-side
+  // TODO error handling
   useEffect(() => {
     const getRandomPokemons = async () => {
-      const ids = createRandomIds(NUM_RANDOM_POKEMON_CADRS);
-      const fetchedPokemons = await Promise.all(
-        ids.map(async (id) => await getPokemon(id))
-      );
       fetchedPokemons.forEach((pok) => {
         dispatch(addPokemon(pok));
         dispatch(addRandomPokemon(pok.id));
@@ -62,19 +82,22 @@ export const Pokemons = () => {
       setFilteredList(fetchedPokemons);
     };
     getRandomPokemons();
-    console.log("fired getRandomPokemons");
-  }, [dispatch]);
+  }, []);
 
   // remove randoms from store
-  useEffect(() => {
-    return () => {
-      console.log("pokemons to remove is: ", randomPokemons);
-      randomPokemons.forEach((p) => {
-        console.log(`fired removePokemon for id:${p.id}`);
-        dispatch(removePokemon(p.id));
-      });
-    };
-  }, []);
+  // TODO it doesn't listen correctly
+  useEffect(
+    () => () => {
+      console.log(
+        "start return useeffect with pokemonsToRemove:",
+        pokemonsToRemove
+      );
+      // randomPokemons?.forEach((pok) => {
+      //   if (pok.isFavourite === true || pok.isRecent === true) {
+      pokemonsToRemove?.forEach((id) => dispatch(removePokemon(id)));
+    },
+    []
+  );
 
   return (
     <ProtectedRoute>

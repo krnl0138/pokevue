@@ -3,7 +3,7 @@ import { fetchPokemon } from "./fetchPokemon";
 import { fetchPokemonSpecies } from "./fetchPokemonSpecies";
 import { parsePokemon } from "./parsePokemon";
 
-export const getPokemon = async (search: string) => {
+export const getPokemon = async (search: string | number) => {
   const pokemon = await fetchPokemon(search);
   const pokemonSpecies = await fetchPokemonSpecies(search);
 

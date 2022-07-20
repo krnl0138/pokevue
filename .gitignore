@@ -34,3 +34,4 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+components/favouritePokemons/FavouritePokemons.tsx

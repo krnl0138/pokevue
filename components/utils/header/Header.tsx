@@ -54,29 +54,29 @@ const Header = () => {
         <Toolbar disableGutters>
           {/* Logo part */}
 
-          <Typography
-            variant="h6"
-            noWrap
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex", alignItems: "center" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            <Link href={urls.home}>
+          <Link href={urls.home}>
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex", alignItems: "center" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
               <Image
                 src={PROJECT_LOGO}
                 width="50"
                 height="50"
                 alt="Project Logo"
               />
-            </Link>
-            <Link href={urls.home}>Pokevue</Link>
-          </Typography>
+              <Link href={urls.home}>Pokevue</Link>
+            </Typography>
+          </Link>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -116,29 +116,29 @@ const Header = () => {
           </Box>
 
           {/* large screen */}
-          <Typography
-            variant="h5"
-            noWrap
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            <Link href={urls.home}>
+          <Link href={urls.home}>
+            <Typography
+              variant="h5"
+              noWrap
+              sx={{
+                mr: 2,
+                display: { xs: "flex", md: "none" },
+                flexGrow: 1,
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
               <Image
                 src={PROJECT_LOGO}
                 width="50"
                 height="50"
                 alt="Project Logo"
               />
-            </Link>
-          </Typography>
+            </Typography>
+          </Link>
           <Box
             sx={{
               flexGrow: 1,
