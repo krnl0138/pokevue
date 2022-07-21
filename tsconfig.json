@@ -31,7 +31,9 @@
     "pages/test.js",
     "lib/redux/slices/test.js",
     "lib/redux/slices/test.js",
-    "components/recentSearch/test.js"
+    "components/recentSearch/test.js",
+    "pages/_document.js",
+    "pages/_document.js"
   ],
   "exclude": ["node_modules"]
 }

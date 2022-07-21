@@ -8,9 +8,9 @@ import Link from "next/link";
 import { PROJECT_URLS as urls } from "../../../utils/constants";
 import { dbGetUser, hanldeSignInWithEmailPassword } from "../../../database";
 import { useRouter } from "next/router";
-import { InputWrapper } from "../InputWrapper";
-import { PasswordInputWrapper } from "../PasswordInputWrapper";
-import { SubmitButtonWrapper } from "../SubmitButtonWrapper";
+import { InputComponent } from "../InputComponent";
+import { PasswordInputComponent } from "../PasswordInputComponent";
+import { SubmitButtonComponent } from "../SubmitButtonComponent";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -29,18 +29,18 @@ export const LoginForm = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <InputWrapper
+        <InputComponent
           label="Enter your email"
           id="email"
           action={setLoginFormValue}
           value={email}
         />
-        <PasswordInputWrapper
+        <PasswordInputComponent
           id="password"
           action={setLoginFormValue}
           value={password}
         />
-        <SubmitButtonWrapper title="Login" />
+        <SubmitButtonComponent title="Login" />
       </form>
 
       <p>

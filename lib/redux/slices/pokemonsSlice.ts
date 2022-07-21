@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { NUM_RECENT_POKEMON_CARDS } from "../../../utils/constants";
-import { Pokemon } from "../../../utils/types";
+import { TPokemon } from "../../../utils/types";
 
 type InitialState = {
-  byId: { [id: number]: Pokemon };
+  byId: { [id: number]: TPokemon };
   allIds: Array<number>;
   recentIds: Array<number>;
   randomIds: Array<number>;
@@ -20,7 +20,7 @@ export const pokemonsSlice = createSlice({
     favouriteIds: [],
   },
   reducers: {
-    addPokemon: (state, action: { payload: Pokemon }) => {
+    addPokemon: (state, action: { payload: TPokemon }) => {
       const { payload } = action;
       const { id } = payload;
       if (state.allIds?.includes(id)) return;

@@ -54,29 +54,28 @@ const Header = () => {
         <Toolbar disableGutters>
           {/* Logo part */}
 
-          <Link href={urls.home}>
-            <Typography
-              variant="h6"
-              noWrap
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex", alignItems: "center" },
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
+          <Typography
+            variant="h5"
+            noWrap
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex", alignItems: "center" },
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            <Link href={urls.home}>
               <Image
                 src={PROJECT_LOGO}
                 width="50"
                 height="50"
                 alt="Project Logo"
               />
-              <Link href={urls.home}>Pokevue</Link>
-            </Typography>
-          </Link>
+            </Link>
+            <Link href={urls.home}>Pokevue</Link>
+          </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -115,30 +114,29 @@ const Header = () => {
             </Menu>
           </Box>
 
-          {/* large screen */}
-          <Link href={urls.home}>
-            <Typography
-              variant="h5"
-              noWrap
-              sx={{
-                mr: 2,
-                display: { xs: "flex", md: "none" },
-                flexGrow: 1,
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
+          <Typography
+            variant="h5"
+            noWrap
+            sx={{
+              mr: 2,
+              display: { xs: "flex", md: "none" },
+              flexGrow: 1,
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            <Link href={urls.home}>
               <Image
                 src={PROJECT_LOGO}
                 width="50"
                 height="50"
                 alt="Project Logo"
               />
-            </Typography>
-          </Link>
+            </Link>
+          </Typography>
+          {/* large screen */}
           <Box
             sx={{
               flexGrow: 1,
@@ -190,9 +188,9 @@ const Header = () => {
                     setting === "logout" ? handleLogout : handleCloseUserMenu
                   }
                 >
-                  <Link href={`${setting.toLowerCase()}`}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </Link>
+                  <Typography textAlign="center">
+                    <Link href={`${setting.toLowerCase()}`}>{setting}</Link>
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>

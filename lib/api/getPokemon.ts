@@ -1,4 +1,4 @@
-import { PokemonResponse, PokemonSpeciesResponse } from "../../utils/types";
+import { TPokemonResponse, TPokemonSpeciesResponse } from "../../utils/types";
 import { fetchPokemon } from "./fetchPokemon";
 import { fetchPokemonSpecies } from "./fetchPokemonSpecies";
 import { parsePokemon } from "./parsePokemon";
@@ -8,6 +8,7 @@ export const getPokemon = async (search: string | number) => {
   const pokemonSpecies = await fetchPokemonSpecies(search);
 
   // TODO no await?
+  // TODO should be different for each entitiy?
   const data = parsePokemon({ pokemon, pokemonSpecies });
   const result = {
     ...data,
@@ -21,9 +22,10 @@ export const getPokemon = async (search: string | number) => {
 export const getPokemonTest = async (search: string | number) => {
   // Offline test variant
   const pokemonRes = await fetch(`/${search}.json`);
-  const pokemon: PokemonResponse = await pokemonRes.json();
+  const pokemon: TPokemonResponse = await pokemonRes.json();
   const pokemonSpeciesRes = await fetch("/pokemonSpeciesReturnedAPI.json");
-  const pokemonSpecies: PokemonSpeciesResponse = await pokemonSpeciesRes.json();
+  const pokemonSpecies: TPokemonSpeciesResponse =
+    await pokemonSpeciesRes.json();
 
   const data = parsePokemon({ pokemon, pokemonSpecies });
 

@@ -14,7 +14,8 @@ type TPasswordWrapper = {
   value: string;
   action: ActionCreatorWithPayload<any, string>;
 };
-export const PasswordInputWrapper = ({
+
+export const PasswordInputComponent = ({
   id,
   value,
   action,

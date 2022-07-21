@@ -9,8 +9,8 @@ import {
   addRecentPokemon,
 } from "../../lib/redux/slices/pokemonsSlice";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
-import { InputWrapper } from "../forms/InputWrapper";
-import { SubmitButtonWrapper } from "../forms/SubmitButtonWrapper";
+import { InputComponent } from "../forms/InputComponent";
+import { SubmitButtonComponent } from "../forms/SubmitButtonComponent";
 
 export const FilterBar = ({
   withSearch,
@@ -44,7 +44,7 @@ export const FilterBar = ({
           (withSearch ? handleOnSubmit : notOnSubmit) as typeof handleOnSubmit
         }
       >
-        <InputWrapper
+        <InputComponent
           label="Pokemon name"
           id="filterValue"
           action={setFilterBarValue}
@@ -52,7 +52,7 @@ export const FilterBar = ({
           helperText="Search pokemons by names!"
         />
 
-        {withSearch && <SubmitButtonWrapper title="Search" />}
+        {withSearch && <SubmitButtonComponent title="Search" />}
       </form>
     </div>
   );

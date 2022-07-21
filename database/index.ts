@@ -9,7 +9,6 @@ import {
   signOut,
   updateEmail,
   updatePassword,
-  User,
   UserInfo,
 } from "firebase/auth";
 import { get, getDatabase, ref, remove, set, update } from "firebase/database";
@@ -48,13 +47,17 @@ export const dbWriteUserData = async (data: UserInfo) => {
   });
 };
 
-export const dbUpdateUserData = async (data: User) => {
+export const dbUpdateUserData = async (data: {
+  username: string;
+  email: string;
+  avatar: string;
+}) => {
   auth.onAuthStateChanged(async (user) => {
     if (user) {
-      const newUser = {};
+      const newUser = <typeof data>{};
       for (const [prop, value] of Object.entries(data)) {
         if (value) {
-          newUser[prop] = value;
+          newUser[prop as keyof typeof data] = value;
         }
       }
       await update(userRef(user.uid), newUser);

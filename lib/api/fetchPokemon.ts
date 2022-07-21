@@ -1,5 +1,5 @@
 import { POKEMON_API } from "../../utils/constants";
-import { PokemonResponse } from "../../utils/types";
+import { TPokemonResponse } from "../../utils/types";
 
 export async function fetchPokemon(search: number | string) {
   const url = `${POKEMON_API}/pokemon/${search}/`;
@@ -9,7 +9,7 @@ export async function fetchPokemon(search: number | string) {
   };
 
   const res = await fetch(url, requestOptions);
-  const data: PokemonResponse = await res.json();
+  const data: TPokemonResponse = await res.json();
 
   return data;
 }

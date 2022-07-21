@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo } from "react";
-import { PokemonCard } from "../components/pokemonCard/PokemonCard";
+import { PokemonCard } from "../components/pokemonCards/pokemonCard/PokemonCard";
 import { Layout } from "../components/utils/layout/Layout";
 
 import { PokemonCards } from "../components/pokemonCards/PokemonCards";
-import { ModalWrapper } from "../components/modal/modalWrapper/modalWrapper";
 import { ProtectedRoute } from "../components/protectedRoute/ProtectedRoute";
 import { FilterBar } from "../components/filterBar/FilterBar";
-import { Pokemon } from "../utils/types";
+import { TPokemon } from "../utils/types";
 import { getPokemon } from "../lib/api/getPokemon";
 import { NUM_RANDOM_POKEMON_CADRS } from "../utils/constants";
 import { createRandomIds } from "../utils/functions";
@@ -18,14 +17,15 @@ import {
 } from "../lib/redux/slices/pokemonsSlice";
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../lib/redux";
+import { ModalView } from "../components/utils/modalView/ModalView";
 
-const selectRandomsToRemove = createSelector(
-  (state: RootState) => state.pokemons.randomIds,
-  (state: RootState) => state.pokemons.favouriteIds,
-  (state: RootState) => state.pokemons.recentIds,
-  (randIds, favIds, recentIds) =>
-    randIds?.filter((id) => !recentIds.includes(id) && !favIds.includes(id))
-);
+// const selectRandomsToRemove = createSelector(
+//   (state: RootState) => state.pokemons.randomIds,
+//   (state: RootState) => state.pokemons.favouriteIds,
+//   (state: RootState) => state.pokemons.recentIds,
+//   (randIds, favIds, recentIds) =>
+//     randIds?.filter((id) => !recentIds.includes(id) && !favIds.includes(id))
+// );
 
 // const selectRandomIds = createSelector(
 //   (state: RootState) => state.pokemons.randomIds,
@@ -44,7 +44,7 @@ export async function getServerSideProps() {
 export const Pokemons = ({
   fetchedPokemons,
 }: {
-  fetchedPokemons: Pokemon[];
+  fetchedPokemons: TPokemon[];
 }) => {
   const dispatch = useAppDispatch();
 
@@ -86,7 +86,7 @@ export const Pokemons = ({
   );
 
   // filter logic
-  const filter = useAppSelector((state) => state.filterBar.value);
+  const filter = useAppSelector((state) => state.filterBar.filterValue);
   const pokemons = useAppSelector((state) => state.pokemons.byId);
   const randoms = randomIds.map((id) => pokemons[id]);
   // TODO is it helpful?
@@ -98,18 +98,21 @@ export const Pokemons = ({
     [filter]
   );
 
+  // TODO animation experiment
+
   return (
     <ProtectedRoute>
       <Layout>
+        <h2>There is currently X favourite pokemons!</h2>
         <FilterBar />
         {randomIds.length > 0 && (
           <PokemonCards
             ids={filteredIds.length > 0 ? filteredIds : randomIds}
           />
         )}
-        <ModalWrapper>
-          <PokemonCard fromModal={true} />
-        </ModalWrapper>
+        <ModalView>
+          <PokemonCard />
+        </ModalView>
       </Layout>
     </ProtectedRoute>
   );

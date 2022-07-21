@@ -10,9 +10,9 @@ import {
   handleUpdatePassword,
   dbUpdateUserData,
 } from "../../../database";
-import { InputWrapper } from "../InputWrapper";
-import { PasswordInputWrapper } from "../PasswordInputWrapper";
-import { SubmitButtonWrapper } from "../SubmitButtonWrapper";
+import { InputComponent } from "../InputComponent";
+import { PasswordInputComponent } from "../PasswordInputComponent";
+import { SubmitButtonComponent } from "../SubmitButtonComponent";
 
 export const ProfileForm = () => {
   const dispatch = useAppDispatch();
@@ -42,30 +42,30 @@ export const ProfileForm = () => {
       <p>Below you can change you data</p>
       {isChanged && <p>Data was successfully changed!</p>}
       <form onSubmit={handleSubmit}>
-        <InputWrapper
+        <InputComponent
           label="Your email"
           id="email"
           action={setProfileFormValue}
           value={email}
         />
-        <InputWrapper
+        <InputComponent
           label="Your username"
           id="username"
           action={setProfileFormValue}
           value={username}
         />
-        <InputWrapper
+        <InputComponent
           label="Your avatar url"
           id="avatar"
           action={setProfileFormValue}
           value={avatar}
         />
-        <PasswordInputWrapper
+        <PasswordInputComponent
           id="password"
           action={setProfileFormValue}
           value={password}
         />
-        <SubmitButtonWrapper title="Submit" />
+        <SubmitButtonComponent title="Submit" />
       </form>
     </div>
   );

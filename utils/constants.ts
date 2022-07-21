@@ -14,5 +14,5 @@ export const PROJECT_URLS = {
 
 export const AVATAR_PLACEHOLDER = "/vercel.svg";
 export const PROJECT_LOGO = "/logo.png";
-export const NUM_RANDOM_POKEMON_CADRS = 3;
+export const NUM_RANDOM_POKEMON_CADRS = 6;
 export const NUM_RECENT_POKEMON_CARDS = 3;

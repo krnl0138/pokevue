@@ -13,9 +13,9 @@ import {
 } from "../../../database";
 import { PROJECT_URLS as urls } from "../../../utils/constants";
 import { useRouter } from "next/router";
-import { InputWrapper } from "../InputWrapper";
-import { PasswordInputWrapper } from "../PasswordInputWrapper";
-import { SubmitButtonWrapper } from "../SubmitButtonWrapper";
+import { InputComponent } from "../InputComponent";
+import { PasswordInputComponent } from "../PasswordInputComponent";
+import { SubmitButtonComponent } from "../SubmitButtonComponent";
 
 export const RegisterForm = () => {
   const dispatch = useAppDispatch();
@@ -39,24 +39,24 @@ export const RegisterForm = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <InputWrapper
+        <InputComponent
           label="Your email"
           id="email"
           action={setRegisterFormValue}
           value={email}
         />
-        <InputWrapper
+        <InputComponent
           label="Your username"
           id="username"
           action={setRegisterFormValue}
           value={username}
         />
-        <PasswordInputWrapper
+        <PasswordInputComponent
           id="password"
           action={setRegisterFormValue}
           value={password}
         />
-        <SubmitButtonWrapper title="Register" />
+        <SubmitButtonComponent title="Register" />
 
         <Button
           onClick={handleGoogleAuth}

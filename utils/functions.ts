@@ -13,3 +13,12 @@ export const createRandomIds = (limit: number) => {
   }
   return arr;
 };
+
+export const getStars = (rate: number) => {
+  if (rate <= 255 && rate > 200) return 1;
+  if (rate < 199 && rate > 150) return 2;
+  if (rate < 149 && rate > 80) return 3;
+  if (rate < 79 && rate > 40) return 4;
+  if (rate < 39 && rate > 0) return 5;
+  return 0;
+};

@@ -2,7 +2,7 @@ import { FormControl, InputLabel, FormHelperText, Input } from "@mui/material";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { useAppDispatch } from "../../utils/hooks";
 
-type TInputWrapper = {
+type TMyInput = {
   id: string;
   value: string;
   action: ActionCreatorWithPayload<any, string>;
@@ -10,17 +10,16 @@ type TInputWrapper = {
   helperText?: string;
 };
 
-export const InputWrapper = ({
+export const InputComponent = ({
   id,
   value,
   action,
   label,
   helperText,
-}: TInputWrapper) => {
+}: TMyInput) => {
   const dispatch = useAppDispatch();
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const result = { [e.currentTarget.id]: e.currentTarget.value };
-    console.log("result is: ", result);
     dispatch(action(result));
   };
   return (
