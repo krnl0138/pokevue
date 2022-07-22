@@ -13,7 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
 import {
-  PROJECT_URLS as urls,
+  URLS,
   PROJECT_LOGO,
   AVATAR_PLACEHOLDER as placeholder,
 } from "../../../utils/constants";
@@ -52,31 +52,32 @@ const Header = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* Logo part */}
-
-          <Typography
-            variant="h5"
-            noWrap
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex", alignItems: "center" },
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            <Link href={urls.home}>
+          <Link href={URLS.home}>
+            <a>
               <Image
                 src={PROJECT_LOGO}
                 width="50"
                 height="50"
                 alt="Project Logo"
               />
-            </Link>
-            <Link href={urls.home}>Pokevue</Link>
+            </a>
+          </Link>
+          <Typography
+            variant="h5"
+            noWrap
+            sx={{
+              ml: 2,
+              display: { xs: "none", md: "flex", alignItems: "center" },
+              fontWeight: 400,
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            <Link href={URLS.home}>Pokevue</Link>
           </Typography>
 
+          {/* large screen */}
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -108,12 +109,20 @@ const Header = () => {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography
+                    component="p"
+                    variant="body2"
+                    textAlign="center"
+                    sx={{ letterSpacing: "1.8", paddingRight: 1 }}
+                  >
+                    {page}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
 
+          {/* // image in the middle when small screen */}
           <Typography
             variant="h5"
             noWrap
@@ -127,13 +136,15 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            <Link href={urls.home}>
-              <Image
-                src={PROJECT_LOGO}
-                width="50"
-                height="50"
-                alt="Project Logo"
-              />
+            <Link href={URLS.home}>
+              <a>
+                <Image
+                  src={PROJECT_LOGO}
+                  width="50"
+                  height="50"
+                  alt="Project Logo"
+                />
+              </a>
             </Link>
           </Typography>
           {/* large screen */}
@@ -149,9 +160,22 @@ const Header = () => {
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
+                  sx={{
+                    my: 2,
+                    color: "white",
+                    display: "block",
+                  }}
                 >
-                  <Link href={`/${url}`}>{page}</Link>
+                  <Typography
+                    component="p"
+                    variant="body2"
+                    sx={{
+                      paddingRight: 1,
+                      letterSpacing: "1.7px",
+                    }}
+                  >
+                    <Link href={`/${url}`}>{page}</Link>
+                  </Typography>
                 </Button>
               );
             })}

@@ -18,7 +18,7 @@ import {
   addFavouritePokemon,
 } from "../../../lib/redux/slices/pokemonsSlice";
 import { useAppDispatch } from "../../../utils/hooks";
-import { PROJECT_URLS as urls } from "../../../utils/constants";
+import { URLS } from "../../../utils/constants";
 
 type TCardActions = {
   id: number;
@@ -54,7 +54,7 @@ export const PokemonCardActions = ({
   };
 
   const handleOpenPokemonScreen = () => {
-    router.push(`${urls.pokemon}/${id}`);
+    router.push(`${URLS.pokemon}/${id}`);
   };
 
   return (

@@ -5,7 +5,7 @@ import {
 } from "../../../lib/redux/slices/loginFormSlice";
 import React from "react";
 import Link from "next/link";
-import { PROJECT_URLS as urls } from "../../../utils/constants";
+import { URLS } from "../../../utils/constants";
 import { dbGetUser, hanldeSignInWithEmailPassword } from "../../../database";
 import { useRouter } from "next/router";
 import { InputComponent } from "../InputComponent";
@@ -23,7 +23,7 @@ export const LoginForm = () => {
     await hanldeSignInWithEmailPassword(email, password);
     await dbGetUser();
     dispatch(resetLoginFormValue());
-    router.push(urls.home);
+    router.push(URLS.home);
   };
 
   return (
@@ -44,7 +44,7 @@ export const LoginForm = () => {
       </form>
 
       <p>
-        Are you a new user? <Link href={urls.register}>Register</Link>
+        Are you a new user? <Link href={URLS.register}>Register</Link>
       </p>
     </div>
   );

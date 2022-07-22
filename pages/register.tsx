@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout } from "../components/utils/layout/Layout";
 import { RegisterForm } from "../components/forms/registerForm/RegisterForm";
-import { PROJECT_URLS as urls } from "../utils/constants";
+import { URLS } from "../utils/constants";
 import { useAppSelector } from "../utils/hooks";
 import { useRouter } from "next/router";
 
@@ -12,7 +12,7 @@ export const Registration = () => {
   console.log(user.username);
   // guard protected route
   if (user.username) {
-    router.push(urls.home);
+    router.push(URLS.home);
   }
   return (
     <Layout>

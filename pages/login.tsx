@@ -3,7 +3,7 @@ import { Layout } from "../components/utils/layout/Layout";
 import { LoginForm } from "../components/forms/loginForm/LoginForm";
 import { useRouter } from "next/router";
 import { useAppSelector } from "../utils/hooks";
-import { PROJECT_URLS as urls } from "../utils/constants";
+import { URLS } from "../utils/constants";
 
 export const Login = () => {
   const router = useRouter();
@@ -11,7 +11,7 @@ export const Login = () => {
   const user = useAppSelector((state) => state.user);
   // guard protected route
   if (user.username) {
-    return router.push(urls.home);
+    return router.push(URLS.home);
   }
   return (
     <Layout>
