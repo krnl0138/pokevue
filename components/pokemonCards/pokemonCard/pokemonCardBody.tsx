@@ -19,6 +19,7 @@ import {
   Shield,
 } from "@mui/icons-material";
 import { useMemo } from "react";
+import { getRandomColors } from "../../../utils/functions";
 
 type TMyCardBody = Pick<
   TPokemon["pokemonData"],
@@ -31,22 +32,8 @@ export const PokemonCardBody = ({
   description,
   avatarBig: avatar,
 }: TMyCardBody) => {
-  // get random colors for abilities
-  const colors = [
-    "primary",
-    "secondary",
-    "error",
-    "info",
-    "success",
-    "warning",
-  ] as const;
-  const getRandomColor = () => {
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
-  const randomColors = useMemo(
-    () => abilities.map((_) => getRandomColor()),
-    []
-  );
+  const randomColors = useMemo(() => getRandomColors(abilities), []);
+  const descriptionShort = description.split(".").splice(0, 4).join(" ");
 
   return (
     <CardContent
@@ -74,7 +61,7 @@ export const PokemonCardBody = ({
             color="text.secondary"
             sx={{ textAlign: "justify" }}
           >
-            {description}
+            {descriptionShort}
           </Typography>
         ) : (
           <p>No description were provided.</p>

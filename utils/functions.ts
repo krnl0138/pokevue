@@ -1,3 +1,5 @@
+import { COLORS } from "./constants";
+
 export const fetcher = async (url: string) => {
   const res = await fetch(url);
   if (res.ok) {
@@ -19,6 +21,10 @@ export const getStars = (rate: number) => {
   if (rate < 199 && rate > 150) return 2;
   if (rate < 149 && rate > 80) return 3;
   if (rate < 79 && rate > 40) return 4;
-  if (rate < 39 && rate > 0) return 5;
+  if (rate < 39 && rate >= 0) return 5;
   return 0;
 };
+
+// get random colors for abilities
+export const getRandomColors = (arr: any) =>
+  arr.map(() => COLORS[Math.floor(Math.random() * COLORS.length)]);
