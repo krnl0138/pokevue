@@ -97,6 +97,10 @@ export type TPokemonSpeciesResponse = {
       url: Url;
     };
   }>;
+  evolves_from_species: null | {
+    name: string;
+    url: Url;
+  };
 };
 
 export type TPokemon = {
@@ -115,6 +119,7 @@ export type TPokemon = {
     isBaby: false;
     isLegendary: false;
     isMythical: false;
+    evolutionName: null | string;
   };
 };
 

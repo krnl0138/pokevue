@@ -8,6 +8,7 @@ export const parsePokemon = (data: {
   pokemon: TPokemonResponse;
   pokemonSpecies: TPokemonSpeciesResponse;
 }): Omit<TPokemon, "isFavourite" | "isRecent" | "isRandom"> => {
+  console.log("parsePokemon was CALLED");
   const { pokemon, pokemonSpecies } = data;
   const id = pokemon.id;
   const name = pokemon.name;
@@ -17,11 +18,21 @@ export const parsePokemon = (data: {
   const isMythical = pokemonSpecies.is_mythical;
   const isBaby = pokemonSpecies.is_baby;
   const captureRate = pokemonSpecies.capture_rate;
-  const description = pokemonSpecies.flavor_text_entries
-    .filter((flavor) => flavor.language.name === "en")
-    .slice(0, 3)
+  const evolutionName = pokemonSpecies.evolves_from_species?.name ?? null;
+
+  const descriptionBase = pokemonSpecies.flavor_text_entries.filter(
+    (flavor) => flavor.language.name === "en"
+  );
+  // delete duplicates with Set.
+  const description = [...new Set(descriptionBase)]
+    .slice(0, 10)
     .flatMap((flavor) => flavor.flavor_text)
-    .join(" ");
+    .join(" ")
+    .replaceAll("POKéMON", "pokemon")
+    .replaceAll(
+      name.toUpperCase(),
+      name.charAt(0).toUpperCase() + name.slice(1)
+    );
 
   // stats = { 1: { name: "hp", value: 45 }, }
   const stats: TPokemon["pokemonData"]["stats"] = pokemon.stats
@@ -57,6 +68,7 @@ export const parsePokemon = (data: {
       isBaby,
       isLegendary,
       isMythical,
+      evolutionName,
     },
   };
 };
