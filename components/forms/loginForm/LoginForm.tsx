@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
 import {
   resetLoginFormValue,
+  selectLoginForm,
   setLoginFormValue,
 } from "../../../lib/redux/slices/loginFormSlice";
 import React from "react";
@@ -16,7 +17,7 @@ export const LoginForm = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const { email, password } = useAppSelector((state) => state.loginForm);
+  const { email, password } = useAppSelector(selectLoginForm);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();

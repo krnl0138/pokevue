@@ -9,7 +9,9 @@ import { getPokemon } from "../../lib/api/getPokemon";
 import {
   addFavouritePokemon,
   addPokemon,
+  selectAllIds,
 } from "../../lib/redux/slices/pokemonsSlice";
+import { selectUser } from "../../lib/redux/slices/userSlice";
 
 type TProtectedRoute = {
   children: JSX.Element;
@@ -18,8 +20,8 @@ type TProtectedRoute = {
 export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user);
-  const pokemonsIds = useAppSelector((state) => state.pokemons.allIds);
+  const user = useAppSelector(selectUser);
+  const pokemonsIds = useAppSelector(selectAllIds);
   const [isFavsLoaded, setIsFavsLoaded] = useState(false);
 
   // Populate user in the global state if logged in or redirect to /login

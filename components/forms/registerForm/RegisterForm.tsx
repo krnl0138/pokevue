@@ -3,6 +3,7 @@ import { Button } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
 import {
   resetRegisterFormValue,
+  selectRegisterForm,
   setRegisterFormValue,
 } from "../../../lib/redux/slices/registerFormSlice";
 import {
@@ -21,9 +22,7 @@ export const RegisterForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { username, email, password } = useAppSelector(
-    (state) => state.registerForm
-  );
+  const { username, email, password } = useAppSelector(selectRegisterForm);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();

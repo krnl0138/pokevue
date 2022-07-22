@@ -5,9 +5,10 @@ import { useAppSelector } from "../utils/hooks";
 import { PokemonCards } from "../components/pokemonCards/PokemonCards";
 import { FilterBar } from "../components/filterBar/FilterBar";
 import { ModalCardWrapper } from "../components/utils/modal/ModalCardWrapper";
+import { selectRecentIds } from "../lib/redux/slices/pokemonsSlice";
 
 export const Index = () => {
-  const recentIds = useAppSelector((state) => state.pokemons.recentIds);
+  const recentIds = useAppSelector(selectRecentIds);
   return (
     <ProtectedRoute>
       <Layout>

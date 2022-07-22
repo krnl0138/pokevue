@@ -12,10 +12,15 @@ import {
   addPokemon,
   addRandomPokemon,
   removePokemon,
+  selectAllPokemons,
+  selectFavouriteIds,
+  selectRandomIds,
+  selectRecentIds,
 } from "../lib/redux/slices/pokemonsSlice";
 import { ModalCardWrapper } from "../components/utils/modal/ModalCardWrapper";
 import { URLS } from "../utils/constants";
 import Link from "next/link";
+import { selectFilterBarValue } from "../lib/redux/slices/filterBarSlice";
 
 export async function getServerSideProps() {
   const ids = createRandomIds(NUM_RANDOM_POKEMON_CADRS);
@@ -34,9 +39,9 @@ export const Pokemons = ({
   const dispatch = useAppDispatch();
   // remove unused randoms from store on unmount
   // replace to test createSelector() -> still not working
-  const randomIds = useAppSelector((state) => state.pokemons.randomIds);
-  const favIds = useAppSelector((state) => state.pokemons.favouriteIds);
-  const recIds = useAppSelector((state) => state.pokemons.recentIds);
+  const randomIds = useAppSelector(selectRandomIds);
+  const favIds = useAppSelector(selectFavouriteIds);
+  const recIds = useAppSelector(selectRecentIds);
   const randomsToRemove = randomIds?.filter(
     (id) => !recIds.includes(id) && !favIds.includes(id)
   );
@@ -52,8 +57,8 @@ export const Pokemons = ({
   );
 
   // filter logic
-  const filter = useAppSelector((state) => state.filterBar.filterValue);
-  const pokemons = useAppSelector((state) => state.pokemons.byId);
+  const filter = useAppSelector(selectFilterBarValue);
+  const pokemons = useAppSelector(selectAllPokemons);
   const randoms = randomIds.map((id) => pokemons[id]);
   // TODO is it helpful?
   const filteredIds = useMemo(

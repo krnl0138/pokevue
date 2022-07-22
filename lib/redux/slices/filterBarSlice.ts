@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "..";
 
 const initialState = {
   filterValue: "",
@@ -19,3 +20,6 @@ export const filterBarSlice = createSlice({
 
 export const { actions, reducer: filterBarReducer } = filterBarSlice;
 export const { setFilterBarValue, resetFilterBarValue } = actions;
+
+export const selectFilterBarValue = (state: RootState) =>
+  state.filterBar.filterValue;

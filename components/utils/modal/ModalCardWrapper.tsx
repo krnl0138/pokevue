@@ -1,6 +1,11 @@
 import Modal from "@mui/material/Modal";
 import React from "react";
-import { closeModal } from "../../../lib/redux/slices/modalSlice";
+import {
+  closeModal,
+  selectModalData,
+  selectModalStatus,
+} from "../../../lib/redux/slices/modalSlice";
+import { selectAllIds } from "../../../lib/redux/slices/pokemonsSlice";
 import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
 import { PokemonCard } from "../../pokemonCards/pokemonCard/PokemonCard";
 
@@ -9,9 +14,9 @@ export const ModalCardWrapper = () => {
   const handleModalClose = () => {
     dispatch(closeModal());
   };
-  const isModalOpen = useAppSelector((state) => state.modal.modalOpen);
-  const modalData = useAppSelector((state) => state.modal.data);
-  const allIds = useAppSelector((state) => state.pokemons.allIds);
+  const isModalOpen = useAppSelector(selectModalStatus);
+  const modalData = useAppSelector(selectModalData);
+  const allIds = useAppSelector(selectAllIds);
 
   return (isModalOpen &&
     typeof modalData === "number" &&

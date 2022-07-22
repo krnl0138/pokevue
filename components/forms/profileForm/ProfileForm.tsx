@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
 import { useState } from "react";
 import {
   resetProfileFormValue,
+  selectProfileForm,
   setProfileFormValue,
 } from "../../../lib/redux/slices/profileFormSlice";
 import {
@@ -18,9 +19,8 @@ export const ProfileForm = () => {
   const dispatch = useAppDispatch();
   const [isChanged, setIsChanged] = useState(false);
 
-  const { username, email, password, avatar } = useAppSelector(
-    (state) => state.profileForm
-  );
+  const { username, email, password, avatar } =
+    useAppSelector(selectProfileForm);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();

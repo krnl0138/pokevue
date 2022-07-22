@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "..";
 import { NUM_RECENT_POKEMON_CARDS } from "../../../utils/constants";
 import { TPokemon } from "../../../utils/types";
 
@@ -86,3 +87,12 @@ export const {
   addRandomPokemon,
   removeRandomPokemon,
 } = actions;
+
+export const selectAllIds = (state: RootState) => state.pokemons.allIds;
+export const selectFavouriteIds = (state: RootState) =>
+  state.pokemons.favouriteIds;
+export const selectRecentIds = (state: RootState) => state.pokemons.recentIds;
+export const selectRandomIds = (state: RootState) => state.pokemons.randomIds;
+export const selectAllPokemons = (state: RootState) => state.pokemons.byId;
+export const selectPokemonById = (state: RootState, id: number) =>
+  state.pokemons.byId[id];

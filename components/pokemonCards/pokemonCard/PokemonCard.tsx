@@ -1,5 +1,7 @@
 import { Card, CircularProgress } from "@mui/material";
 import React, { useState } from "react";
+import { selectModalData } from "../../../lib/redux/slices/modalSlice";
+import { selectPokemonById } from "../../../lib/redux/slices/pokemonsSlice";
 import { useAppSelector } from "../../../utils/hooks";
 import { PokemonCardActions } from "./pokemonCardActions";
 import { PokemonCardBody } from "./pokemonCardBody";
@@ -32,8 +34,8 @@ const cardStyleModal = {
 export const PokemonCard = React.forwardRef(
   ({ id, inRecent }: TPokemonCard, ref) => {
     console.log(`render PokemonCard with id: ${id}`);
-    const isModalOpen = useAppSelector((state) => state.modal.modalOpen);
-    const pokemon = useAppSelector((state) => state.pokemons.byId[id]);
+    const isModalOpen = useAppSelector(selectModalData);
+    const pokemon = useAppSelector((state) => selectPokemonById(state, id));
 
     const [isHovered, setIsHovered] = useState(false);
     const toggleSetIsHovered = () => {

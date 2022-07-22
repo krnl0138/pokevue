@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "..";
 
 const initialState = {
   email: "",
@@ -22,3 +23,5 @@ export const profileFormSlice = createSlice({
 
 export const { actions, reducer: profileFormReducer } = profileFormSlice;
 export const { setProfileFormValue, resetProfileFormValue } = actions;
+
+export const selectProfileForm = (state: RootState) => state.profileForm;

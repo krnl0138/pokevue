@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "..";
 
 const initialState = {
   email: "",
@@ -21,3 +22,5 @@ export const registerFormSlice = createSlice({
 
 export const { actions, reducer: registerFormReducer } = registerFormSlice;
 export const { setRegisterFormValue, resetRegisterFormValue } = actions;
+
+export const selectRegisterForm = (state: RootState) => state.registerForm;

@@ -4,7 +4,7 @@ import { PokemonDetailed } from "../../components/pokemonDetailed/PokemonDetaile
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { ProtectedRoute } from "../../components/protectedRoute/ProtectedRoute";
 import { getPokemon } from "../../lib/api/getPokemon";
-import { addPokemon } from "../../lib/redux/slices/pokemonsSlice";
+import { addPokemon, selectPokemonById } from "../../lib/redux/slices/pokemonsSlice";
 import { CircularProgress } from "@mui/material";
 import { GetServerSideProps } from "next/types";
 import { fetchEvolution } from "../../lib/api/fetchEvolution";
@@ -29,7 +29,7 @@ const Pokemon = (evolutionPokemons: TPokemon[]) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const id = router.asPath.split("/")[2];
-  const pokemon = useAppSelector((state) => state.pokemons.byId[Number(id)]);
+  const pokemon = useAppSelector(state => selectPokemonById(state,Number(id)));
 
   // hotfix, sometimes router returns '[id]' string
   if (id === "[id]") return <CircularProgress />;

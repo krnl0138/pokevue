@@ -23,17 +23,6 @@
     "incremental": true,
     "esModuleInterop": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "lib/prisma/index.ts",
-    "pages/test.js",
-    "lib/redux/slices/test.js",
-    "lib/redux/slices/test.js",
-    "components/recentSearch/test.js",
-    "pages/_document.js",
-    "pages/_document.js"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

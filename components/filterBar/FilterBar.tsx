@@ -2,6 +2,7 @@ import { SyntheticEvent } from "react";
 import { getPokemon } from "../../lib/api/getPokemon";
 import {
   resetFilterBarValue,
+  selectFilterBarValue,
   setFilterBarValue,
 } from "../../lib/redux/slices/filterBarSlice";
 import {
@@ -18,7 +19,7 @@ export const FilterBar = ({
   withSearch?: boolean;
 }): JSX.Element => {
   const dispatch = useAppDispatch();
-  const { filterValue } = useAppSelector((state) => state.filterBar);
+  const filterValue = useAppSelector(selectFilterBarValue);
 
   const handleOnSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();

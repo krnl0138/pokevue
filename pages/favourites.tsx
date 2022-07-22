@@ -6,13 +6,18 @@ import { PokemonCards } from "../components/pokemonCards/PokemonCards";
 import { FilterBar } from "../components/filterBar/FilterBar";
 import Box from "@mui/material/Box";
 import { ModalCardWrapper } from "../components/utils/modal/ModalCardWrapper";
+import { selectFilterBarValue } from "../lib/redux/slices/filterBarSlice";
+import {
+  selectAllPokemons,
+  selectFavouriteIds,
+} from "../lib/redux/slices/pokemonsSlice";
 
 export const Favourites = () => {
-  const favIds = useAppSelector((state) => state.pokemons.favouriteIds);
+  const favIds = useAppSelector(selectFavouriteIds);
 
   // filter logic
-  const filter = useAppSelector((state) => state.filterBar.filterValue);
-  const pokemons = useAppSelector((state) => state.pokemons.byId);
+  const filter = useAppSelector(selectFilterBarValue);
+  const pokemons = useAppSelector(selectAllPokemons);
   const favs = favIds.map((id) => pokemons[id]);
   const filterIds = favs
     .filter((r) => r.pokemonData.name.includes(filter))
