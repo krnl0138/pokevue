@@ -1,39 +1,40 @@
-import { Box, List, ListItem } from "@mui/material";
+import { Box, List, ListItem, Typography } from "@mui/material";
 import Link from "next/link";
-import { PROJECT_URLS as urls } from "../../../utils/constants";
+import { URLS } from "../../../utils/constants";
 
 export const Footer = () => {
   return (
-    // <footer>
     <Box
       component="footer"
       sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        justifyContent: "flex-start",
         width: "100%",
-        height: "10rem",
+        height: "7rem",
+        p: { fontWeight: 700 },
       }}
     >
-      <Box component="nav">
+      <Box component="nav" sx={{ marginBottom: 1 }}>
         <List sx={{ display: "flex" }}>
           <ListItem>
-            <Link href={urls.home}>Home</Link>
+            <Link href={URLS.home}>Home</Link>
           </ListItem>
           <ListItem>
-            <Link href={urls.about}>About</Link>
+            <Link href={URLS.about}>About</Link>
           </ListItem>
           <ListItem>
-            <Link href={urls.profile}>Profile</Link>
+            <Link href={URLS.profile}>Profile</Link>
           </ListItem>
           <ListItem>
-            <Link href={urls.favourites}>Favourites</Link>
+            <Link href={URLS.favourites}>Favourites</Link>
           </ListItem>
         </List>
       </Box>
-      <p>Made with MaterialUI, React/Redux, NextJS, Typescript and Firebase</p>
-      <p>Pokevue, 2022</p>
+      <Typography component="p" variant="h6" sx={{ fontWeight: 700 }}>
+        Pokevue, 2022
+      </Typography>
     </Box>
-    // </footer>
   );
 };
