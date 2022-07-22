@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo } from "react";
-import { PokemonCard } from "../components/pokemonCards/pokemonCard/PokemonCard";
+import React, { useEffect, useMemo, useState } from "react";
 import { Layout } from "../components/utils/layout/Layout";
-
 import { PokemonCards } from "../components/pokemonCards/PokemonCards";
 import { ProtectedRoute } from "../components/protectedRoute/ProtectedRoute";
 import { FilterBar } from "../components/filterBar/FilterBar";
@@ -15,22 +13,9 @@ import {
   addRandomPokemon,
   removePokemon,
 } from "../lib/redux/slices/pokemonsSlice";
-import { createSelector } from "@reduxjs/toolkit";
-import { RootState } from "../lib/redux";
-import { ModalView } from "../components/utils/modalView/ModalView";
-
-// const selectRandomsToRemove = createSelector(
-//   (state: RootState) => state.pokemons.randomIds,
-//   (state: RootState) => state.pokemons.favouriteIds,
-//   (state: RootState) => state.pokemons.recentIds,
-//   (randIds, favIds, recentIds) =>
-//     randIds?.filter((id) => !recentIds.includes(id) && !favIds.includes(id))
-// );
-
-// const selectRandomIds = createSelector(
-//   (state: RootState) => state.pokemons.randomIds,
-//   (randIds) => randIds
-// );
+import { ModalCardWrapper } from "../components/utils/modal/ModalCardWrapper";
+import { URLS } from "../utils/constants";
+import Link from "next/link";
 
 export async function getServerSideProps() {
   const ids = createRandomIds(NUM_RANDOM_POKEMON_CADRS);
@@ -47,28 +32,9 @@ export const Pokemons = ({
   fetchedPokemons: TPokemon[];
 }) => {
   const dispatch = useAppDispatch();
-
-  // Dispatch random pokemons to store
-  // TODO error handling
-  useEffect(() => {
-    const getRandomPokemons = async () => {
-      fetchedPokemons.forEach((pok) => {
-        dispatch(addPokemon(pok));
-        dispatch(addRandomPokemon(pok.id));
-      });
-    };
-    getRandomPokemons();
-  }, []);
-
   // remove unused randoms from store on unmount
   // replace to test createSelector() -> still not working
-  // const randomIds = useAppSelector(selectRandomIds);
   const randomIds = useAppSelector((state) => state.pokemons.randomIds);
-  const rIds = useMemo(() => randomIds, [randomIds]);
-
-  console.log("randomIds fired", randomIds);
-  console.log("rIds fired", rIds);
-
   const favIds = useAppSelector((state) => state.pokemons.favouriteIds);
   const recIds = useAppSelector((state) => state.pokemons.recentIds);
   const randomsToRemove = randomIds?.filter(
@@ -80,7 +46,7 @@ export const Pokemons = ({
   useEffect(
     () => () => {
       console.log("randomsToRemove: ", randomsToRemove);
-      return randomsToRemove.forEach((id) => dispatch(removePokemon(id)));
+      randomsToRemove.forEach((id) => dispatch(removePokemon(id)));
     },
     []
   );
@@ -98,21 +64,30 @@ export const Pokemons = ({
     [filter]
   );
 
-  // TODO animation experiment
+  const [isFetched, setIsFetched] = useState(false);
+  if (fetchedPokemons) {
+    if (!isFetched) return;
+    setIsFetched(true);
+    fetchedPokemons.forEach((pok) => {
+      dispatch(addPokemon(pok));
+      dispatch(addRandomPokemon(pok.id));
+    });
+  }
 
   return (
     <ProtectedRoute>
       <Layout>
-        <h2>There is currently X favourite pokemons!</h2>
+        <h2>
+          You have {favIds.length} favourite pokemons!{" "}
+          <Link href={URLS.home}>Want to catch more?</Link>
+        </h2>
         <FilterBar />
         {randomIds.length > 0 && (
           <PokemonCards
             ids={filteredIds.length > 0 ? filteredIds : randomIds}
           />
         )}
-        <ModalView>
-          <PokemonCard />
-        </ModalView>
+        <ModalCardWrapper />
       </Layout>
     </ProtectedRoute>
   );

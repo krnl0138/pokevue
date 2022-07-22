@@ -4,6 +4,7 @@ import { fetchPokemonSpecies } from "./fetchPokemonSpecies";
 import { parsePokemon } from "./parsePokemon";
 
 export const getPokemon = async (search: string | number) => {
+  console.log("getPokemon was CALLED for id: ", search);
   const pokemon = await fetchPokemon(search);
   const pokemonSpecies = await fetchPokemonSpecies(search);
 

@@ -11,7 +11,7 @@ import {
   dbWriteUserData,
   dbGetUser,
 } from "../../../database";
-import { PROJECT_URLS as urls } from "../../../utils/constants";
+import { URLS } from "../../../utils/constants";
 import { useRouter } from "next/router";
 import { InputComponent } from "../InputComponent";
 import { PasswordInputComponent } from "../PasswordInputComponent";
@@ -33,7 +33,7 @@ export const RegisterForm = () => {
     await dbWriteUserData(newUser);
     await dbGetUser();
     dispatch(resetRegisterFormValue());
-    router.push(urls.home);
+    router.push(URLS.home);
   };
 
   return (
