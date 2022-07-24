@@ -23,7 +23,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useAppSelector } from "../../../utils/hooks";
 import { handleLogout } from "../../../database";
-import { selectUser } from "../../../lib/redux/slices/userSlice";
+import { userSelect } from "../../../lib/redux/slices/userSlice";
 
 const pages = ["Pokemons", "About"];
 const settings = ["Favourites", "Profile", "Logout"];
@@ -47,7 +47,7 @@ const Header = () => {
     setAnchorElUser(null);
   };
 
-  const { username, avatar } = useAppSelector(selectUser);
+  const { username, avatar } = useAppSelector(userSelect);
 
   return (
     <AppBar position="static">
