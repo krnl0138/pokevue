@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { AVATAR_PLACEHOLDER as placeholder } from "../../../utils/constants";
-import { TPokemon } from "../../../utils/types";
+import { AVATAR_PLACEHOLDER as placeholder } from "../../../../utils/constants";
+import { TPokemon } from "../../../../utils/types";
 import {
   CardContent,
   Chip,
@@ -19,7 +19,7 @@ import {
   Shield,
 } from "@mui/icons-material";
 import { useMemo } from "react";
-import { getRandomColors } from "../../../utils/functions";
+import { getRandomColors } from "../../../../utils/functions";
 
 type TMyCardBody = Pick<
   TPokemon["pokemonData"],
@@ -101,6 +101,19 @@ export const PokemonCardBody = ({
             >
               <ListItemText>
                 <Chip
+                  color="secondary"
+                  label={stat.value}
+                  size="small"
+                  variant="outlined"
+                  sx={{
+                    backgroundColor: "transparent",
+                    color: "rgb(102 102 102)",
+                    border: "none",
+                    borderBottom: "1px solid rgb(159 159 159 / 71%)",
+                    borderRadius: "16px",
+                    padding: "0 0 0 5px",
+                    height: "25px",
+                  }}
                   icon={
                     stat.name === "hp" ? (
                       <Tooltip title="Health">
@@ -124,19 +137,6 @@ export const PokemonCardBody = ({
                       </Tooltip>
                     )
                   }
-                  color="secondary"
-                  label={stat.value}
-                  size="small"
-                  variant="outlined"
-                  sx={{
-                    backgroundColor: "transparent",
-                    color: "rgb(102 102 102)",
-                    border: "none",
-                    borderBottom: "1px solid rgb(159 159 159 / 71%)",
-                    borderRadius: "16px",
-                    padding: "0 0 0 5px",
-                    height: "25px",
-                  }}
                 />
               </ListItemText>
             </ListItem>

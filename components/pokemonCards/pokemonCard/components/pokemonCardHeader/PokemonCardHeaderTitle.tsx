@@ -5,7 +5,7 @@ import {
   QuestionMarkOutlined,
 } from "@mui/icons-material";
 import { Container, Typography, Tooltip, Box } from "@mui/material";
-import { getStars } from "../../../../utils/functions";
+import { getStars } from "../../../../../utils/functions";
 import { TMyCardHeader } from "./PokemonCardHeader";
 
 type TMyCardHeaderTitle = Pick<

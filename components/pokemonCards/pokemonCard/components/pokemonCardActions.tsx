@@ -16,9 +16,9 @@ import {
   removeRecentPokemon,
   removeFavouritePokemon,
   addFavouritePokemon,
-} from "../../../lib/redux/slices/pokemonsSlice";
-import { useAppDispatch } from "../../../utils/hooks";
-import { URLS } from "../../../utils/constants";
+} from "../../../../lib/redux/slices/pokemonsSlice";
+import { useAppDispatch } from "../../../../utils/hooks";
+import { URLS } from "../../../../utils/constants";
 
 type TCardActions = {
   id: number;

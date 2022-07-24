@@ -1,5 +1,5 @@
 import CardHeader from "@mui/material/CardHeader";
-import { TPokemon } from "../../../../utils/types";
+import { TPokemon } from "../../../../../utils/types";
 import { PokemonCardHeaderAction } from "./PokemonCardHeaderAction";
 import { PokemonCardHeaderAvatar } from "./PokemonCardHeaderAvatar";
 import { PokemonCardHeaderTitle } from "./PokemonCardHeaderTitle";

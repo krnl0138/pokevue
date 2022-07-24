@@ -10,8 +10,8 @@ export const PokemonCards = ({
   ids: number[];
   inRecent?: boolean;
 }) => {
+  // `Sortable` implementation to allow dragging cards around
   const dragRef = useRef<any>(null);
-
   useEffect(() => {
     if (dragRef.current) {
       Sortable.create(dragRef.current, {
@@ -21,7 +21,6 @@ export const PokemonCards = ({
     }
   }, [dragRef]);
 
-  console.log("inRecent from PokemonCards: ", inRecent);
   return (
     <List
       ref={dragRef}

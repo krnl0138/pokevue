@@ -11,7 +11,7 @@ import {
   addPokemon,
   selectAllIds,
 } from "../../lib/redux/slices/pokemonsSlice";
-import { selectUser } from "../../lib/redux/slices/userSlice";
+import { userSelect } from "../../lib/redux/slices/userSlice";
 
 type TProtectedRoute = {
   children: JSX.Element;
@@ -20,7 +20,7 @@ type TProtectedRoute = {
 export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
+  const user = useAppSelector(userSelect);
   const pokemonsIds = useAppSelector(selectAllIds);
   const [isFavsLoaded, setIsFavsLoaded] = useState(false);
 
@@ -29,7 +29,7 @@ export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
     const auth = getAuth(app);
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        await dbGetUser();
+        // await dbGetUser();
       } else {
         // router.push(URLS.login);
       }

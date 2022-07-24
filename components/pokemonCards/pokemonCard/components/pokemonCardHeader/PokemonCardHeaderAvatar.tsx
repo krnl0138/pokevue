@@ -1,6 +1,6 @@
 import { Avatar } from "@mui/material";
 import Image from "next/image";
-import { AVATAR_PLACEHOLDER as placeholder } from "../../../../utils/constants";
+import { AVATAR_PLACEHOLDER as placeholder } from "../../../../../utils/constants";
 
 export const PokemonCardHeaderAvatar = ({ avatar }: { avatar: string }) => {
   return (

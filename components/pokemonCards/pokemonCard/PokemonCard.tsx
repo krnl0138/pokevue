@@ -1,11 +1,12 @@
 import { Card, CircularProgress } from "@mui/material";
 import React, { useState } from "react";
-import { selectModalData } from "../../../lib/redux/slices/modalSlice";
+import { selectModalStatus } from "../../../lib/redux/slices/modalSlice";
 import { selectPokemonById } from "../../../lib/redux/slices/pokemonsSlice";
 import { useAppSelector } from "../../../utils/hooks";
-import { PokemonCardActions } from "./pokemonCardActions";
-import { PokemonCardBody } from "./pokemonCardBody";
-import { PokemonCardHeader } from "./pokemonCardHeader/PokemonCardHeader";
+import { PokemonCardActions } from "./components/pokemonCardActions";
+import { PokemonCardBody } from "./components/pokemonCardBody";
+import { PokemonCardHeader } from "./components/pokemonCardHeader/PokemonCardHeader";
+import { styleHoverShadow } from "../../../styles/styles";
 
 type TPokemonCard = {
   id: number;
@@ -18,6 +19,7 @@ const cardStyle = {
   justifyContent: "space-between;",
   maxWidth: "385px",
   m: 1,
+  styleHoverShadow,
 };
 
 const cardStyleModal = {
@@ -34,7 +36,7 @@ const cardStyleModal = {
 export const PokemonCard = React.forwardRef(
   ({ id, inRecent }: TPokemonCard, ref) => {
     console.log(`render PokemonCard with id: ${id}`);
-    const isModalOpen = useAppSelector(selectModalData);
+    const isModalOpen = useAppSelector(selectModalStatus);
     const pokemon = useAppSelector((state) => selectPokemonById(state, id));
 
     const [isHovered, setIsHovered] = useState(false);

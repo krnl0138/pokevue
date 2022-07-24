@@ -1,7 +1,7 @@
 import { CatchingPokemon } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
-import { openModal } from "../../../../lib/redux/slices/modalSlice";
-import { useAppDispatch } from "../../../../utils/hooks";
+import { openModal } from "../../../../../lib/redux/slices/modalSlice";
+import { useAppDispatch } from "../../../../../utils/hooks";
 
 export const PokemonCardHeaderAction = ({ id }: { id: number }) => {
   const dispatch = useAppDispatch();
