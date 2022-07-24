@@ -7,6 +7,7 @@ import { PokemonCardActions } from "./components/pokemonCardActions";
 import { PokemonCardBody } from "./components/pokemonCardBody";
 import { PokemonCardHeader } from "./components/pokemonCardHeader/PokemonCardHeader";
 import { styleHoverShadow } from "../../../styles/styles";
+import { PokemonCardContext } from "./pokemonCardContext";
 
 type TPokemonCard = {
   id: number;
@@ -44,60 +45,28 @@ export const PokemonCard = React.forwardRef(
       setIsHovered(!isHovered);
     };
 
-    const isFavourite = pokemon.isFavourite;
-    const isRecent = pokemon.isRecent;
-    const {
-      name,
-      avatarBig,
-      avatarSmall,
-      description,
-      abilities,
-      stats,
-      captureRate,
-      isBaby,
-      isLegendary,
-      isMythical,
-    } = pokemon.pokemonData;
-
     return (
-      <Card
-        onMouseEnter={toggleSetIsHovered}
-        onMouseLeave={toggleSetIsHovered}
-        variant="outlined"
-        sx={isModalOpen ? cardStyleModal : cardStyle}
-      >
-        {pokemon ? (
-          <>
-            <PokemonCardHeader
-              name={name}
-              id={id}
-              avatarSmall={avatarSmall}
-              captureRate={captureRate}
-              isLegendary={isLegendary}
-              isMythical={isMythical}
-              isBaby={isBaby}
-            />
-            <PokemonCardBody
-              abilities={abilities}
-              stats={stats}
-              description={description}
-              avatarBig={avatarBig}
-            />
+      <PokemonCardContext.Provider value={pokemon}>
+        <Card
+          onMouseEnter={toggleSetIsHovered}
+          onMouseLeave={toggleSetIsHovered}
+          variant="outlined"
+          sx={isModalOpen ? cardStyleModal : cardStyle}
+        >
+          {pokemon ? (
+            <>
+              <PokemonCardHeader />
+              <PokemonCardBody />
 
-            {!isModalOpen && (
-              <PokemonCardActions
-                id={id}
-                inRecent={inRecent ? inRecent : !inRecent}
-                isFavourite={isFavourite}
-                isHovered={isHovered}
-                isRecent={isRecent}
-              />
-            )}
-          </>
-        ) : (
-          <CircularProgress />
-        )}
-      </Card>
+              {!isModalOpen && (
+                <PokemonCardActions inRecent={inRecent} isHovered={isHovered} />
+              )}
+            </>
+          ) : (
+            <CircularProgress />
+          )}
+        </Card>
+      </PokemonCardContext.Provider>
     );
   }
 );

@@ -1,9 +1,12 @@
 import { CatchingPokemon } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import { useContext } from "react";
 import { openModal } from "../../../../../lib/redux/slices/modalSlice";
 import { useAppDispatch } from "../../../../../utils/hooks";
+import { PokemonCardContext } from "../../pokemonCardContext";
 
-export const PokemonCardHeaderAction = ({ id }: { id: number }) => {
+export const PokemonCardHeaderAction = () => {
+  const { id } = useContext(PokemonCardContext);
   const dispatch = useAppDispatch();
   // TODO check if it displayed correctly
   const handleOpenModal = () => {

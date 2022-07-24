@@ -1,8 +1,12 @@
 import { Avatar } from "@mui/material";
 import Image from "next/image";
+import { useContext } from "react";
 import { AVATAR_PLACEHOLDER as placeholder } from "../../../../../utils/constants";
+import { PokemonCardContext } from "../../pokemonCardContext";
 
-export const PokemonCardHeaderAvatar = ({ avatar }: { avatar: string }) => {
+export const PokemonCardHeaderAvatar = () => {
+  const { pokemonData } = useContext(PokemonCardContext);
+  const { avatarSmall } = pokemonData;
   return (
     <Avatar
       sx={{
@@ -11,7 +15,7 @@ export const PokemonCardHeaderAvatar = ({ avatar }: { avatar: string }) => {
       }}
     >
       <Image
-        src={avatar ? avatar : placeholder}
+        src={avatarSmall ? avatarSmall : placeholder}
         width="30"
         height="30"
         alt="avatar pokemon"

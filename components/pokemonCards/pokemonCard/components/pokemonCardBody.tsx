@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { AVATAR_PLACEHOLDER as placeholder } from "../../../../utils/constants";
-import { TPokemon } from "../../../../utils/types";
 import {
   CardContent,
   Chip,
@@ -18,20 +17,13 @@ import {
   QuestionMark,
   Shield,
 } from "@mui/icons-material";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { getRandomColors } from "../../../../utils/functions";
+import { PokemonCardContext } from "../pokemonCardContext";
 
-type TMyCardBody = Pick<
-  TPokemon["pokemonData"],
-  "description" | "avatarBig" | "abilities" | "stats"
->;
-
-export const PokemonCardBody = ({
-  abilities,
-  stats,
-  description,
-  avatarBig: avatar,
-}: TMyCardBody) => {
+export const PokemonCardBody = () => {
+  const { pokemonData } = useContext(PokemonCardContext);
+  const { abilities, stats, description, avatarBig } = pokemonData;
   const randomColors = useMemo(() => getRandomColors(abilities), []);
   const descriptionShort = description.split(".").splice(0, 4).join(" ");
 
@@ -48,7 +40,7 @@ export const PokemonCardBody = ({
         <Image
           height="140"
           width="140"
-          src={avatar ? avatar : placeholder}
+          src={avatarBig ? avatarBig : placeholder}
           alt="pokemon avatar"
         />
       </Container>

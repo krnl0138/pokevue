@@ -5,21 +5,14 @@ import {
   QuestionMarkOutlined,
 } from "@mui/icons-material";
 import { Container, Typography, Tooltip, Box } from "@mui/material";
+import { useContext } from "react";
 import { getStars } from "../../../../../utils/functions";
-import { TMyCardHeader } from "./PokemonCardHeader";
+import { PokemonCardContext } from "../../pokemonCardContext";
 
-type TMyCardHeaderTitle = Pick<
-  TMyCardHeader,
-  "isBaby" | "isLegendary" | "isMythical" | "name" | "captureRate"
->;
+export const PokemonCardHeaderTitle = () => {
+  const { pokemonData } = useContext(PokemonCardContext);
+  const { isBaby, isLegendary, isMythical, name, captureRate } = pokemonData;
 
-export const PokemonCardHeaderTitle = ({
-  isBaby,
-  isLegendary,
-  isMythical,
-  name,
-  captureRate,
-}: TMyCardHeaderTitle) => {
   const stars = getStars(captureRate);
   const starsArray = [...Array(stars).keys()];
   return (

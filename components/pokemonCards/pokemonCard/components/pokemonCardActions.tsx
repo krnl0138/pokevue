@@ -17,22 +17,17 @@ import {
   handleRecentPokemon,
   handleFavouritePokemon,
 } from "../../../../lib/redux/slices/pokemonsSlice";
-
-type TCardActions = {
-  id: number;
-  isFavourite: boolean;
-  isHovered: boolean;
-  isRecent: boolean;
-  inRecent: boolean;
-};
+import { useContext } from "react";
+import { PokemonCardContext } from "../pokemonCardContext";
 
 export const PokemonCardActions = ({
-  id,
   isHovered,
-  isFavourite,
-  isRecent,
-}: TCardActions) => {
-  console.log(isRecent);
+  inRecent,
+}: {
+  isHovered: boolean;
+  inRecent?: boolean;
+}) => {
+  const { id, isFavourite, isRecent } = useContext(PokemonCardContext);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -49,7 +44,7 @@ export const PokemonCardActions = ({
     >
       {isHovered && (
         <BottomNavigation>
-          {isRecent && (
+          {inRecent && isRecent && (
             <Tooltip title="Delete from recent search">
               <BottomNavigationAction
                 onClick={() => dispatch(handleRecentPokemon(id, isRecent))}
