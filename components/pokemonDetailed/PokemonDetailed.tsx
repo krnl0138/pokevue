@@ -25,7 +25,7 @@ export const PokemonDetailed = ({
     abilities,
     stats,
     avatarSmall,
-    captureRate,
+    // captureRate,
     isBaby,
     isLegendary,
     isMythical,

@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "..";
-import { TLoginFormData } from "../../../components/forms/loginForm/LoginForm";
-import { TProfileFormData } from "../../../components/forms/profileForm/ProfileForm";
-import { TRegisterFormData } from "../../../components/forms/registerForm/RegisterForm";
+import { TLoginFormData } from "../../../components/forms/loginForm/loginFormReducer";
+import { TProfileFormData } from "../../../components/forms/profileForm/profileFormReducer";
+import { TRegisterFormData } from "../../../components/forms/registerForm/registerFormReducer";
 import {
   handleUpdateEmail,
   handleUpdatePassword,
@@ -38,6 +38,15 @@ export const { actions, reducer: userReducer } = userSlice;
 export const { setUser, resetUser } = actions;
 
 export const userSelect = (state: RootState) => state.user;
+
+export const userGet = () => async (dispatch: AppDispatch) => {
+  try {
+    const user = await dbGetUser();
+    dispatch(setUser(user));
+  } catch {
+    throw new Error("No user was found");
+  }
+};
 
 export const userLogin =
   (data: TLoginFormData) => async (dispatch: AppDispatch) => {

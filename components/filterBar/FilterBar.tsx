@@ -7,7 +7,7 @@ import {
 } from "../../lib/redux/slices/filterBarSlice";
 import {
   addPokemon,
-  addRecentPokemon,
+  handleRecentPokemon,
 } from "../../lib/redux/slices/pokemonsSlice";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { InputComponent } from "../forms/InputComponent";
@@ -28,7 +28,7 @@ export const FilterBar = ({
     try {
       const pokemon = await getPokemon(search);
       dispatch(addPokemon(pokemon));
-      dispatch(addRecentPokemon(pokemon.id));
+      dispatch(handleRecentPokemon(pokemon.id));
     } catch (e: any) {
       throw new Error(e.message);
     }
@@ -48,7 +48,7 @@ export const FilterBar = ({
         <InputComponent
           label="Pokemon name"
           id="filterValue"
-          action={setFilterBarValue}
+          onChange={setFilterBarValue}
           value={filterValue}
           helperText="Search pokemons by names!"
         />

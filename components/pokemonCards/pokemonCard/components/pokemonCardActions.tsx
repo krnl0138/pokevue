@@ -11,14 +11,12 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useRouter } from "next/router";
-import {
-  addRecentPokemon,
-  removeRecentPokemon,
-  removeFavouritePokemon,
-  addFavouritePokemon,
-} from "../../../../lib/redux/slices/pokemonsSlice";
 import { useAppDispatch } from "../../../../utils/hooks";
 import { URLS } from "../../../../utils/constants";
+import {
+  handleRecentPokemon,
+  handleFavouritePokemon,
+} from "../../../../lib/redux/slices/pokemonsSlice";
 
 type TCardActions = {
   id: number;
@@ -37,23 +35,8 @@ export const PokemonCardActions = ({
   console.log(isRecent);
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const handleRecent = () => {
-    isRecent
-      ? dispatch(removeRecentPokemon(id))
-      : dispatch(addRecentPokemon(id));
-  };
 
-  const handleFavourite = () => {
-    if (isFavourite) {
-      // dbRemoveFavourite(id);
-      dispatch(removeFavouritePokemon(id));
-      return;
-    }
-    // dbWriteFavourite(id);
-    dispatch(addFavouritePokemon(id));
-  };
-
-  const handleOpenPokemonScreen = () => {
+  const handleOpenDetailedPokemon = () => {
     router.push(`${URLS.pokemon}/${id}`);
   };
 
@@ -69,7 +52,7 @@ export const PokemonCardActions = ({
           {isRecent && (
             <Tooltip title="Delete from recent search">
               <BottomNavigationAction
-                onClick={handleRecent}
+                onClick={() => dispatch(handleRecentPokemon(id, isRecent))}
                 icon={<DeleteOutlineOutlined fontSize="small" />}
                 sx={{ color: "#1f88e5" }}
               />
@@ -78,7 +61,7 @@ export const PokemonCardActions = ({
 
           <Tooltip title="Add to favourites">
             <BottomNavigationAction
-              onClick={handleFavourite}
+              onClick={() => dispatch(handleFavouritePokemon(id, isFavourite))}
               icon={
                 isFavourite ? (
                   <Favorite fontSize="small" />
@@ -92,7 +75,7 @@ export const PokemonCardActions = ({
 
           <Tooltip title="Learn about this pokemon">
             <BottomNavigationAction
-              onClick={handleOpenPokemonScreen}
+              onClick={handleOpenDetailedPokemon}
               icon={<Segment fontSize="small" />}
               sx={{ color: "#1f88e5" }}
             />

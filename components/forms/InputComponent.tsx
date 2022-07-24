@@ -4,7 +4,9 @@ import React from "react";
 type TMyInput = {
   id: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => void | { payload: any; type: string };
   label: string;
   helperText?: string;
 };
@@ -12,7 +14,6 @@ type TMyInput = {
 export const InputComponent = ({
   id,
   value,
-  // action,
   onChange,
   label,
   helperText,

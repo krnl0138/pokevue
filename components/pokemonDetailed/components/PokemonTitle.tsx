@@ -1,9 +1,6 @@
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { Typography, Button } from "@mui/material";
-import {
-  removeFavouritePokemon,
-  addFavouritePokemon,
-} from "../../../lib/redux/slices/pokemonsSlice";
+import { handleFavouritePokemon } from "../../../lib/redux/slices/pokemonsSlice";
 import { useAppDispatch } from "../../../utils/hooks";
 import { TPokemon } from "../../../utils/types";
 
@@ -11,16 +8,6 @@ type TPokemonTitle = Pick<TPokemon, "id" | "isFavourite"> &
   Pick<TPokemon["pokemonData"], "name">;
 export const PokemonTitle = ({ name, id, isFavourite }: TPokemonTitle) => {
   const dispatch = useAppDispatch();
-
-  const handleFavourite = () => {
-    if (isFavourite) {
-      // dbRemoveFavourite(id);
-      dispatch(removeFavouritePokemon(id));
-      return;
-    }
-    // dbWriteFavourite(id);
-    dispatch(addFavouritePokemon(id));
-  };
 
   return (
     <Typography
@@ -31,7 +18,7 @@ export const PokemonTitle = ({ name, id, isFavourite }: TPokemonTitle) => {
     >
       {name}
       <Button
-        onClick={handleFavourite}
+        onClick={() => dispatch(handleFavouritePokemon(id))}
         sx={{ marginLeft: 2, borderRadius: "12px" }}
       >
         {isFavourite ? (

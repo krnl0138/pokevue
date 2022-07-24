@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "..";
+import { AppDispatch, RootState } from "..";
+import { dbRemoveFavourite, dbWriteFavourite } from "../../../database";
 import { NUM_RECENT_POKEMON_CARDS } from "../../../utils/constants";
 import { TPokemon } from "../../../utils/types";
 
@@ -96,3 +97,26 @@ export const selectRandomIds = (state: RootState) => state.pokemons.randomIds;
 export const selectAllPokemons = (state: RootState) => state.pokemons.byId;
 export const selectPokemonById = (state: RootState, id: number) =>
   state.pokemons.byId[id];
+
+export const handleFavouritePokemon =
+  (id: TPokemon["id"], isFavourite?: TPokemon["isFavourite"]) =>
+  (dispatch: AppDispatch) => {
+    // TODO db should be in try..catch block ?
+    if (isFavourite) {
+      // dbRemoveFavourite(id);
+      dispatch(removeFavouritePokemon(id));
+      return;
+    }
+    // dbWriteFavourite(id);
+    dispatch(addFavouritePokemon(id));
+  };
+
+export const handleRecentPokemon =
+  (id: TPokemon["id"], isRecent?: TPokemon["isRecent"]) =>
+  (dispatch: AppDispatch) => {
+    if (isRecent) {
+      dispatch(removeRecentPokemon(id));
+      return;
+    }
+    dispatch(addRecentPokemon(id));
+  };

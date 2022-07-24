@@ -1,17 +1,17 @@
 import { getAuth } from "firebase/auth";
 import { useState } from "react";
-import { app, dbGetUser } from "../../database";
+import { app } from "../../database";
 import { URLS } from "../../utils/constants";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { CircularProgress } from "@mui/material";
 import { getPokemon } from "../../lib/api/getPokemon";
 import {
-  addFavouritePokemon,
   addPokemon,
+  handleFavouritePokemon,
   selectAllIds,
 } from "../../lib/redux/slices/pokemonsSlice";
-import { userSelect } from "../../lib/redux/slices/userSlice";
+import { userGet, userSelect } from "../../lib/redux/slices/userSlice";
 
 type TProtectedRoute = {
   children: JSX.Element;
@@ -29,9 +29,9 @@ export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
     const auth = getAuth(app);
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        // await dbGetUser();
+        await dispatch(userGet());
       } else {
-        // router.push(URLS.login);
+        router.push(URLS.login);
       }
     });
     // wait until onAuthStateChanged
@@ -52,7 +52,7 @@ export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
 
     result.forEach((pok) => {
       dispatch(addPokemon(pok));
-      dispatch(addFavouritePokemon(pok.id));
+      dispatch(handleFavouritePokemon(pok.id));
     });
   };
   if (!isFavsLoaded) populateFavourites();
