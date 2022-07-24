@@ -14,6 +14,7 @@ import {
 import { get, getDatabase, ref, remove, set, update } from "firebase/database";
 import store from "../lib/redux";
 import { setUser } from "../lib/redux/slices/userSlice";
+import * as fakeUser from "../public/fakeUser.json";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -92,7 +93,10 @@ export const dbGetUser = async () => {
   auth.onAuthStateChanged(async (user) => {
     if (user) {
       const userSnapshot = await get(userRef(user.uid));
-      store.dispatch(setUser(userSnapshot.val()));
+      // store.dispatch(setUser(userSnapshot.val()));
+      return userSnapshot.val();
+      // TODO TEST CODE REMOVE TO USE DB
+      store.dispatch(setUser(fakeUser));
     } else {
       throw new Error(`No user is logged in. Function call cannot be made.`);
     }
@@ -101,8 +105,8 @@ export const dbGetUser = async () => {
 
 //
 // auth
-export const handleGoogleAuth = () => {
-  signInWithPopup(auth, new GoogleAuthProvider());
+export const handleGoogleAuth = async () => {
+  await signInWithPopup(auth, new GoogleAuthProvider());
 };
 
 export const handleCreateUser = async (email: string, password: string) => {

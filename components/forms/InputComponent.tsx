@@ -1,11 +1,10 @@
 import { FormControl, InputLabel, FormHelperText, Input } from "@mui/material";
-import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
-import { useAppDispatch } from "../../utils/hooks";
+import React from "react";
 
 type TMyInput = {
   id: string;
   value: string;
-  action: ActionCreatorWithPayload<any, string>;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label: string;
   helperText?: string;
 };
@@ -13,15 +12,11 @@ type TMyInput = {
 export const InputComponent = ({
   id,
   value,
-  action,
+  // action,
+  onChange,
   label,
   helperText,
 }: TMyInput) => {
-  const dispatch = useAppDispatch();
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const result = { [e.currentTarget.id]: e.currentTarget.value };
-    dispatch(action(result));
-  };
   return (
     <FormControl>
       <InputLabel htmlFor={id} margin="dense">
@@ -30,13 +25,11 @@ export const InputComponent = ({
       <Input
         id={id}
         aria-describedby={`${id}-helper`}
-        onChange={handleOnChange}
+        onChange={onChange}
         value={value}
       />
       {helperText && (
-        <FormHelperText id={`${id}-helper`}>
-          We&apos;ll never share your email.
-        </FormHelperText>
+        <FormHelperText id={`${id}-helper`}>{helperText}</FormHelperText>
       )}
     </FormControl>
   );

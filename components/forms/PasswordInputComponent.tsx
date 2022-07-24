@@ -5,28 +5,19 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { useState } from "react";
-import { useAppDispatch } from "../../utils/hooks";
 
 type TPasswordWrapper = {
   id: string;
   value: string;
-  action: ActionCreatorWithPayload<any, string>;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const PasswordInputComponent = ({
   id,
   value,
-  action,
+  onChange,
 }: TPasswordWrapper) => {
-  const dispatch = useAppDispatch();
-
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const result = { [e.currentTarget.id]: e.currentTarget.value };
-    dispatch(action(result));
-  };
-
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -37,7 +28,8 @@ export const PasswordInputComponent = ({
       <OutlinedInput
         id={id}
         type={showPassword ? "text" : "password"}
-        onChange={handleOnChange}
+        // onChange={handleOnChange}
+        onChange={onChange}
         value={value}
         endAdornment={
           <InputAdornment position="end">
