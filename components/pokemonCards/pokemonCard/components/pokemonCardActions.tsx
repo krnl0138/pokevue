@@ -25,7 +25,7 @@ export const PokemonCardActions = ({
   inRecent,
 }: {
   isHovered: boolean;
-  inRecent?: boolean;
+  inRecent: boolean;
 }) => {
   const { id, isFavourite, isRecent } = useContext(PokemonCardContext);
   const router = useRouter();

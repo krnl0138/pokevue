@@ -6,9 +6,6 @@ import { useAppDispatch } from "../../utils/hooks";
 type TMyInput = {
   id: string;
   value: string;
-  // onChange: (
-  //   e: React.ChangeEvent<HTMLInputElement>
-  // ) => void | { payload: any; type: string };
   onChange: (
     e: React.ChangeEvent<HTMLInputElement>
   ) => void | ActionCreatorWithPayload<any, string>;
@@ -20,12 +17,9 @@ export const InputComponent = ({
   id,
   value,
   onChange,
-  action,
   label,
   helperText,
 }: TMyInput) => {
-  // console.log(action);
-  // console.log(onChange);
   const dispatch = useAppDispatch();
   return (
     <FormControl>
@@ -36,8 +30,6 @@ export const InputComponent = ({
         id={id}
         aria-describedby={`${id}-helper`}
         onChange={onChange}
-        // action={action}
-        // onChange={action ? action : onChange}
         value={value}
       />
       {helperText && (

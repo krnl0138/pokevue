@@ -22,7 +22,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useAppSelector } from "../../../utils/hooks";
-import { handleLogout } from "../../../database";
+import { handleLogout } from "../../../firebase/auth";
 import { userSelect } from "../../../lib/redux/slices/userSlice";
 
 const pages = ["Pokemons", "About"];
