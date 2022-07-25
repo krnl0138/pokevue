@@ -1,4 +1,6 @@
-import { SyntheticEvent } from "react";
+import Input from "@mui/material/Input";
+import FormControl from "@mui/material/FormControl";
+import React, { SyntheticEvent } from "react";
 import { getPokemon } from "../../lib/api/getPokemon";
 import {
   resetFilterBarValue,
@@ -10,8 +12,8 @@ import {
   handleRecentPokemon,
 } from "../../lib/redux/slices/pokemonsSlice";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
-import { InputComponent } from "../forms/InputComponent";
 import { SubmitButtonComponent } from "../forms/SubmitButtonComponent";
+import { dbGetAverageRating } from "../../firebase/dbRatings";
 
 export const FilterBar = ({
   withSearch,
@@ -21,12 +23,19 @@ export const FilterBar = ({
   const dispatch = useAppDispatch();
   const filterValue = useAppSelector(selectFilterBarValue);
 
+  const onFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setFilterBarValue(e.target.value));
+  };
+
   const handleOnSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    if (!filterValue) return;
     const search = filterValue.toLowerCase();
     dispatch(resetFilterBarValue());
     try {
       const pokemon = await getPokemon(search);
+      const pokemonId = pokemon.id;
+      await dbGetAverageRating({ pokemonId });
       dispatch(addPokemon(pokemon));
       dispatch(handleRecentPokemon(pokemon.id));
     } catch (e: any) {
@@ -45,13 +54,14 @@ export const FilterBar = ({
           (withSearch ? handleOnSubmit : notOnSubmit) as typeof handleOnSubmit
         }
       >
-        <InputComponent
-          label="Pokemon name"
-          id="filterValue"
-          onChange={setFilterBarValue}
-          value={filterValue}
-          helperText="Search pokemons by names!"
-        />
+        <FormControl>
+          <Input
+            id="filterBar"
+            aria-describedby={`filterBar-helper`}
+            onChange={onFormChange}
+            value={filterValue}
+          />
+        </FormControl>
 
         {withSearch && <SubmitButtonComponent title="Search" />}
       </form>
