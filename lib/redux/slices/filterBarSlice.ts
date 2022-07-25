@@ -10,7 +10,7 @@ export const filterBarSlice = createSlice({
   initialState,
   reducers: {
     setFilterBarValue: (state, action) => {
-      return { ...state, ...action.payload };
+      state.filterValue = action.payload;
     },
     resetFilterBarValue: () => {
       return initialState;

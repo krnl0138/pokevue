@@ -7,7 +7,7 @@ import {
 export const parsePokemon = (data: {
   pokemon: TPokemonResponse;
   pokemonSpecies: TPokemonSpeciesResponse;
-}): Omit<TPokemon, "isFavourite" | "isRecent" | "isRandom"> => {
+}): Pick<TPokemon, "pokemonData" | "id"> => {
   console.log("parsePokemon was CALLED");
   const { pokemon, pokemonSpecies } = data;
   const id = pokemon.id;
