@@ -12,11 +12,10 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import { TPokemon } from "../../../utils/types";
 import Image from "next/image";
 import { styleHoverShadow } from "../../../styles/styles";
-
-type TPokemonStats = Pick<TPokemon["pokemonData"], "stats" | "avatarSmall">;
+import { useContext } from "react";
+import { PokemonDetailedContext } from "../pokemonDetailedContext";
 
 const statStyle = {
   display: "flex",
@@ -24,7 +23,9 @@ const statStyle = {
   svg: { marginRight: 0.5 },
 };
 
-export const PokemonStats = ({ stats, avatarSmall }: TPokemonStats) => {
+export const PokemonStats = () => {
+  const { pokemonData } = useContext(PokemonDetailedContext);
+  const { stats, avatarSmall } = pokemonData;
   return (
     <Container
       sx={{
@@ -33,7 +34,7 @@ export const PokemonStats = ({ stats, avatarSmall }: TPokemonStats) => {
         paddingTop: 2,
         marginTop: 2,
         paddingBottom: 5,
-        styleHoverShadow,
+        ...styleHoverShadow,
       }}
     >
       <Container

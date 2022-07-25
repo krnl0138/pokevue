@@ -1,16 +1,10 @@
 import { Container, Chip } from "@mui/material";
-import { TPokemon } from "../../../utils/types";
+import { useContext } from "react";
+import { PokemonDetailedContext } from "../pokemonDetailedContext";
 
-type TPokemonAttributes = Pick<
-  TPokemon["pokemonData"],
-  "isLegendary" | "isMythical" | "isBaby"
->;
-
-export const PokemonAttributes = ({
-  isLegendary,
-  isMythical,
-  isBaby,
-}: TPokemonAttributes) => {
+export const PokemonAttributes = () => {
+  const { pokemonData } = useContext(PokemonDetailedContext);
+  const { isLegendary, isMythical, isBaby } = pokemonData;
   return (
     <Container
       sx={{

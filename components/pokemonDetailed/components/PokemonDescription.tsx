@@ -1,8 +1,10 @@
 import { Container, Typography } from "@mui/material";
-import { TPokemon } from "../../../utils/types";
+import { useContext } from "react";
+import { PokemonDetailedContext } from "../pokemonDetailedContext";
 
-type TPokemonDescription = Pick<TPokemon["pokemonData"], "description">;
-export const PokemonDescription = ({ description }: TPokemonDescription) => {
+export const PokemonDescription = () => {
+  const { pokemonData } = useContext(PokemonDetailedContext);
+  const { description } = pokemonData;
   return (
     <Container sx={{}}>
       <Typography variant="h2" component="h2" sx={{ marginBottom: 3 }}>

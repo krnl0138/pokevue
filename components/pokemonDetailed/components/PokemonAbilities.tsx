@@ -2,16 +2,13 @@ import { List, ListItem, ListItemText, Chip } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
-import { TPokemon } from "../../../utils/types";
+import { useContext } from "react";
+import { styleHoverShadow } from "../../../styles/styles";
+import { PokemonDetailedContext } from "../pokemonDetailedContext";
 
-type TPokemonAbilities = Pick<
-  TPokemon["pokemonData"],
-  "abilities" | "avatarSmall"
->;
-export const PokemonAbilities = ({
-  abilities,
-  avatarSmall,
-}: TPokemonAbilities) => {
+export const PokemonAbilities = () => {
+  const { pokemonData } = useContext(PokemonDetailedContext);
+  const { abilities, avatarSmall } = pokemonData;
   return (
     <Container
       sx={{
@@ -19,10 +16,7 @@ export const PokemonAbilities = ({
         borderRadius: "8px",
         paddingTop: 2,
         paddingBottom: 2,
-        ":hover": {
-          backgroundColor: "rgb(0 0 0 / 2%)",
-          boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
-        },
+        ...styleHoverShadow,
       }}
     >
       <Container

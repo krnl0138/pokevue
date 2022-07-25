@@ -1,24 +1,4 @@
 import React from "react";
-import { TPokemon } from "../../../utils/types";
+import { POKEMON_INITIAL_STATE } from "../../../utils/constants";
 
-const initialState: TPokemon = {
-  id: -Infinity,
-  isFavourite: false,
-  isRecent: false,
-  isRandom: false,
-  pokemonData: {
-    name: "",
-    avatarBig: "",
-    avatarSmall: "",
-    description: "",
-    abilities: [{ id: -Infinity, name: "" }],
-    stats: [{ id: -Infinity, name: "", value: -Infinity }],
-    captureRate: -Infinity,
-    isBaby: false,
-    isLegendary: false,
-    isMythical: false,
-    evolutionName: "",
-  },
-};
-
-export const PokemonCardContext = React.createContext(initialState);
+export const PokemonCardContext = React.createContext(POKEMON_INITIAL_STATE);

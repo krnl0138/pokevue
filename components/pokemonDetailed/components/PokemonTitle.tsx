@@ -1,13 +1,14 @@
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { Typography, Button } from "@mui/material";
+import { useContext } from "react";
 import { handleFavouritePokemon } from "../../../lib/redux/slices/pokemonsSlice";
 import { useAppDispatch } from "../../../utils/hooks";
-import { TPokemon } from "../../../utils/types";
+import { PokemonDetailedContext } from "../pokemonDetailedContext";
 
-type TPokemonTitle = Pick<TPokemon, "id" | "isFavourite"> &
-  Pick<TPokemon["pokemonData"], "name">;
-export const PokemonTitle = ({ name, id, isFavourite }: TPokemonTitle) => {
+export const PokemonTitle = () => {
   const dispatch = useAppDispatch();
+  const { id, isFavourite, pokemonData } = useContext(PokemonDetailedContext);
+  const { name } = pokemonData;
 
   return (
     <Typography

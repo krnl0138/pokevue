@@ -5,8 +5,11 @@ import { URLS } from "../../../utils/constants";
 import { TPokemon } from "../../../utils/types";
 import Image from "next/image";
 
-type TPokemonEvolution = { evolutionPokemons: TPokemon[] };
-export const PokemonEvolution = ({ evolutionPokemons }: TPokemonEvolution) => {
+export const PokemonEvolution = ({
+  evolutionPokemons,
+}: {
+  evolutionPokemons: TPokemon[];
+}) => {
   return (
     <>
       <Typography

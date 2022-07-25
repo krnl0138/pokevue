@@ -1,9 +1,11 @@
 import { Container } from "@mui/material";
-import { TPokemon } from "../../../utils/types";
 import Image from "next/image";
+import { useContext } from "react";
+import { PokemonDetailedContext } from "../pokemonDetailedContext";
 
-type TPokemonBigImage = Pick<TPokemon["pokemonData"], "avatarBig">;
-export const PokemonBigImage = ({ avatarBig }: TPokemonBigImage) => {
+export const PokemonBigImage = () => {
+  const { pokemonData } = useContext(PokemonDetailedContext);
+  const { avatarBig } = pokemonData;
   return (
     <Container
       sx={{
