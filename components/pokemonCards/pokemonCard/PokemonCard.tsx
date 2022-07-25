@@ -1,4 +1,4 @@
-import { Card, CircularProgress } from "@mui/material";
+import { Box, Card, CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { selectModalStatus } from "../../../lib/redux/slices/modalSlice";
 import { selectPokemonById } from "../../../lib/redux/slices/pokemonsSlice";
@@ -20,7 +20,6 @@ const cardStyle = {
   justifyContent: "space-between;",
   maxWidth: "385px",
   m: 1,
-  styleHoverShadow,
 };
 
 const cardStyleModal = {
@@ -55,11 +54,16 @@ export const PokemonCard = React.forwardRef(
         >
           {pokemon ? (
             <>
-              <PokemonCardHeader />
-              <PokemonCardBody />
+              <Box sx={styleHoverShadow}>
+                <PokemonCardHeader />
+                <PokemonCardBody />
+              </Box>
 
               {!isModalOpen && (
-                <PokemonCardActions inRecent={inRecent} isHovered={isHovered} />
+                <PokemonCardActions
+                  inRecent={inRecent ? inRecent : !inRecent}
+                  isHovered={isHovered}
+                />
               )}
             </>
           ) : (
