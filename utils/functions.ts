@@ -1,3 +1,4 @@
+import { ConstructionOutlined } from "@mui/icons-material";
 import { COLORS } from "./constants";
 
 export const fetcher = async (url: string) => {
@@ -16,15 +17,23 @@ export const createRandomIds = (limit: number) => {
   return arr;
 };
 
-export const getStars = (rate: number) => {
-  if (rate <= 255 && rate > 200) return 1;
-  if (rate < 199 && rate > 150) return 2;
-  if (rate < 149 && rate > 80) return 3;
-  if (rate < 79 && rate > 40) return 4;
-  if (rate < 39 && rate >= 0) return 5;
-  return 0;
+export const getCaptureColor = (rate: number) => {
+  if (rate <= 50) return "error";
+  if (rate > 50 && rate <= 180) return "warning";
+  if (rate > 180) return "success";
+  return "default";
 };
 
 // get random colors for abilities
 export const getRandomColors = (arr: any) =>
   arr.map(() => COLORS[Math.floor(Math.random() * COLORS.length)]);
+
+export const calculateAverageRating = (ratings: { [uid: string]: number }):number => {
+  if (!ratings) return 0;
+  const ratingsArr = Object.values(ratings);
+  const sum = ratingsArr.reduce((acc, rating) => acc + rating, 0);
+  const result = (sum / ratingsArr.length).toFixed(1);
+  console.log("result from calculateAverageRating is: ", result);
+
+  return Number(result);
+};

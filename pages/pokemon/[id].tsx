@@ -4,11 +4,15 @@ import { PokemonDetailed } from "../../components/pokemonDetailed/PokemonDetaile
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { ProtectedRoute } from "../../components/protectedRoute/ProtectedRoute";
 import { getPokemon } from "../../lib/api/getPokemon";
-import { addPokemon, selectPokemonById } from "../../lib/redux/slices/pokemonsSlice";
+import {
+  addPokemon,
+  selectPokemonById,
+} from "../../lib/redux/slices/pokemonsSlice";
 import { CircularProgress } from "@mui/material";
 import { GetServerSideProps } from "next/types";
 import { fetchEvolution } from "../../lib/api/fetchEvolution";
 import { TPokemon } from "../../utils/types";
+import { dbGetAverageRating } from "../../firebase/dbRatings";
 
 // TODO should do SSR with its own richer parse function or render from client store?
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -29,19 +33,27 @@ const Pokemon = (evolutionPokemons: TPokemon[]) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const id = router.asPath.split("/")[2];
-  const pokemon = useAppSelector(state => selectPokemonById(state,Number(id)));
+  const pokemon = useAppSelector((state) =>
+    selectPokemonById(state, Number(id))
+  );
 
   // hotfix, sometimes router returns '[id]' string
   if (id === "[id]") return <CircularProgress />;
 
   const loadPokemon = async (id: number) => {
     if (evolutionPokemons) {
-      Object.values(evolutionPokemons).forEach((p) => dispatch(addPokemon(p)));
+      Object.values(evolutionPokemons).forEach((p) => {
+        const pokemonId = p.id;
+        dispatch(addPokemon(p));
+        dbGetAverageRating({ pokemonId });
+      });
       return;
     }
     console.log("id is:", id);
     if (!id) return;
     const pokemon = await getPokemon(id);
+    const pokemonId = id;
+    await dbGetAverageRating({ pokemonId });
     console.log("returned pokemon from getPokemon is: ", pokemon);
     dispatch(addPokemon(pokemon));
   };

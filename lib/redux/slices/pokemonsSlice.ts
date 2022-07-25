@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "..";
-import { dbRemoveFavourite, dbWriteFavourite } from "../../../database";
+import { dbRemoveFavourite, dbWriteFavourite } from "../../../firebase/dbUsers";
 import { NUM_RECENT_POKEMON_CARDS } from "../../../utils/constants";
 import { TPokemon } from "../../../utils/types";
 
-type InitialState = {
+type TInitialState = {
   byId: { [id: number]: TPokemon };
   allIds: Array<number>;
   recentIds: Array<number>;
@@ -12,15 +12,17 @@ type InitialState = {
   favouriteIds: Array<number>;
 };
 
+const initialState: TInitialState = {
+  byId: {},
+  allIds: [],
+  recentIds: [],
+  randomIds: [],
+  favouriteIds: [],
+};
+
 export const pokemonsSlice = createSlice({
   name: "pokemons",
-  initialState: <InitialState>{
-    byId: {},
-    allIds: [],
-    recentIds: [],
-    randomIds: [],
-    favouriteIds: [],
-  },
+  initialState,
   reducers: {
     addPokemon: (state, action: { payload: TPokemon }) => {
       const { payload } = action;
@@ -74,6 +76,14 @@ export const pokemonsSlice = createSlice({
       state.allIds = state.allIds.filter((i) => i !== id);
       delete state.byId[id];
     },
+    addAverageRating: (
+      state,
+      action: { payload: { pokemonId: number; ratingAverage: number } }
+    ) => {
+      console.log("payload from addAverageRating is: ", action.payload);
+      const { pokemonId, ratingAverage } = action.payload;
+      state.byId[pokemonId].ratingAverage = ratingAverage;
+    },
   },
 });
 
@@ -87,6 +97,7 @@ export const {
   removeFavouritePokemon,
   addRandomPokemon,
   removeRandomPokemon,
+  addAverageRating,
 } = actions;
 
 export const selectAllIds = (state: RootState) => state.pokemons.allIds;
@@ -97,6 +108,8 @@ export const selectRandomIds = (state: RootState) => state.pokemons.randomIds;
 export const selectAllPokemons = (state: RootState) => state.pokemons.byId;
 export const selectPokemonById = (state: RootState, id: number) =>
   state.pokemons.byId[id];
+export const selectAverageRating = (state: RootState, id: number) =>
+  state.pokemons.byId[id].ratingAverage;
 
 export const handleFavouritePokemon =
   (id: TPokemon["id"], isFavourite?: TPokemon["isFavourite"]) =>

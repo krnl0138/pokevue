@@ -4,49 +4,84 @@ import {
   Stars,
   QuestionMarkOutlined,
 } from "@mui/icons-material";
-import { Container, Typography, Tooltip, Box } from "@mui/material";
+import { Container, Typography, Tooltip, Box, Chip } from "@mui/material";
 import { useContext } from "react";
-import { getStars } from "../../../../../utils/functions";
+import { getCaptureColor } from "../../../../../utils/functions";
+import { PokemonRating } from "../../../../pokemonRating/PokemonRating";
 import { PokemonCardContext } from "../../pokemonCardContext";
 
 export const PokemonCardHeaderTitle = () => {
-  const { pokemonData } = useContext(PokemonCardContext);
+  const { id, pokemonData } = useContext(PokemonCardContext);
   const { isBaby, isLegendary, isMythical, name, captureRate } = pokemonData;
 
-  const stars = getStars(captureRate);
-  const starsArray = [...Array(stars).keys()];
+  const captureColor = getCaptureColor(captureRate);
   return (
-    <Container sx={{ padding: 0, display: "flex", alignItems: "center" }}>
+    <Container
+      sx={{
+        padding: 0,
+        display: "flex",
+        alignItems: "center",
+        "@media": { padding: 0 },
+      }}
+    >
       <Typography
         variant="h6"
-        sx={{ textTransform: "capitalize", paddingRight: "5px" }}
+        sx={{
+          textTransform: "capitalize",
+          paddingRight: "5px",
+          fontWeight: "300",
+        }}
       >
         {name}
       </Typography>
 
-      <Tooltip title="Rate of capture">
-        <Box sx={{ alignSelf: "flex-end" }}>
-          {starsArray.map((i) => (
-            <Grade key={i} fontSize="small" />
-          ))}
-        </Box>
-      </Tooltip>
+      <PokemonRating id={id} />
 
-      {isBaby && (
-        <Tooltip title="Pokemon is baby">
-          <BedroomBabyOutlined fontSize="small" color="primary" />
-        </Tooltip>
-      )}
-      {isLegendary && (
-        <Tooltip title="Pokemon is legendary">
-          <Stars fontSize="small" color="primary" />
-        </Tooltip>
-      )}
-      {isMythical && (
-        <Tooltip title="Pokemon is mythical">
-          <QuestionMarkOutlined fontSize="small" color="primary" />
-        </Tooltip>
-      )}
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          padding: 0,
+          "@media": { padding: 0 },
+        }}
+      >
+        {isBaby && (
+          <Tooltip title="Pokemon is baby">
+            <BedroomBabyOutlined fontSize="small" color="primary" />
+          </Tooltip>
+        )}
+        {isLegendary && (
+          <Tooltip title="Pokemon is legendary">
+            <Stars fontSize="small" color="primary" />
+          </Tooltip>
+        )}
+        {isMythical && (
+          <Tooltip title="Pokemon is mythical">
+            <QuestionMarkOutlined fontSize="small" color="primary" />
+          </Tooltip>
+        )}
+        {captureColor === "default" ? null : (
+          <Tooltip
+            title={
+              captureColor === "error"
+                ? "Incredibly hard to catch"
+                : captureColor === "warning"
+                ? "Can be tricky to catch"
+                : "Very easy to catch"
+            }
+          >
+            <Chip
+              color={captureColor}
+              sx={{
+                height: "8px",
+                width: "8px",
+                marginLeft: "4px",
+              }}
+            ></Chip>
+          </Tooltip>
+        )}
+      </Container>
     </Container>
   );
 };

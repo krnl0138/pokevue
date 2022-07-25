@@ -103,11 +103,15 @@ export type TPokemonSpeciesResponse = {
   };
 };
 
+export type TRatings = { [uuid: string]: number };
+
 export type TPokemon = {
   id: number;
   isFavourite: boolean;
   isRecent: boolean;
   isRandom: boolean;
+  // TODO check optional value => mandatory
+  ratingAverage?: null | number;
   pokemonData: {
     name: string;
     avatarBig: string;
@@ -127,5 +131,6 @@ export type TUser = {
   username: string;
   email: string;
   avatar?: string;
-  favourites?: [];
+  favourites: { [pokemonId: number]: number };
+  ratings: { [pokemonId: number]: number };
 };
