@@ -6,7 +6,7 @@ import { useAppSelector } from "../../../utils/hooks";
 import { PokemonCardActions } from "./components/pokemonCardActions";
 import { PokemonCardBody } from "./components/pokemonCardBody";
 import { PokemonCardHeader } from "./components/pokemonCardHeader/PokemonCardHeader";
-import { styleHoverShadow } from "../../../styles/styles";
+import { styleGlobalHoverShadow } from "../../../styles/styles";
 import { PokemonCardContext } from "./pokemonCardContext";
 
 type TPokemonCard = {
@@ -54,7 +54,7 @@ export const PokemonCard = React.forwardRef(
         >
           {pokemon ? (
             <>
-              <Box sx={styleHoverShadow}>
+              <Box sx={styleGlobalHoverShadow}>
                 <PokemonCardHeader />
                 <PokemonCardBody />
               </Box>
