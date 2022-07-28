@@ -28,12 +28,12 @@ export const getCaptureColor = (rate: number) => {
 export const getRandomColors = (arr: any) =>
   arr.map(() => COLORS[Math.floor(Math.random() * COLORS.length)]);
 
-export const calculateAverageRating = (ratings: { [uid: string]: number }):number => {
+export const calculateAverageRating = (ratings: {
+  [uid: string]: number;
+}): number => {
   if (!ratings) return 0;
   const ratingsArr = Object.values(ratings);
   const sum = ratingsArr.reduce((acc, rating) => acc + rating, 0);
   const result = (sum / ratingsArr.length).toFixed(1);
-  console.log("result from calculateAverageRating is: ", result);
-
   return Number(result);
 };

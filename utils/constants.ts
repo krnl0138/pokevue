@@ -18,6 +18,7 @@ export const AVATAR_PLACEHOLDER = "/vercel.svg";
 export const PROJECT_LOGO = "/logo.png";
 export const NUM_RANDOM_POKEMON_CADRS = 2;
 export const NUM_RECENT_POKEMON_CARDS = 3;
+export const NUM_COMMENTS_TO_SHOW = 5;
 
 export const COLORS = [
   "primary",
@@ -33,6 +34,9 @@ export const POKEMON_INITIAL_STATE: TPokemon = {
   isRecent: false,
   isRandom: false,
   isFavourite: false,
+  comments: [],
+  // commentsIds: [],
+  ratingAverage: -Infinity,
   pokemonData: {
     name: "",
     avatarBig: "",

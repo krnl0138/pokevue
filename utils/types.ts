@@ -103,7 +103,12 @@ export type TPokemonSpeciesResponse = {
   };
 };
 
-export type TRatings = { [uuid: string]: number };
+export type TRatings = { [uid: TUser["uid"]]: number };
+export type TComment = {
+  uid: TUser["uid"];
+  comment: string;
+  commentId: string;
+};
 
 export type TPokemon = {
   id: number;
@@ -111,7 +116,9 @@ export type TPokemon = {
   isRecent: boolean;
   isRandom: boolean;
   // TODO check optional value => mandatory
-  ratingAverage?: null | number;
+  ratingAverage: number;
+  comments: TComment[];
+  // commentsIds: string[];
   pokemonData: {
     name: string;
     avatarBig: string;
@@ -128,6 +135,7 @@ export type TPokemon = {
 };
 
 export type TUser = {
+  uid: string;
   username: string;
   email: string;
   avatar?: string;
