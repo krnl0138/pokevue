@@ -6,11 +6,14 @@ import { InputComponent } from "../InputComponent";
 import { PasswordInputComponent } from "../PasswordInputComponent";
 import { SubmitButtonComponent } from "../SubmitButtonComponent";
 import CircularProgress from "@mui/material/CircularProgress";
-import { userLogin } from "../../../lib/redux/slices/userSlice";
-import { useAppDispatch } from "../../../utils/hooks";
 import { loginReducer, initialStateLogin } from "./loginFormReducer";
+import { authInterface } from "../../../firebase/authInterface";
+import { Container, Typography } from "@mui/material";
+import { useAppDispatch } from "../../../utils/hooks";
+import { userLogin } from "../../../lib/redux/slices/userSlice";
 
 export const LoginForm = () => {
+  const auth = authInterface();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [state, dispatchLogin] = useReducer(loginReducer, initialStateLogin);
@@ -30,7 +33,7 @@ export const LoginForm = () => {
   };
 
   return (
-    <div>
+    <Container>
       <form onSubmit={handleSubmit}>
         <InputComponent
           label="Enter your email"
@@ -62,15 +65,23 @@ export const LoginForm = () => {
         )}
       </form>
 
-      {isLoggedIn && <p>Successfully logged in. Redirecting...</p>}
-      {error && <p>There was an error: {error}</p>}
+      {isLoggedIn && (
+        <Typography component="p" variant="body1">
+          Successfully logged in. Redirecting...
+        </Typography>
+      )}
+      {error && (
+        <Typography component="p" variant="body1">
+          There was an error: {error}
+        </Typography>
+      )}
 
-      <p>
+      <Typography component="p" variant="body1">
         Are you a new user?{" "}
         <Link href={URLS.register}>
           <a>Register</a>
         </Link>
-      </p>
-    </div>
+      </Typography>
+    </Container>
   );
 };

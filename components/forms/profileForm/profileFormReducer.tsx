@@ -63,7 +63,7 @@ export const profileReducer = (
       if (!action.field) return state;
       return {
         ...state,
-        [action.field]: action.value,
+        data: { ...state.data, [action.field]: action.value },
       };
     }
     default:
