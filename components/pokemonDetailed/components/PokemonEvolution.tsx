@@ -5,6 +5,27 @@ import { URLS } from "../../../utils/constants";
 import { TPokemon } from "../../../utils/types";
 import Image from "next/image";
 
+const styleEvolutionTitle = {
+  paddingTop: 2,
+  paddingLeft: 3,
+  paddingBottom: 1,
+  marginTop: 6,
+  fontWeight: 700,
+};
+const styleEvolutionContainerMain = {
+  display: "flex",
+  alignItems: "center",
+  padding: 4,
+  paddingBottom: 6,
+  "svg:last-child": { display: "none" },
+};
+
+const styleEvolutionPokemonContainer = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+};
+
 export const PokemonEvolution = ({
   evolutionPokemons,
 }: {
@@ -12,48 +33,20 @@ export const PokemonEvolution = ({
 }) => {
   return (
     <>
-      <Typography
-        component="h2"
-        variant="h4"
-        sx={{
-          paddingTop: 2,
-          paddingLeft: 3,
-          paddingBottom: 1,
-          marginTop: 6,
-          fontWeight: 700,
-        }}
-      >
+      <Typography component="h2" variant="h4" sx={styleEvolutionTitle}>
         Evolution
       </Typography>
 
-      <Container
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          padding: 4,
-          paddingBottom: 6,
-          "svg:last-child": { display: "none" },
-        }}
-      >
+      <Container sx={styleEvolutionContainerMain}>
         {Object.values(evolutionPokemons).map((evo) => {
           const nameCapitalized =
             evo.pokemonData.name.charAt(0).toUpperCase() +
             evo.pokemonData.name.slice(1);
           return (
             <Box key={evo.id}>
-              <Container
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
+              <Container sx={styleEvolutionPokemonContainer}>
                 <Tooltip title={`Show me ${nameCapitalized}!`}>
-                  <Box
-                    sx={{
-                      textAlign: "center",
-                    }}
-                  >
+                  <Box sx={{ textAlign: "center" }}>
                     <Link href={`${URLS.pokemon}/${evo.pokemonData.name}`}>
                       <a>
                         <Image
@@ -69,8 +62,8 @@ export const PokemonEvolution = ({
                       variant="body1"
                       sx={{ marginTop: 1.5 }}
                     >
-                      <Link href={`${URLS.pokemon}/${evo.pokemonData.name}`}>
-                        {nameCapitalized}
+                      <Link href={`${URLS.pokemon}/${evo.id}`}>
+                        <a>{nameCapitalized}</a>
                       </Link>
                     </Typography>
                   </Box>
