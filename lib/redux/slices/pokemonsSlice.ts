@@ -1,10 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "..";
-import { dbRemoveFavourite, dbWriteFavourite } from "../../../firebase/dbUsers";
-import { NUM_RECENT_POKEMON_CARDS } from "../../../utils/constants";
-import { TPokemon } from "../../../utils/types";
+import {
+  NUM_COMMENTS_TO_SHOW,
+  NUM_RECENT_POKEMON_CARDS,
+} from "../../../utils/constants";
+import { TComment, TPokemon, TUser } from "../../../utils/types";
+import { dbInterface } from "../../api/dbInterface";
+import { getPokemon } from "../../api/getPokemon";
 
-type TInitialState = {
+type SliceState = {
   byId: { [id: number]: TPokemon };
   allIds: Array<number>;
   recentIds: Array<number>;
@@ -12,7 +21,7 @@ type TInitialState = {
   favouriteIds: Array<number>;
 };
 
-const initialState: TInitialState = {
+const initialState: SliceState = {
   byId: {},
   allIds: [],
   recentIds: [],
@@ -24,51 +33,43 @@ export const pokemonsSlice = createSlice({
   name: "pokemons",
   initialState,
   reducers: {
-    addPokemon: (state, action: { payload: TPokemon }) => {
-      const { payload } = action;
-      const { id } = payload;
-      if (state.allIds?.includes(id)) return;
-      state.byId[id] = payload;
-      state.allIds.push(id);
-    },
-    addFavouritePokemon: (state, action: { payload: number }) => {
+    addFavouritePokemon: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.byId[id].isFavourite = true;
       state.favouriteIds.push(id);
     },
-    removeFavouritePokemon: (state, action: { payload: number }) => {
+    removeFavouritePokemon: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.byId[id].isFavourite = false;
       state.favouriteIds = state.favouriteIds.filter((fav) => fav !== id);
     },
-    addRandomPokemon: (state, action: { payload: number }) => {
+    addRandomPokemon: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.byId[id].isRandom = true;
       state.randomIds.push(id);
     },
-    removeRandomPokemon: (state, action: { payload: number }) => {
+    removeRandomPokemon: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.byId[id].isRandom = false;
       state.randomIds = state.randomIds.filter((fav) => fav !== id);
     },
     // TODO should be pure functions? is it pure?
-    addRecentPokemon: (state, action: { payload: number }) => {
+    addRecentPokemon: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       // if more than limit remove the oldest one
       if (state.recentIds.length === NUM_RECENT_POKEMON_CARDS) {
         const first = state.recentIds.shift();
         if (first) state.byId[first].isRecent = false;
       }
-
       state.byId[id].isRecent = true;
       state.recentIds.push(id);
     },
-    removeRecentPokemon: (state, action: { payload: number }) => {
+    removeRecentPokemon: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.byId[id].isRecent = false;
       state.recentIds = state.recentIds.filter((i) => i !== id);
     },
-    removePokemon: (state, action: { payload: number }) => {
+    removePokemon: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.recentIds = state.recentIds.filter((i) => i !== id);
       state.randomIds = state.randomIds.filter((i) => i !== id);
@@ -78,18 +79,76 @@ export const pokemonsSlice = createSlice({
     },
     addAverageRating: (
       state,
-      action: { payload: { pokemonId: number; ratingAverage: number } }
+      action: PayloadAction<{ pokemonId: number; ratingAverage: number }>
     ) => {
-      console.log("payload from addAverageRating is: ", action.payload);
       const { pokemonId, ratingAverage } = action.payload;
       state.byId[pokemonId].ratingAverage = ratingAverage;
     },
+    addPokemonNewComment: (
+      state,
+      action: PayloadAction<{
+        pokemonId: number;
+        newComment: TComment;
+      }>
+    ) => {
+      console.log("addPokemonNewComment was called");
+      const { pokemonId, newComment } = action.payload;
+      const comments = state.byId[pokemonId].comments;
+      // const commentsIds = state.byId[pokemonId].commentsIds;
+      if (comments.length === NUM_COMMENTS_TO_SHOW) comments.shift();
+      comments.push(newComment);
+      // commentsIds.push(newComment.commentId);
+    },
+    addPokemonComments: (
+      state,
+      action: PayloadAction<{
+        pokemonId: number;
+        comments: TComment[];
+      }>
+    ) => {
+      console.log("addPokemonComments was called");
+      const { pokemonId, comments } = action.payload;
+      state.byId[pokemonId].comments = comments;
+    },
+    addPokemonCommentsIds: (
+      state,
+      action: PayloadAction<{
+        pokemonId: number;
+        commentsIds: string[];
+      }>
+    ) => {
+      const { pokemonId, commentsIds } = action.payload;
+      // state.byId[pokemonId].commentsIds = commentsIds;
+    },
+    // removeComment: (
+    //   state,
+    //   action: PayloadAction<{ pokemonId: number; commentId: string }>
+    // ) => {
+    //   const { pokemonId, commentId } = action.payload;
+    //   state.byId[pokemonId].comments;
+    // },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(addPokemon.pending, (state, action) => {})
+      .addCase(addPokemon.rejected, (state, action) => {})
+      .addCase(addPokemon.fulfilled, (state, action) => {
+        const db = dbInterface();
+        const pokemon = action.payload;
+        const id = pokemon.id;
+        state.byId[id] = pokemon;
+        state.allIds.push(id);
+        db.getAverageRating({ id });
+        // TODO should be on different async call for Detailed view only to decrease db calls
+        console.log("Pokemon was added and getComments were called!");
+        db.getComments(id);
+      });
   },
 });
 
+// Default Exports
 export const { actions, reducer: pokemonsReducer } = pokemonsSlice;
 export const {
-  addPokemon,
   removePokemon,
   addRecentPokemon,
   removeRecentPokemon,
@@ -98,8 +157,12 @@ export const {
   addRandomPokemon,
   removeRandomPokemon,
   addAverageRating,
+  addPokemonNewComment,
+  addPokemonComments,
+  addPokemonCommentsIds,
 } = actions;
 
+// Selectors
 export const selectAllIds = (state: RootState) => state.pokemons.allIds;
 export const selectFavouriteIds = (state: RootState) =>
   state.pokemons.favouriteIds;
@@ -111,19 +174,26 @@ export const selectPokemonById = (state: RootState, id: number) =>
 export const selectAverageRating = (state: RootState, id: number) =>
   state.pokemons.byId[id].ratingAverage;
 
+export const selectPokemonComments = (state: RootState, pokemonId: number) =>
+  state.pokemons.byId[pokemonId].comments;
+
+// Thunks
+// TODO should be async thunk
 export const handleFavouritePokemon =
   (id: TPokemon["id"], isFavourite?: TPokemon["isFavourite"]) =>
   (dispatch: AppDispatch) => {
+    const db = dbInterface();
     // TODO db should be in try..catch block ?
     if (isFavourite) {
-      // dbRemoveFavourite(id);
+      // db.removeFavourite(id);
       dispatch(removeFavouritePokemon(id));
       return;
     }
-    // dbWriteFavourite(id);
+    // db.writeFavourite(id);
     dispatch(addFavouritePokemon(id));
   };
 
+// TODO should be async thunk
 export const handleRecentPokemon =
   (id: TPokemon["id"], isRecent?: TPokemon["isRecent"]) =>
   (dispatch: AppDispatch) => {
@@ -133,3 +203,14 @@ export const handleRecentPokemon =
     }
     dispatch(addRecentPokemon(id));
   };
+
+export const addPokemon = createAsyncThunk(
+  "pokemons/addPokemon",
+  async (id: string | number) => {
+    // ask to fetch the pokemon.
+    // on fulfilled IF fetched: add to the store.
+    const pokemon = await getPokemon(id);
+    // return afterwards to access for later actions, like set favourite/recent statuses.
+    return pokemon;
+  }
+);
