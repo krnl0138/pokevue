@@ -22,13 +22,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useAppSelector } from "../../../utils/hooks";
-import { handleLogout } from "../../../firebase/auth";
-import { userSelect } from "../../../lib/redux/slices/userSlice";
+import { selectUser } from "../../../lib/redux/slices/userSlice";
+import { authInterface } from "../../../firebase/authInterface";
 
 const pages = ["Pokemons", "About"];
 const settings = ["Favourites", "Profile", "Logout"];
 
 const Header = () => {
+  const auth = authInterface();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -47,7 +48,7 @@ const Header = () => {
     setAnchorElUser(null);
   };
 
-  const { username, avatar } = useAppSelector(userSelect);
+  const { username, avatar } = useAppSelector(selectUser);
 
   return (
     <AppBar position="static">
@@ -210,7 +211,7 @@ const Header = () => {
                 <MenuItem
                   key={setting}
                   onClick={
-                    setting === "logout" ? handleLogout : handleCloseUserMenu
+                    setting === "logout" ? auth.logout : handleCloseUserMenu
                   }
                 >
                   <Typography textAlign="center">
