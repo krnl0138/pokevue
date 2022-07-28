@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
 
 const initialState = {
@@ -9,7 +9,7 @@ export const filterBarSlice = createSlice({
   name: "filterBar",
   initialState,
   reducers: {
-    setFilterBarValue: (state, action) => {
+    setFilterBarValue: (state, action: PayloadAction<string>) => {
       state.filterValue = action.payload;
     },
     resetFilterBarValue: () => {

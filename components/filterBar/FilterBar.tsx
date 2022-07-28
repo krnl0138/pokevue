@@ -1,7 +1,6 @@
 import Input from "@mui/material/Input";
 import FormControl from "@mui/material/FormControl";
 import React, { SyntheticEvent } from "react";
-import { getPokemon } from "../../lib/api/getPokemon";
 import {
   resetFilterBarValue,
   selectFilterBarValue,
@@ -13,13 +12,15 @@ import {
 } from "../../lib/redux/slices/pokemonsSlice";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { SubmitButtonComponent } from "../forms/SubmitButtonComponent";
-import { dbGetAverageRating } from "../../firebase/dbRatings";
+import { dbInterface } from "../../lib/api/dbInterface";
+import { Container } from "@mui/system";
 
 export const FilterBar = ({
   withSearch,
 }: {
   withSearch?: boolean;
 }): JSX.Element => {
+  const db = dbInterface();
   const dispatch = useAppDispatch();
   const filterValue = useAppSelector(selectFilterBarValue);
 
@@ -33,10 +34,7 @@ export const FilterBar = ({
     const search = filterValue.toLowerCase();
     dispatch(resetFilterBarValue());
     try {
-      const pokemon = await getPokemon(search);
-      const pokemonId = pokemon.id;
-      await dbGetAverageRating({ pokemonId });
-      dispatch(addPokemon(pokemon));
+      const pokemon = await dispatch(addPokemon(search)).unwrap();
       dispatch(handleRecentPokemon(pokemon.id));
     } catch (e: any) {
       throw new Error(e.message);
@@ -48,7 +46,7 @@ export const FilterBar = ({
   };
 
   return (
-    <div>
+    <Container>
       <form
         onSubmit={
           (withSearch ? handleOnSubmit : notOnSubmit) as typeof handleOnSubmit
@@ -65,6 +63,6 @@ export const FilterBar = ({
 
         {withSearch && <SubmitButtonComponent title="Search" />}
       </form>
-    </div>
+    </Container>
   );
 };
