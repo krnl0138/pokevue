@@ -58,7 +58,9 @@ export const dbCreateRating = async (data: {
         }
       });
     } else {
-      throw new Error(`No user is logged in. Function call cannot be made.`);
+      throw new Error(
+        `No user is logged in. dbCreateRating call cannot be made.`
+      );
     }
   });
 };
@@ -86,7 +88,9 @@ export const dbUpdateRating = async (data: {
         }
       });
     } else {
-      throw new Error(`No user is logged in. Function call cannot be made.`);
+      throw new Error(
+        `No user is logged in. dbUpdateRating call cannot be made.`
+      );
     }
   });
 };
@@ -98,7 +102,9 @@ export const dbRemoveRating = (data: { pokemonId: number }) => {
       remove(pokemonRatingByUserRef(user.uid, pokemonId));
       remove(userRatingByPokemonRef(user.uid, pokemonId));
     } else {
-      throw new Error(`No user is logged in. Function call cannot be made.`);
+      throw new Error(
+        `No user is logged in. dbRemoveRating call cannot be made.`
+      );
     }
   });
 };
@@ -113,7 +119,9 @@ export const dbGetAverageRating = async (data: { pokemonId: number }) => {
         store.dispatch(addAverageRating({ pokemonId, ratingAverage }));
       });
     } else {
-      throw new Error(`No user is logged in. Function call cannot be made.`);
+      throw new Error(
+        `No user is logged in. dbGetAverageRating call cannot be made.`
+      );
     }
   });
 };
