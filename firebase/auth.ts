@@ -12,11 +12,25 @@ import app from "./index";
 
 const auth = getAuth(app);
 
-export const handleGoogleAuth = async () => {
-  await signInWithPopup(auth, new GoogleAuthProvider());
+export const authGoogleAuth = async () => {
+  try {
+    const result = await signInWithPopup(auth, new GoogleAuthProvider());
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    if (!credential)
+      throw new Error(
+        "Something went wrong no credential were provided by Google. Try again."
+      );
+    const token = credential.accessToken;
+    const user = result.user;
+    return user;
+  } catch (error: any) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    return `An error happened during login: ${errorCode}: ${errorMessage}`;
+  }
 };
 
-export const handleCreateUser = async (email: string, password: string) => {
+export const authCreateUser = async (email: string, password: string) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -32,12 +46,18 @@ export const handleCreateUser = async (email: string, password: string) => {
   }
 };
 
-export const hanldeSignInWithEmailPassword = async (
+export const authSignInWithEmailPassword = async (
   email: string,
   password: string
 ) => {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+    return user;
   } catch (e: any) {
     const errorCode = e.code;
     const errorMessage = e.message;
@@ -45,11 +65,11 @@ export const hanldeSignInWithEmailPassword = async (
   }
 };
 
-export const handleLogout = () => {
+export const authLogout = () => {
   signOut(auth);
 };
 
-export const handleUpdatePassword = async (newPassword: string) => {
+export const authUpdatePassword = async (newPassword: string) => {
   auth.onAuthStateChanged((user) => {
     if (user) {
       try {
@@ -60,11 +80,13 @@ export const handleUpdatePassword = async (newPassword: string) => {
         throw new Error(`${errorCode}: ${errorMessage}`);
       }
     } else {
-      throw new Error(`No user is logged in. Function call cannot be made.`);
+      throw new Error(
+        `No user is logged in. authUpdatePassword call cannot be made.`
+      );
     }
   });
 };
-export const handleUpdateEmail = async (newEmail: string) => {
+export const authUpdateEmail = async (newEmail: string) => {
   auth.onAuthStateChanged((user) => {
     if (user) {
       try {
@@ -75,7 +97,9 @@ export const handleUpdateEmail = async (newEmail: string) => {
         throw new Error(`${errorCode}: ${errorMessage}`);
       }
     } else {
-      throw new Error(`No user is logged in. Function call cannot be made.`);
+      throw new Error(
+        `No user is logged in. authUpdateEmail call cannot be made.`
+      );
     }
   });
 };
