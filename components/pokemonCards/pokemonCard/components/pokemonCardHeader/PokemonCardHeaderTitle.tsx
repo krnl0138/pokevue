@@ -1,10 +1,9 @@
 import {
-  Grade,
   BedroomBabyOutlined,
   Stars,
   QuestionMarkOutlined,
 } from "@mui/icons-material";
-import { Container, Typography, Tooltip, Box, Chip } from "@mui/material";
+import { Container, Typography, Tooltip, Chip } from "@mui/material";
 import { useContext } from "react";
 import { getCaptureColor } from "../../../../../utils/functions";
 import { PokemonRating } from "../../../../pokemonRating/PokemonRating";

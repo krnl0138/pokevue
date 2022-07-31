@@ -1,8 +1,8 @@
 import {
   Favorite,
   FavoriteBorder,
-  Segment,
   DeleteOutlineOutlined,
+  ReadMore,
 } from "@mui/icons-material";
 import {
   CardActions,
@@ -20,14 +20,9 @@ import {
 import { useContext } from "react";
 import { PokemonCardContext } from "../pokemonCardContext";
 
-export const PokemonCardActions = ({
-  isHovered,
-  inRecent,
-}: {
-  isHovered: boolean;
-  inRecent: boolean;
-}) => {
-  const { id, isFavourite, isRecent } = useContext(PokemonCardContext);
+export const PokemonCardActions = () => {
+  const { id, isFavourite, isRecent, inRecent, isHovered } =
+    useContext(PokemonCardContext);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -47,15 +42,16 @@ export const PokemonCardActions = ({
           {inRecent && isRecent && (
             <Tooltip title="Delete from recent search">
               <BottomNavigationAction
+                sx={{ color: "#1f88e5" }}
                 onClick={() => dispatch(handleRecentPokemon(id, isRecent))}
                 icon={<DeleteOutlineOutlined fontSize="small" />}
-                sx={{ color: "#1f88e5" }}
               />
             </Tooltip>
           )}
 
           <Tooltip title="Add to favourites">
             <BottomNavigationAction
+              sx={{ color: "#1f88e5" }}
               onClick={() => dispatch(handleFavouritePokemon(id, isFavourite))}
               icon={
                 isFavourite ? (
@@ -64,14 +60,13 @@ export const PokemonCardActions = ({
                   <FavoriteBorder fontSize="small" />
                 )
               }
-              sx={{ color: "#1f88e5" }}
             />
           </Tooltip>
 
           <Tooltip title="Learn about this pokemon">
             <BottomNavigationAction
               onClick={handleOpenDetailedPokemon}
-              icon={<Segment fontSize="small" />}
+              icon={<ReadMore />}
               sx={{ color: "#1f88e5" }}
             />
           </Tooltip>

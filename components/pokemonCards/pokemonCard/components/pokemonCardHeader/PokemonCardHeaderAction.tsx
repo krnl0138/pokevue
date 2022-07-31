@@ -1,4 +1,4 @@
-import { CatchingPokemon } from "@mui/icons-material";
+import { OpenInFull } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { useContext } from "react";
 import { openModal } from "../../../../../lib/redux/slices/modalSlice";
@@ -8,19 +8,18 @@ import { PokemonCardContext } from "../../pokemonCardContext";
 export const PokemonCardHeaderAction = () => {
   const { id } = useContext(PokemonCardContext);
   const dispatch = useAppDispatch();
-  // TODO check if it displayed correctly
-  const handleOpenModal = () => {
-    dispatch(openModal(id));
-  };
-  return (
+  const { inModal, isHovered } = useContext(PokemonCardContext);
+  return inModal ? null : (
     <IconButton
-      onClick={handleOpenModal}
+      onClick={() => dispatch(openModal(id))}
       sx={{
+        marginLeft: "5px",
+        marginRight: "2px",
         alignSelf: "center",
         ":hover": { color: "#1976d2" },
       }}
     >
-      <CatchingPokemon />
+      {isHovered ? <OpenInFull fontSize="small" /> : null}
     </IconButton>
   );
 };

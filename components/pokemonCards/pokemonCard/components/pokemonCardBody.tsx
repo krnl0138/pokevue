@@ -20,6 +20,7 @@ import {
 import { useContext, useMemo } from "react";
 import { getRandomColors } from "../../../../utils/functions";
 import { PokemonCardContext } from "../pokemonCardContext";
+import { styleGlobalTextStyle } from "../../../../styles/styles";
 
 export const PokemonCardBody = () => {
   const { pokemonData } = useContext(PokemonCardContext);
@@ -50,8 +51,10 @@ export const PokemonCardBody = () => {
           <Typography
             variant="body2"
             paragraph={true}
-            color="text.secondary"
-            sx={{ textAlign: "justify" }}
+            sx={{
+              textAlign: "justify",
+              ...styleGlobalTextStyle,
+            }}
           >
             {descriptionShort}
           </Typography>
@@ -73,6 +76,7 @@ export const PokemonCardBody = () => {
                   size="small"
                   variant="outlined"
                   color={randomColors[i]}
+                  sx={{ fontWeight: 300 }}
                 />
               </ListItemText>
             </ListItem>
@@ -99,17 +103,18 @@ export const PokemonCardBody = () => {
                   variant="outlined"
                   sx={{
                     backgroundColor: "transparent",
-                    color: "rgb(102 102 102)",
+                    color: "rgba(0, 0, 0, .62)",
                     border: "none",
                     borderBottom: "1px solid rgb(159 159 159 / 71%)",
                     borderRadius: "16px",
                     padding: "0 0 0 5px",
                     height: "25px",
+                    fontWeight: "300",
                   }}
                   icon={
                     stat.name === "hp" ? (
                       <Tooltip title="Health">
-                        <FavoriteBorder />
+                        <FavoriteBorder fontSize="small" />
                       </Tooltip>
                     ) : stat.name === "speed" ? (
                       <Tooltip title="Speed">
