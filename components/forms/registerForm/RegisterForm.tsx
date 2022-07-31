@@ -1,10 +1,14 @@
-import { Google, Send } from "@mui/icons-material";
-import { Button, CircularProgress } from "@mui/material";
-import { URLS } from "../../../utils/constants";
+import { Google } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Typography,
+} from "@mui/material";
+import { REGEX_EMAIL, REGEX_PASSWORD, URLS } from "../../../utils/constants";
 import { useRouter } from "next/router";
-import { InputComponent } from "../InputComponent";
-import { PasswordInputComponent } from "../PasswordInputComponent";
-import { SubmitButtonComponent } from "../SubmitButtonComponent";
+import { SubmitButtonComponent } from "../../utils/forms/SubmitButtonComponent";
 import { useReducer } from "react";
 import { useAppDispatch } from "../../../utils/hooks";
 import {
@@ -12,6 +16,34 @@ import {
   userRegister,
 } from "../../../lib/redux/slices/userSlice";
 import { initialStateRegister, registerReducer } from "./registerFormReducer";
+import { styleGlobalBorderComponent } from "../../../styles/styles";
+import { InputPasswordComponent } from "../../utils/forms/PasswordComponent";
+import { InputComponent } from "../../utils/forms/InputComponent";
+import { TMyChangeFormEvent } from "../../../utils/types";
+
+const styleMainContainer = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%,-50%)",
+  padding: 8,
+  paddingTop: 6,
+  bgcolor: "#fdfdfd",
+  boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
+  textAlign: "center",
+  ...styleGlobalBorderComponent,
+  ":hover": {
+    boxShadow: "rgb(0 0 0 / 24%) 0px 5px 12px",
+  },
+  "@media": { padding: 8, paddingTop: 6 },
+  " p": { fontWeight: 300 },
+};
+
+const styleFormContainer = {
+  display: "flex",
+  flexDirection: "column",
+  " > div": { margin: "10px 0" },
+};
 
 export const RegisterForm = () => {
   const router = useRouter();
@@ -35,62 +67,81 @@ export const RegisterForm = () => {
     }
   };
 
+  const onChangeUsername = (e: TMyChangeFormEvent) => {
+    dispatchRegister({
+      type: "field",
+      field: "username",
+      value: e.currentTarget.value,
+    });
+  };
+  const onChangeEmail = (e: TMyChangeFormEvent) => {
+    dispatchRegister({
+      type: "field",
+      field: "email",
+      value: e.currentTarget.value,
+    });
+  };
+  const onChangePassword = (e: TMyChangeFormEvent) => {
+    dispatchRegister({
+      type: "field",
+      field: "password",
+      value: e.currentTarget.value,
+    });
+  };
+
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <Container maxWidth="xs" sx={styleMainContainer}>
+      <Typography component="p" variant="h4" sx={{ marginBottom: 5 }}>
+        Pokevue
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} sx={styleFormContainer}>
         <InputComponent
-          label="Your email"
-          id="email"
-          onChange={(e) =>
-            dispatchRegister({
-              type: "field",
-              field: "email",
-              value: e.currentTarget.value,
-            })
-          }
-          value={email}
-        />
-        <InputComponent
-          label="Your username"
-          id="username"
-          onChange={(e) =>
-            dispatchRegister({
-              type: "field",
-              field: "username",
-              value: e.currentTarget.value,
-            })
-          }
+          required={true}
           value={username}
+          label="username"
+          onChange={onChangeUsername}
         />
-        <PasswordInputComponent
-          id="password"
-          onChange={(e) =>
-            dispatchRegister({
-              type: "field",
-              field: "password",
-              value: e.currentTarget.value,
-            })
-          }
+
+        <InputComponent
+          required={true}
+          value={email}
+          label="email"
+          regex={REGEX_EMAIL}
+          onChange={onChangeEmail}
+        />
+
+        <InputPasswordComponent
+          required={true}
           value={password}
+          regex={REGEX_PASSWORD}
+          onChange={onChangePassword}
         />
+
         {isLoading ? (
           <CircularProgress />
         ) : (
-          <SubmitButtonComponent title="Register" />
+          <SubmitButtonComponent text="Login" />
         )}
 
         <Button
           onClick={() => dispatch(userLoginGoogle())}
           type="button"
           variant="contained"
-          endIcon={<Send />}
         >
           <Google />
         </Button>
+      </Box>
 
-        {isRegistered && <p>Successfully registered you. Redirecting...</p>}
-        {error && <p>There was an error: {error}</p>}
-      </form>
-    </div>
+      {isRegistered && (
+        <Typography component="p" variant="body1">
+          Successful registration in. Redirecting...
+        </Typography>
+      )}
+      {error && (
+        <Typography component="p" variant="body1">
+          There was an error: {error}
+        </Typography>
+      )}
+    </Container>
   );
 };
