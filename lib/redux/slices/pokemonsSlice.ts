@@ -1,17 +1,12 @@
-import {
-  createAsyncThunk,
-  createSelector,
-  createSlice,
-  PayloadAction,
-} from "@reduxjs/toolkit";
-import { AppDispatch, RootState } from "..";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "..";
 import {
   NUM_COMMENTS_TO_SHOW,
   NUM_RECENT_POKEMON_CARDS,
 } from "../../../utils/constants";
-import { TComment, TPokemon, TUser } from "../../../utils/types";
+import { AppThunk, TComment, TPokemon } from "../../../utils/types";
 import { dbInterface } from "../../api/dbInterface";
-import { getPokemon } from "../../api/getPokemon";
+import { retrievePokemon } from "../../api/retrievePokemon";
 
 type SliceState = {
   byId: { [id: number]: TPokemon };
@@ -33,6 +28,13 @@ export const pokemonsSlice = createSlice({
   name: "pokemons",
   initialState,
   reducers: {
+    addPokemon: (state, action: PayloadAction<TPokemon>) => {
+      const pokemon = action.payload;
+      const id = pokemon.id;
+      state.allIds.push(id);
+      state.byId[id] = { ...state.byId[id], ...pokemon };
+      if (state.favouriteIds.includes(id)) state.byId[id].isFavourite = true;
+    },
     addFavouritePokemon: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.byId[id].isFavourite = true;
@@ -42,6 +44,10 @@ export const pokemonsSlice = createSlice({
       const id = action.payload;
       state.byId[id].isFavourite = false;
       state.favouriteIds = state.favouriteIds.filter((fav) => fav !== id);
+    },
+    addFavouriteIds: (state, action: PayloadAction<number[]>) => {
+      const favs = action.payload;
+      state.favouriteIds = favs;
     },
     addRandomPokemon: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -53,10 +59,9 @@ export const pokemonsSlice = createSlice({
       state.byId[id].isRandom = false;
       state.randomIds = state.randomIds.filter((fav) => fav !== id);
     },
-    // TODO should be pure functions? is it pure?
     addRecentPokemon: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      // if more than limit remove the oldest one
+      /* remove the oldest card if more than limit  */
       if (state.recentIds.length === NUM_RECENT_POKEMON_CARDS) {
         const first = state.recentIds.shift();
         if (first) state.byId[first].isRecent = false;
@@ -91,7 +96,6 @@ export const pokemonsSlice = createSlice({
         newComment: TComment;
       }>
     ) => {
-      console.log("addPokemonNewComment was called");
       const { pokemonId, newComment } = action.payload;
       const comments = state.byId[pokemonId].comments;
       // const commentsIds = state.byId[pokemonId].commentsIds;
@@ -106,51 +110,29 @@ export const pokemonsSlice = createSlice({
         comments: TComment[];
       }>
     ) => {
-      console.log("addPokemonComments was called");
       const { pokemonId, comments } = action.payload;
+      if (comments.length === 0) state.byId[pokemonId].comments = [];
       state.byId[pokemonId].comments = comments;
     },
-    addPokemonCommentsIds: (
-      state,
-      action: PayloadAction<{
-        pokemonId: number;
-        commentsIds: string[];
-      }>
-    ) => {
-      const { pokemonId, commentsIds } = action.payload;
-      // state.byId[pokemonId].commentsIds = commentsIds;
-    },
-    // removeComment: (
-    //   state,
-    //   action: PayloadAction<{ pokemonId: number; commentId: string }>
-    // ) => {
-    //   const { pokemonId, commentId } = action.payload;
-    //   state.byId[pokemonId].comments;
-    // },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(addPokemon.pending, (state, action) => {})
-      .addCase(addPokemon.rejected, (state, action) => {})
-      .addCase(addPokemon.fulfilled, (state, action) => {
-        const db = dbInterface();
-        const pokemon = action.payload;
-        const id = pokemon.id;
-        state.byId[id] = pokemon;
-        state.allIds.push(id);
-        db.getAverageRating({ id });
-        // TODO should be on different async call for Detailed view only to decrease db calls
-        console.log("Pokemon was added and getComments were called!");
-        db.getComments(id);
-      });
+    builder.addCase(getPokemon.fulfilled, (state, action) => {
+      const pokemon = action.payload;
+      const id = pokemon.id;
+      state.allIds.push(id);
+      state.byId[id] = { ...state.byId[id], ...pokemon };
+      if (state.favouriteIds.includes(id)) state.byId[id].isFavourite = true;
+    });
   },
 });
 
-// Default Exports
+// DEFAULT EXPORTS
 export const { actions, reducer: pokemonsReducer } = pokemonsSlice;
 export const {
+  addPokemon,
   removePokemon,
   addRecentPokemon,
+  addFavouriteIds,
   removeRecentPokemon,
   addFavouritePokemon,
   removeFavouritePokemon,
@@ -159,10 +141,9 @@ export const {
   addAverageRating,
   addPokemonNewComment,
   addPokemonComments,
-  addPokemonCommentsIds,
 } = actions;
 
-// Selectors
+// SELECTORS
 export const selectAllIds = (state: RootState) => state.pokemons.allIds;
 export const selectFavouriteIds = (state: RootState) =>
   state.pokemons.favouriteIds;
@@ -177,40 +158,37 @@ export const selectAverageRating = (state: RootState, id: number) =>
 export const selectPokemonComments = (state: RootState, pokemonId: number) =>
   state.pokemons.byId[pokemonId].comments;
 
-// Thunks
-// TODO should be async thunk
+// THUNKS
+export const getPokemon = createAsyncThunk(
+  "pokemons/addPokemon",
+  async (id: string | number) => {
+    const { getAverageRating } = dbInterface();
+    const pokemon = await retrievePokemon(id);
+    getAverageRating(pokemon.id);
+    return pokemon;
+  }
+);
+
 export const handleFavouritePokemon =
-  (id: TPokemon["id"], isFavourite?: TPokemon["isFavourite"]) =>
-  (dispatch: AppDispatch) => {
+  (id: TPokemon["id"], isFavourite?: TPokemon["isFavourite"]): AppThunk =>
+  (dispatch, getState) => {
     const db = dbInterface();
-    // TODO db should be in try..catch block ?
+    const uid = getState().user.uid;
     if (isFavourite) {
-      // db.removeFavourite(id);
+      db.removeFavourite(uid, id);
       dispatch(removeFavouritePokemon(id));
       return;
     }
-    // db.writeFavourite(id);
+    db.writeFavourite(uid, id);
     dispatch(addFavouritePokemon(id));
   };
 
-// TODO should be async thunk
 export const handleRecentPokemon =
-  (id: TPokemon["id"], isRecent?: TPokemon["isRecent"]) =>
-  (dispatch: AppDispatch) => {
+  (id: TPokemon["id"], isRecent?: TPokemon["isRecent"]): AppThunk =>
+  (dispatch) => {
     if (isRecent) {
       dispatch(removeRecentPokemon(id));
       return;
     }
     dispatch(addRecentPokemon(id));
   };
-
-export const addPokemon = createAsyncThunk(
-  "pokemons/addPokemon",
-  async (id: string | number) => {
-    // ask to fetch the pokemon.
-    // on fulfilled IF fetched: add to the store.
-    const pokemon = await getPokemon(id);
-    // return afterwards to access for later actions, like set favourite/recent statuses.
-    return pokemon;
-  }
-);

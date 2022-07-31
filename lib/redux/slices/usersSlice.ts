@@ -35,18 +35,17 @@ export const usersSlice = createSlice({
     }),
 });
 
-// Default exports
+// DEFAULT EXPORTS
 export const { actions, reducer: usersReducer } = usersSlice;
 export const { addOtherUser } = actions;
 
-// Selectors
+// SELECTORS
 export const selectOtherUser = (state: RootState, uid: string) =>
   state.users[uid];
-// TODO embed the logic if no avatar return a placeholder -- abstract this logic from components
 export const selectUserAvatar = (state: RootState, uid: string) =>
   state.users[uid].avatar;
 
-// Thunks
+// THUNKS
 export const getOtherUser = createAsyncThunk(
   "users/getOtherUser",
   async (uid: string) => {
