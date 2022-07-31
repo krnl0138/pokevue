@@ -8,7 +8,7 @@ export const parsePokemon = (data: {
   pokemon: TPokemonResponse;
   pokemonSpecies: TPokemonSpeciesResponse;
 }): Pick<TPokemon, "pokemonData" | "id"> => {
-  console.log("parsePokemon was CALLED");
+  console.log("parsePokemon was CALLED!!!");
   const { pokemon, pokemonSpecies } = data;
   const id = pokemon.id;
   const name = pokemon.name;
@@ -20,13 +20,14 @@ export const parsePokemon = (data: {
   const captureRate = pokemonSpecies.capture_rate;
   const evolutionName = pokemonSpecies.evolves_from_species?.name ?? null;
 
-  const descriptionBase = pokemonSpecies.flavor_text_entries.filter(
-    (flavor) => flavor.language.name === "en"
-  );
-  // delete duplicates with Set.
-  const description = [...new Set(descriptionBase)]
+  // extract an array of 10 english phrases for description
+  const descriptionBase = pokemonSpecies.flavor_text_entries
+    .filter((flavor) => flavor.language.name === "en")
     .slice(0, 10)
-    .flatMap((flavor) => flavor.flavor_text)
+    .map((flavor) => flavor.flavor_text);
+
+  // delete duplicates with Set and do naming
+  const description = [...new Set(descriptionBase)]
     .join(" ")
     .replaceAll("POKéMON", "pokemon")
     .replaceAll(
