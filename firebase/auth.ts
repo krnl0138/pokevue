@@ -20,7 +20,7 @@ export const authGoogleAuth = async () => {
       throw new Error(
         "Something went wrong no credential were provided by Google. Try again."
       );
-    const token = credential.accessToken;
+    // const token = credential.accessToken;
     const user = result.user;
     return user;
   } catch (error: any) {

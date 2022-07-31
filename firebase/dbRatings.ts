@@ -1,4 +1,3 @@
-import { getAuth } from "firebase/auth";
 import {
   getDatabase,
   ref,
@@ -12,9 +11,9 @@ import store from "../lib/redux";
 import { addAverageRating } from "../lib/redux/slices/pokemonsSlice";
 import { calculateAverageRating } from "../utils/functions";
 import { setUserRating } from "../lib/redux/slices/userSlice";
+import { TUser } from "../utils/types";
 
 const db = getDatabase(app);
-const auth = getAuth(app);
 
 // db/pokemons/[pokemonId]/ratings :
 //          {uuid1:1,
@@ -34,94 +33,70 @@ const userRatingRef = (userId: string) => ref(db, `users/${userId}/ratings`);
 const userRatingByPokemonRef = (userId: string, pokemonId: number) =>
   ref(db, `users/${userId}/ratings/${pokemonId}`);
 
-export const dbCreateRating = async (data: {
-  pokemonId: number;
-  rating: number;
-}) => {
+export const dbCreateRating = async (
+  uid: TUser["uid"],
+  data: {
+    pokemonId: number;
+    rating: number;
+  }
+) => {
   const { pokemonId, rating } = data;
 
-  auth.onAuthStateChanged(async (user) => {
-    if (user) {
-      await Promise.all([
-        set(pokemonRatingByUserRef(user.uid, pokemonId), rating),
-        set(userRatingByPokemonRef(user.uid, pokemonId), rating),
-      ]);
-      onValue(userRatingByPokemonRef(user.uid, pokemonId), (snapshot) => {
-        const userRating = snapshot.val();
-        store.dispatch(setUserRating({ pokemonId, userRating }));
-      });
-      onValue(pokemonRatingRef(pokemonId), (snapshot) => {
-        const ratings = snapshot.val();
-        const ratingAverage = calculateAverageRating(ratings);
-        if (ratingAverage) {
-          store.dispatch(addAverageRating({ pokemonId, ratingAverage }));
-        }
-      });
-    } else {
-      throw new Error(
-        `No user is logged in. dbCreateRating call cannot be made.`
-      );
+  await Promise.all([
+    set(pokemonRatingByUserRef(uid, pokemonId), rating),
+    set(userRatingByPokemonRef(uid, pokemonId), rating),
+  ]);
+  onValue(userRatingByPokemonRef(uid, pokemonId), (snapshot) => {
+    const userRating = snapshot.val();
+    store.dispatch(setUserRating({ pokemonId, userRating }));
+  });
+  onValue(pokemonRatingRef(pokemonId), (snapshot) => {
+    const ratings = snapshot.val();
+    const ratingAverage = calculateAverageRating(ratings);
+    if (ratingAverage) {
+      store.dispatch(addAverageRating({ pokemonId, ratingAverage }));
     }
   });
 };
 
-export const dbUpdateRating = async (data: {
-  pokemonId: number;
-  rating: number;
-}) => {
+export const dbUpdateRating = async (
+  uid: TUser["uid"],
+  data: {
+    pokemonId: number;
+    rating: number;
+  }
+) => {
   const { pokemonId, rating } = data;
-  auth.onAuthStateChanged(async (user) => {
-    if (user) {
-      await Promise.all([
-        update(pokemonRatingRef(pokemonId), { [user.uid]: rating }),
-        update(userRatingRef(user.uid), { [pokemonId]: rating }),
-      ]);
-      onValue(userRatingByPokemonRef(user.uid, pokemonId), (snapshot) => {
-        const userRating = snapshot.val();
-        store.dispatch(setUserRating({ pokemonId, userRating }));
-      });
-      onValue(pokemonRatingRef(pokemonId), (snapshot) => {
-        const ratings = snapshot.val();
-        const ratingAverage = calculateAverageRating(ratings);
-        if (ratingAverage) {
-          store.dispatch(addAverageRating({ pokemonId, ratingAverage }));
-        }
-      });
-    } else {
-      throw new Error(
-        `No user is logged in. dbUpdateRating call cannot be made.`
-      );
+  await Promise.all([
+    update(pokemonRatingRef(pokemonId), { [uid]: rating }),
+    update(userRatingRef(uid), { [pokemonId]: rating }),
+  ]);
+  onValue(userRatingByPokemonRef(uid, pokemonId), (snapshot) => {
+    const userRating = snapshot.val();
+    store.dispatch(setUserRating({ pokemonId, userRating }));
+  });
+  onValue(pokemonRatingRef(pokemonId), (snapshot) => {
+    const ratings = snapshot.val();
+    const ratingAverage = calculateAverageRating(ratings);
+    if (ratingAverage) {
+      store.dispatch(addAverageRating({ pokemonId, ratingAverage }));
     }
   });
 };
 
-export const dbRemoveRating = (data: { pokemonId: number }) => {
+export const dbRemoveRating = (
+  uid: TUser["uid"],
+  data: { pokemonId: number }
+) => {
   const { pokemonId } = data;
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      remove(pokemonRatingByUserRef(user.uid, pokemonId));
-      remove(userRatingByPokemonRef(user.uid, pokemonId));
-    } else {
-      throw new Error(
-        `No user is logged in. dbRemoveRating call cannot be made.`
-      );
-    }
-  });
+  remove(pokemonRatingByUserRef(uid, pokemonId));
+  remove(userRatingByPokemonRef(uid, pokemonId));
 };
 
-export const dbGetAverageRating = async (data: { pokemonId: number }) => {
-  const { pokemonId } = data;
-  auth.onAuthStateChanged(async (user) => {
-    if (user) {
-      onValue(pokemonRatingRef(pokemonId), (snapshot) => {
-        const ratings = snapshot.val();
-        const ratingAverage = calculateAverageRating(ratings);
-        store.dispatch(addAverageRating({ pokemonId, ratingAverage }));
-      });
-    } else {
-      throw new Error(
-        `No user is logged in. dbGetAverageRating call cannot be made.`
-      );
-    }
+export const dbGetAverageRating = (pokemonId: number) => {
+  onValue(pokemonRatingRef(pokemonId), (snapshot) => {
+    const ratings = snapshot.val();
+    const ratingAverage = calculateAverageRating(ratings);
+    store.dispatch(addAverageRating({ pokemonId, ratingAverage }));
   });
 };

@@ -17,60 +17,79 @@ import {
   dbWriteFavourite,
   dbWriteUserData,
 } from "../../firebase/dbUsers";
+import { TUser } from "../../utils/types";
 
 // An agnostic db provider for Redux
 // Usage: const db = dbProvider();
 export const dbInterface = () => {
-  const createUser = async (data: { username: string; email: string }) => {
-    await dbWriteUserData(data);
+  const createUser = async (
+    uid: TUser["uid"],
+    data: { username: string; email: string }
+  ) => {
+    await dbWriteUserData(uid, data);
   };
 
-  const updateUser = async (data: {
-    username: string;
-    email: string;
-    avatar: string;
-  }) => {
-    await dbUpdateUserData(data);
+  const updateUser = async (
+    uid: TUser["uid"],
+    data: {
+      username: string;
+      email: string;
+      avatar: string;
+    }
+  ) => {
+    await dbUpdateUserData(uid, data);
   };
 
-  const writeFavourite = async (favourite: number) => {
-    await dbWriteFavourite(favourite);
+  const writeFavourite = async (uid: TUser["uid"], favourite: number) => {
+    await dbWriteFavourite(uid, favourite);
   };
 
-  const removeFavourite = async (favourite: number) => {
-    dbRemoveFavourite(favourite);
+  const removeFavourite = async (uid: TUser["uid"], favourite: number) => {
+    dbRemoveFavourite(uid, favourite);
   };
 
-  const getUser = async () => {
-    await dbGetUser();
+  const getUser = async (uid: string) => {
+    await dbGetUser(uid);
   };
 
-  const createRating = async ({
-    id: pokemonId,
-    rating,
-  }: {
-    id: number;
-    rating: number;
-  }) => {
-    await dbCreateRating({ pokemonId, rating });
+  // TODO args should be rewritten properly
+  const createRating = async (
+    uid: TUser["uid"],
+    {
+      id: pokemonId,
+      rating,
+    }: {
+      id: number;
+      rating: number;
+    }
+  ) => {
+    await dbCreateRating(uid, { pokemonId, rating });
   };
 
-  const updateRating = async ({
-    id: pokemonId,
-    rating,
-  }: {
-    id: number;
-    rating: number;
-  }) => {
-    await dbUpdateRating({ pokemonId, rating });
+  // TODO args should be rewritten properly
+  const updateRating = async (
+    uid: TUser["uid"],
+    {
+      id: pokemonId,
+      rating,
+    }: {
+      id: number;
+      rating: number;
+    }
+  ) => {
+    await dbUpdateRating(uid, { pokemonId, rating });
   };
 
-  const removeRating = async ({ id: pokemonId }: { id: number }) => {
-    dbRemoveRating({ pokemonId });
+  // TODO args should be rewritten properly
+  const removeRating = async (
+    uid: TUser["uid"],
+    { id: pokemonId }: { id: number }
+  ) => {
+    dbRemoveRating(uid, { pokemonId });
   };
 
-  const getAverageRating = async ({ id: pokemonId }: { id: number }) => {
-    await dbGetAverageRating({ pokemonId });
+  const getAverageRating = async (id: number) => {
+    await dbGetAverageRating(id);
   };
 
   const getOtherUser = async (uid: string) => {
@@ -78,8 +97,12 @@ export const dbInterface = () => {
     await dbGetOtherUser(uid);
   };
 
-  const writeComment = async (pokemonId: number, comment: string) => {
-    await dbWriteComment({ pokemonId, comment });
+  const writeComment = async (
+    uid: TUser["uid"],
+    pokemonId: number,
+    comment: string
+  ) => {
+    await dbWriteComment(uid, { pokemonId, comment });
   };
 
   const getComments = async (pokemonId: number) => {

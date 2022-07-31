@@ -1,75 +1,68 @@
 import { getAuth } from "firebase/auth";
-import { useState } from "react";
-import app from "../../firebase/index";
-import { URLS } from "../../utils/constants";
 import { useRouter } from "next/router";
-import { useAppDispatch, useAppSelector } from "../../utils/hooks";
-import { CircularProgress } from "@mui/material";
-import { getPokemon } from "../../lib/api/getPokemon";
+import { useEffect, useState } from "react";
+import app from "../../firebase/index";
+import { dbInterface } from "../../lib/api/dbInterface";
 import {
-  addPokemon,
-  handleFavouritePokemon,
+  addFavouritePokemon,
+  getPokemon,
   selectAllIds,
 } from "../../lib/redux/slices/pokemonsSlice";
-import { userSelect } from "../../lib/redux/slices/userSlice";
-import { dbGetUser } from "../../firebase/dbUsers";
-import { dbGetAverageRating } from "../../firebase/dbRatings";
-import { TPokemon } from "../../utils/types";
+import {
+  selectUserFavourites,
+  selectUserUsername,
+} from "../../lib/redux/slices/userSlice";
+import { URLS } from "../../utils/constants";
+import { removeDuplicates } from "../../utils/functions";
+import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 
 type TProtectedRoute = {
   children: JSX.Element;
 };
 
-export const ProtectedRoute = ({ children }: TProtectedRoute): JSX.Element => {
-  console.log("children are: ", children);
-  const router = useRouter();
+// A single source of truth for authentication.
+// It asks db for the user data and dispatches it
+export const ProtectedRoute = ({ children }: TProtectedRoute) => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector(userSelect);
+  const router = useRouter();
+  const auth = getAuth(app);
+  const db = dbInterface();
+  const username = useAppSelector(selectUserUsername);
+  const userFavourites = useAppSelector(selectUserFavourites);
   const pokemonsIds = useAppSelector(selectAllIds);
-  const [isFavsLoaded, setIsFavsLoaded] = useState(false);
-  const [wasUserLoaded, setWasUserLoaded] = useState(false);
-  console.log("wasUserLoaded from ProtectedRoute was: ", wasUserLoaded);
 
-  // Populate user in the global state if logged in or redirect to /login
-  if (!user?.username) {
-    const auth = getAuth(app);
-    auth.onAuthStateChanged(async (user) => {
-      if (!wasUserLoaded) {
-        console.log("I was called on onAuthStateChanged in ProtectedRoute");
-        setWasUserLoaded(true);
-        await dbGetUser();
+  const redirect = () => router.push(URLS.login);
+
+  /* Listen auth and populate user to the store or redirect to login */
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        await db.getUser(user.uid);
         return;
       } else {
-        // NextJS's blocking this somehow
-        // router.push(URLS.login);
-        return <CircularProgress />;
+        return redirect();
       }
     });
-  }
+    return () => unsubscribe();
+  }, []);
 
-  // check for duplicates already in the store
-  const favs = Object.values(user.favourites).filter(
-    (id) => !pokemonsIds?.includes(id)
-  );
-  const populateFavourites = async () => {
-    if (!favs) return;
-    setIsFavsLoaded(true);
-    const result = await Promise.all(
-      favs.map(async (id) => await getPokemon(id))
-    );
+  /* If logged in fetch and populate favourites to the store. */
+  const [isFavsPopulated, setIsFavsPopulated] = useState(false);
+  useEffect(() => {
+    if (isFavsPopulated || Object.keys(userFavourites).length === 0) return;
+    const favIdsToFetch = removeDuplicates(userFavourites, pokemonsIds);
+    if (favIdsToFetch.length === 0) return;
 
-    result.forEach((pok) => {
-      const pokemonId = pok.id;
-      dbGetAverageRating({ pokemonId });
-      dispatch(addPokemon(pok));
-      dispatch(handleFavouritePokemon(pok.id));
-    });
-  };
-  if (!isFavsLoaded) populateFavourites();
+    const populateFavourites = async () => {
+      setIsFavsPopulated(true);
+      const favPokemons = await Promise.all(
+        favIdsToFetch.map((id) => dispatch(getPokemon(id)).unwrap())
+      );
+      favPokemons.forEach((p) => dispatch(addFavouritePokemon(p.id)));
+    };
 
-  if (!user?.username) {
-    return <CircularProgress />;
-  }
+    populateFavourites();
+  }, [username]);
 
-  return children;
+  return username ? children : null;
 };
