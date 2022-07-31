@@ -1,5 +1,6 @@
 import { Container, Typography } from "@mui/material";
 import { useContext } from "react";
+import { styleGlobalTextStyle } from "../../../styles/styles";
 import { PokemonDetailedContext } from "../pokemonDetailedContext";
 
 export const PokemonDescription = () => {
@@ -13,7 +14,7 @@ export const PokemonDescription = () => {
       <Typography
         variant="body1"
         component="p"
-        sx={{ textAlign: "justify", paddingRight: 6 }}
+        sx={{ textAlign: "justify", paddingRight: 6, ...styleGlobalTextStyle }}
       >
         {description}
       </Typography>
