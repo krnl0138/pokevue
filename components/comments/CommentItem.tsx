@@ -1,30 +1,39 @@
+import { RemoveCircleOutline } from "@mui/icons-material";
 import {
   Avatar,
   Box,
   Button,
   CircularProgress,
-  FormControl,
   ListItem,
   Typography,
 } from "@mui/material";
 import Image from "next/image";
+import { useEffect, useRef } from "react";
+import { dbInterface } from "../../lib/api/dbInterface";
 import { RootState } from "../../lib/redux";
+import { selectCurrentUserUid } from "../../lib/redux/slices/userSlice";
 import {
   getOtherUser,
   selectOtherUser,
-  selectUserAvatar,
 } from "../../lib/redux/slices/usersSlice";
-import { useAppDispatch, useAppSelector } from "../../utils/hooks";
-import { TPokemon, TUser } from "../../utils/types";
-import { AVATAR_PLACEHOLDER as placeholder } from "../../utils/constants";
-import { selectCurrentUserUid } from "../../lib/redux/slices/userSlice";
-import { RemoveCircleOutline } from "@mui/icons-material";
 import {
   styleGlobalBorderComponent,
   styleGlobalHoverShadow,
 } from "../../styles/styles";
-import { dbInterface } from "../../lib/api/dbInterface";
-import { useEffect, useRef } from "react";
+import { AVATAR_PLACEHOLDER as placeholder } from "../../utils/constants";
+import { useAppDispatch, useAppSelector } from "../../utils/hooks";
+import { TUser } from "../../utils/types";
+
+const styleUserDataBox = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  marginTop: "0.5rem",
+  marginRight: "1rem",
+  minWidth: "70px",
+  // maxWidth: "70px",
+  textAlign: "center",
+};
 
 type TCommentItem = {
   uid: TUser["uid"];
@@ -60,29 +69,20 @@ export const CommentItem = ({
     <ListItem
       component="div"
       sx={{
+        backgroundColor: "#fdfdfd",
         margin: "4px 0",
         ...styleGlobalBorderComponent,
         ...styleGlobalHoverShadow,
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: 1,
-          minWidth: "70px",
-          maxWidth: "70px",
-          textAlign: "center",
-        }}
-      >
+      <Box sx={styleUserDataBox}>
         {user ? (
           <>
             {user.avatar ? (
               <Avatar>
                 <Image
-                  width="50"
-                  height="50"
+                  width="70"
+                  height="70"
                   src={user.avatar ? user.avatar : placeholder}
                   alt="User avatar"
                 />
@@ -93,8 +93,8 @@ export const CommentItem = ({
 
             <Typography
               component="p"
-              variant="body2"
-              sx={{ fontSize: "0.675rem" }}
+              variant="caption"
+              sx={{ fontSize: "0.675rem", fontWeight: "300", marginTop: "3px" }}
             >
               {user.username}
             </Typography>
@@ -107,17 +107,25 @@ export const CommentItem = ({
       <Typography
         component="p"
         variant="body1"
-        sx={{ fontWeight: "300", fontSize: "0.9rem", padding: "8px 0" }}
+        sx={{
+          fontWeight: "300",
+          fontSize: "0.9rem",
+          padding: "8px 0",
+          width: "70%",
+        }}
       >
         {comment}
       </Typography>
 
       {uid === currentUserUid && (
-        <FormControl sx={{ marginLeft: "auto" }}>
-          <Button type="submit" variant="text" onClick={handleOnClick}>
-            <RemoveCircleOutline fontSize="small" />
-          </Button>
-        </FormControl>
+        <Button
+          type="submit"
+          variant="text"
+          onClick={handleOnClick}
+          sx={{ marginLeft: "auto" }}
+        >
+          <RemoveCircleOutline fontSize="small" />
+        </Button>
       )}
     </ListItem>
   );

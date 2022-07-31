@@ -1,25 +1,29 @@
-import { CircularProgress, List, Typography } from "@mui/material";
+import { List, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { RootState } from "../../lib/redux";
 import { selectPokemonComments } from "../../lib/redux/slices/pokemonsSlice";
-import { getOtherUser } from "../../lib/redux/slices/usersSlice";
-import { useAppDispatch, useAppSelector } from "../../utils/hooks";
+import { useAppSelector } from "../../utils/hooks";
 import { TPokemon } from "../../utils/types";
 import { CommentItem } from "./CommentItem";
+import autoAnimate from "@formkit/auto-animate";
 
 type TComments = {
   pokemonId: TPokemon["id"];
 };
 
 export const Comments = ({ pokemonId }: TComments) => {
-  const dispatch = useAppDispatch();
-  // pokemonComments = [ {commentId, uid, comment}, {commentId, uid, comment} ]
   const pokemonComments = useAppSelector((state: RootState) =>
     selectPokemonComments(state, pokemonId)
   );
   console.log("pokemonComments in Comments is: ", pokemonComments);
   console.log("pokemonComments lenght is: ", pokemonComments.length);
+
+  // `AutoAnimate` implementation to add animation
+  const commentsRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    commentsRef.current && autoAnimate(commentsRef.current);
+  }, [commentsRef]);
 
   return (
     <Container sx={{ marginTop: 4 }}>
@@ -28,7 +32,11 @@ export const Comments = ({ pokemonId }: TComments) => {
       </Typography>
 
       {pokemonComments.length > 0 ? (
-        <List sx={{ maxWidth: "480px", minWidth: "480px", width: "480px" }}>
+        <List
+          ref={commentsRef}
+          component="div"
+          sx={{ maxWidth: "480px", minWidth: "480px", width: "480px" }}
+        >
           {pokemonComments.map((commentBody) => {
             if (!commentBody) return;
             return (
