@@ -1,4 +1,3 @@
-import { ConstructionOutlined } from "@mui/icons-material";
 import { COLORS } from "./constants";
 
 export const fetcher = async (url: string) => {
@@ -36,4 +35,16 @@ export const calculateAverageRating = (ratings: {
   const sum = ratingsArr.reduce((acc, rating) => acc + rating, 0);
   const result = (sum / ratingsArr.length).toFixed(1);
   return Number(result);
+};
+
+export const capitalize = (word: string) =>
+  word.charAt(0).toUpperCase() + word.slice(1);
+
+export const removeDuplicates = (
+  current: {
+    [pokemonId: number]: number;
+  },
+  initial: number[]
+) => {
+  return Object.values(current).filter((id) => !initial?.includes(id));
 };

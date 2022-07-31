@@ -1,4 +1,14 @@
+import { AnyAction, ThunkAction } from "@reduxjs/toolkit";
+import { ChangeEvent } from "react";
 import { Url } from "url";
+import { RootState } from "../lib/redux";
+
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  AnyAction
+>;
 
 export type TPokemonResponse = {
   abilities: Array<{
@@ -115,10 +125,8 @@ export type TPokemon = {
   isFavourite: boolean;
   isRecent: boolean;
   isRandom: boolean;
-  // TODO check optional value => mandatory
-  ratingAverage: number;
+  ratingAverage?: number;
   comments: TComment[];
-  // commentsIds: string[];
   pokemonData: {
     name: string;
     avatarBig: string;
@@ -142,3 +150,7 @@ export type TUser = {
   favourites: { [pokemonId: number]: number };
   ratings: { [pokemonId: number]: number };
 };
+
+export type TMyChangeFormEvent = ChangeEvent<
+  HTMLInputElement | HTMLTextAreaElement
+>;

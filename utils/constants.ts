@@ -14,11 +14,17 @@ export const URLS = {
   pokemon: "/pokemon",
 };
 
+export const APP_NAME = "pokevue";
 export const AVATAR_PLACEHOLDER = "/vercel.svg";
+export const POKEMON_LOGO = "/pokemon_logo.webp";
 export const PROJECT_LOGO = "/logo.png";
 export const NUM_RANDOM_POKEMON_CADRS = 2;
-export const NUM_RECENT_POKEMON_CARDS = 3;
+export const NUM_RECENT_POKEMON_CARDS = 5;
 export const NUM_COMMENTS_TO_SHOW = 5;
+
+export const REGEX_EMAIL =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+export const REGEX_PASSWORD = /\S{8,}/;
 
 export const COLORS = [
   "primary",
