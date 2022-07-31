@@ -20,13 +20,13 @@ export const parsePokemon = (data: {
   const captureRate = pokemonSpecies.capture_rate;
   const evolutionName = pokemonSpecies.evolves_from_species?.name ?? null;
 
-  // extract an array of 10 english phrases for description
+  /* Extract an array of 10 english phrases for description */
   const descriptionBase = pokemonSpecies.flavor_text_entries
     .filter((flavor) => flavor.language.name === "en")
     .slice(0, 10)
     .map((flavor) => flavor.flavor_text);
 
-  // delete duplicates with Set and do naming
+  /* Delete duplicates with Set and do naming */
   const description = [...new Set(descriptionBase)]
     .join(" ")
     .replaceAll("POKéMON", "pokemon")
@@ -35,7 +35,7 @@ export const parsePokemon = (data: {
       name.charAt(0).toUpperCase() + name.slice(1)
     );
 
-  // stats = { 1: { name: "hp", value: 45 }, }
+  /* stats structure is: { 1: { name: "hp", value: 45 }, } */
   const stats: TPokemon["pokemonData"]["stats"] = pokemon.stats
     .filter((stat) => !stat.stat.name.includes("special"))
     .map((stat) => {
@@ -46,7 +46,7 @@ export const parsePokemon = (data: {
       return { id, name, value };
     });
 
-  // abilities = { 65: "overgrow", }
+  /* abilities structure is: { 65: "overgrow", } */
   const abilities: TPokemon["pokemonData"]["abilities"] = pokemon.abilities.map(
     (ability) => {
       const splits = ability.ability.url.split("/");
