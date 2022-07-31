@@ -1,5 +1,3 @@
-import Input from "@mui/material/Input";
-import FormControl from "@mui/material/FormControl";
 import React, { SyntheticEvent } from "react";
 import {
   resetFilterBarValue,
@@ -7,24 +5,25 @@ import {
   setFilterBarValue,
 } from "../../lib/redux/slices/filterBarSlice";
 import {
-  addPokemon,
+  getPokemon,
   handleRecentPokemon,
 } from "../../lib/redux/slices/pokemonsSlice";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
-import { SubmitButtonComponent } from "../forms/SubmitButtonComponent";
-import { dbInterface } from "../../lib/api/dbInterface";
+import { SubmitButtonComponent } from "../utils/forms/SubmitButtonComponent";
 import { Container } from "@mui/system";
+import { InputComponent } from "../utils/forms/InputComponent";
+import { TMyChangeFormEvent } from "../../utils/types";
+import { Box, Tooltip } from "@mui/material";
 
 export const FilterBar = ({
   withSearch,
 }: {
   withSearch?: boolean;
 }): JSX.Element => {
-  const db = dbInterface();
   const dispatch = useAppDispatch();
   const filterValue = useAppSelector(selectFilterBarValue);
 
-  const onFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFormChange = (e: TMyChangeFormEvent) => {
     dispatch(setFilterBarValue(e.target.value));
   };
 
@@ -34,7 +33,7 @@ export const FilterBar = ({
     const search = filterValue.toLowerCase();
     dispatch(resetFilterBarValue());
     try {
-      const pokemon = await dispatch(addPokemon(search)).unwrap();
+      const pokemon = await dispatch(getPokemon(search)).unwrap();
       dispatch(handleRecentPokemon(pokemon.id));
     } catch (e: any) {
       throw new Error(e.message);
@@ -45,24 +44,44 @@ export const FilterBar = ({
     e.preventDefault();
   };
 
-  return (
-    <Container>
-      <form
-        onSubmit={
-          (withSearch ? handleOnSubmit : notOnSubmit) as typeof handleOnSubmit
-        }
-      >
-        <FormControl>
-          <Input
-            id="filterBar"
-            aria-describedby={`filterBar-helper`}
-            onChange={onFormChange}
-            value={filterValue}
-          />
-        </FormControl>
+  const styleInput = {
+    marginLeft: "auto",
+    maxWidth: "20rem",
+    marginRight: 2,
+  };
 
-        {withSearch && <SubmitButtonComponent title="Search" />}
-      </form>
+  const styleMainContainer = {
+    display: "flex",
+    alignItems: "center",
+    marginTop: 4,
+    marginBottom: 3,
+  };
+
+  return (
+    <Container
+      component="form"
+      onSubmit={
+        (withSearch ? handleOnSubmit : notOnSubmit) as typeof handleOnSubmit
+      }
+      sx={styleMainContainer}
+    >
+      <InputComponent
+        fullWidth={true}
+        size="small"
+        label="Pokemon name"
+        value={filterValue}
+        onChange={onFormChange}
+        customSX={styleInput}
+        helperText={filterValue === "" ? "Pokemon name" : "Try 'pikachu'"}
+      />
+
+      {withSearch && (
+        <Tooltip title="Only last 5 searches are visible" placement="bottom">
+          <Box component="span">
+            <SubmitButtonComponent text="Search" />
+          </Box>
+        </Tooltip>
+      )}
     </Container>
   );
 };
