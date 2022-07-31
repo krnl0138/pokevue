@@ -16,6 +16,7 @@ import {
   URLS,
   PROJECT_LOGO,
   AVATAR_PLACEHOLDER as placeholder,
+  APP_NAME,
 } from "../../../utils/constants";
 
 import Image from "next/image";
@@ -51,15 +52,21 @@ const Header = () => {
   const { username, avatar } = useAppSelector(selectUser);
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
+    <AppBar position="static" sx={{ backgroundColor: "rgb(24 125 226 / 95%)" }}>
+      <Container
+        maxWidth="xl"
+        sx={{
+          boxShadow:
+            "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
+        }}
+      >
         <Toolbar disableGutters>
           <Link href={URLS.home}>
             <a>
               <Image
                 src={PROJECT_LOGO}
-                width="50"
-                height="50"
+                width="40"
+                height="40"
                 alt="Project Logo"
               />
             </a>
@@ -70,13 +77,15 @@ const Header = () => {
             sx={{
               ml: 2,
               display: { xs: "none", md: "flex", alignItems: "center" },
-              fontWeight: 400,
-              letterSpacing: ".3rem",
+              fontWeight: 300,
+              letterSpacing: ".25rem",
+              fontSize: "1.1rem",
               color: "inherit",
               textDecoration: "none",
+              textTransform: "capitalize",
             }}
           >
-            <Link href={URLS.home}>Pokevue</Link>
+            <Link href={URLS.home}>{APP_NAME}</Link>
           </Typography>
 
           {/* large screen */}
@@ -115,7 +124,7 @@ const Header = () => {
                     component="p"
                     variant="body2"
                     textAlign="center"
-                    sx={{ letterSpacing: "1.8", paddingRight: 1 }}
+                    sx={{ letterSpacing: "1.8" }}
                   >
                     {page}
                   </Typography>
@@ -132,8 +141,9 @@ const Header = () => {
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontWeight: 700,
-              letterSpacing: ".3rem",
+              fontWeight: 300,
+              fontSize: "1.1rem",
+              letterSpacing: ".25rem",
               color: "inherit",
               textDecoration: "none",
             }}
@@ -164,6 +174,7 @@ const Header = () => {
                   onClick={handleCloseNavMenu}
                   sx={{
                     my: 2,
+                    marginRight: "1rem",
                     color: "white",
                     display: "block",
                   }}
@@ -172,8 +183,8 @@ const Header = () => {
                     component="p"
                     variant="body2"
                     sx={{
-                      paddingRight: 1,
                       letterSpacing: "1.7px",
+                      fontWeight: "300",
                     }}
                   >
                     <Link href={`/${url}`}>{page}</Link>
@@ -206,7 +217,15 @@ const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <Typography textAlign="center">{username}</Typography>
+              <Typography
+                sx={{
+                  textAlign: "center",
+                  textTransform: "capitalize",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                {username}
+              </Typography>
               {settings.map((setting) => (
                 <MenuItem
                   key={setting}
@@ -214,8 +233,13 @@ const Header = () => {
                     setting === "logout" ? auth.logout : handleCloseUserMenu
                   }
                 >
-                  <Typography textAlign="center">
-                    <Link href={`${setting.toLowerCase()}`}>{setting}</Link>
+                  <Typography
+                    textAlign="center"
+                    sx={{ fontSize: "1rem", fontWeight: "300" }}
+                  >
+                    <Link href={`${setting.toLowerCase()}`}>
+                      <a>{setting}</a>
+                    </Link>
                   </Typography>
                 </MenuItem>
               ))}
