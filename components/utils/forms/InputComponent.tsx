@@ -1,19 +1,24 @@
 import { TextField } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { HTMLInputTypeAttribute, useState } from "react";
+import { TMyChangeFormEvent } from "../../../utils/types";
 
 type TInputComponent = {
   required?: boolean;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  type?: HTMLInputTypeAttribute;
+  value?: string;
+  onChange: (e: TMyChangeFormEvent) => void;
   label: string;
   regex?: RegExp;
   customSX?: {};
   defaultValue?: string;
   size?: "small" | "medium";
   fullWidth?: boolean;
+  labelFocus?: string;
   helperText?: string;
 };
 export const InputComponent = ({
+  required = false,
+  type = "text",
   value,
   regex,
   label,
@@ -21,8 +26,8 @@ export const InputComponent = ({
   customSX,
   defaultValue,
   size = "medium",
-  required = false,
   fullWidth = false,
+  labelFocus,
   helperText,
 }: TInputComponent) => {
   const [isFocus, setIsFocus] = useState(false);
@@ -34,18 +39,19 @@ export const InputComponent = ({
 
   return (
     <TextField
+      type={type}
       required={required}
       size={size}
       fullWidth={fullWidth}
       error={isFocus && !isValid && true}
       onFocus={() => setIsFocus(!isFocus)}
       onBlur={() => setIsFocus(!isFocus)}
-      id={`${value}-required`}
-      label={isFocus ? helperText : label}
+      label={isFocus ? labelFocus : label}
+      helperText={helperText && helperText}
       variant="outlined"
       defaultValue={defaultValue}
       onChange={(e) => {
-        setIsValid(regex ? validate(value) : true);
+        setIsValid(regex && value ? validate(value) : true);
         onChange(e);
       }}
       value={value}
