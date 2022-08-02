@@ -6,13 +6,19 @@ import { InputComponent } from "../../utils/forms/InputComponent";
 import { SubmitButtonComponent } from "../../utils/forms/SubmitButtonComponent";
 import CircularProgress from "@mui/material/CircularProgress";
 import { loginReducer, initialStateLogin } from "./loginFormReducer";
-import { Box, Button, Container, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useAppDispatch } from "../../../utils/hooks";
 import {
   userLogin,
   userLoginGoogle,
 } from "../../../lib/redux/slices/userSlice";
-import { Google } from "@mui/icons-material";
+import { Google, OpenInNew } from "@mui/icons-material";
 import {
   styleGlobalBorderComponent,
   styleGlobalContainerDark,
@@ -86,11 +92,70 @@ export const LoginForm = () => {
       ? { ...styleMainContainer, ...lightBackground }
       : { ...styleMainContainer, ...darkBackground };
 
+  const styleIconFilter =
+    theme.palette.mode === "light" ? "opacity(0.05)" : "opacity(0.2)";
+
+  const styleLink =
+    theme.palette.mode === "light" ? "rgb(25 118 210)" : "#00b4f8";
+
+  const matches = useMediaQuery(theme.breakpoints.down("sm"));
+  const styleHeaderFontSize = matches ? "1.2rem" : "1.5rem";
+  const styleIconMobile = matches
+    ? {
+        top: "3%",
+        right: "38%",
+        backgroundSize: "60px 60px",
+        height: "60px",
+        width: "60px",
+      }
+    : {
+        top: "5%",
+        right: "40%",
+        backgroundSize: "80px 80px",
+        height: "80px",
+        width: "80px",
+      };
+
   return (
-    <Container maxWidth="xs" sx={styleMain}>
-      <Typography component="p" variant="h4" sx={{ marginBottom: 5 }}>
-        Pokevue
-      </Typography>
+    <Container
+      maxWidth="xs"
+      sx={
+        matches
+          ? {
+              ...styleMain,
+              padding: "1.5rem 1rem",
+              "@media": { padding: "1.5rem 1rem" },
+              " p": { fontSize: "1rem" },
+            }
+          : styleMain
+      }
+    >
+      <Box
+        id="login-form-header"
+        sx={{
+          "::before": {
+            content: "''",
+            position: "fixed",
+            backgroundImage: `url(/pokeball_small_logo.png)`,
+            ...styleIconMobile,
+            backgroundRepeat: "no-repeat",
+            filter: `${styleIconFilter}`,
+            zIndex: "-1",
+          },
+        }}
+      >
+        <Typography
+          component="p"
+          variant="h4"
+          sx={{
+            marginBottom: 5,
+            textTransform: "uppercase",
+            fontSize: `${styleHeaderFontSize}`,
+          }}
+        >
+          Pokevue
+        </Typography>
+      </Box>
       <Box component="form" onSubmit={handleSubmit} sx={styleFormContainer}>
         <InputComponent
           required={true}
@@ -133,10 +198,23 @@ export const LoginForm = () => {
         </Typography>
       )}
 
-      <Typography component="p" variant="body1" sx={{ marginTop: 6 }}>
+      <Typography
+        component="p"
+        variant="body1"
+        sx={{
+          marginTop: 6,
+          " a": {
+            color: `${styleLink}`,
+            textDecoration: "underline",
+          },
+        }}
+      >
         Are you a new user?{" "}
         <Link href={URLS.register}>
-          <a>Register</a>
+          <a>
+            Register
+            <OpenInNew fontSize="small" sx={{ fontSize: "0.8rem" }} />
+          </a>
         </Link>
       </Typography>
     </Container>

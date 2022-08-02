@@ -1,16 +1,21 @@
-import { Container, Chip } from "@mui/material";
+import { Container, Chip, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useContext } from "react";
 import { PokemonDetailedContext } from "../pokemonDetailedContext";
 
 export const PokemonAttributes = () => {
   const { pokemonData } = useContext(PokemonDetailedContext);
   const { isLegendary, isMythical, isBaby } = pokemonData;
+  const theme = useTheme();
+  const mdScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const styleWidth = mdScreen ? { justifyContent: "center" } : "";
   return (
     <Container
       sx={{
         display: "flex",
         paddingTop: 2,
         ">div": { marginRight: "1rem" },
+        ...styleWidth,
       }}
     >
       <Chip

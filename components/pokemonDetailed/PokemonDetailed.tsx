@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Container, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { POKEMON_LOGO } from "../../utils/constants";
 import { TPokemon } from "../../utils/types";
@@ -84,6 +84,13 @@ export const PokemonDetailed = ({
         }
       : styleContainerMain;
 
+  const smallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const stylePokemonData = smallScreen
+    ? { ...styleContainerPokemonData, flexDirection: "column" }
+    : styleContainerPokemonData;
+  const stylePokemonAttributes = smallScreen
+    ? { ...styleContainerPokemonAttributes, width: "80%", marginTop: "2rem" }
+    : styleContainerPokemonAttributes;
   return (
     <PokemonDetailedContext.Provider value={pokemon}>
       <Container sx={styleMain}>
@@ -92,10 +99,10 @@ export const PokemonDetailed = ({
           <PokemonBigImage />
         </Container>
 
-        <Container sx={styleContainerPokemonData}>
+        <Container sx={stylePokemonData}>
           <PokemonDescription />
 
-          <Container sx={styleContainerPokemonAttributes}>
+          <Container sx={stylePokemonAttributes}>
             <PokemonRating id={id} inDetailed={true} />
             <PokemonAbilities />
             <PokemonStats />

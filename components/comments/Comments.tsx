@@ -10,8 +10,8 @@ import autoAnimate from "@formkit/auto-animate";
 
 const styleCommentsList = {
   maxWidth: "480px",
-  minWidth: "480px",
-  width: "480px",
+  // minWidth: "480px",
+  // width: "480px",
   maxHeight: "300px",
   overflowY: "auto",
 };

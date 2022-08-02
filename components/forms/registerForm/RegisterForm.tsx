@@ -6,6 +6,7 @@ import {
   CircularProgress,
   Container,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { REGEX_EMAIL, REGEX_PASSWORD, URLS } from "../../../utils/constants";
 import { useRouter } from "next/router";
@@ -101,12 +102,67 @@ export const RegisterForm = () => {
     theme.palette.mode === "light"
       ? { ...styleMainContainer, ...lightBackground }
       : { ...styleMainContainer, ...darkBackground };
+  const styleIconFilter =
+    theme.palette.mode === "light" ? "opacity(0.05)" : "opacity(0.2)";
+
+  const matches = useMediaQuery(theme.breakpoints.down("sm"));
+  const styleHeaderFontSize = matches ? "1.2rem" : "1.5rem";
+  const styleIconMobile = matches
+    ? {
+        top: "3%",
+        right: "42%",
+        height: "60px",
+        width: "60px",
+        backgroundSize: "60px 60px",
+      }
+    : {
+        top: "5%",
+        right: "40%",
+        height: "80px",
+        width: "80px",
+        backgroundSize: "80px 80px",
+      };
 
   return (
-    <Container maxWidth="xs" sx={styleMain}>
-      <Typography component="p" variant="h4" sx={{ marginBottom: 5 }}>
-        Pokevue
-      </Typography>
+    <Container
+      maxWidth="xs"
+      sx={
+        matches
+          ? {
+              ...styleMain,
+              padding: "1.5rem 1rem",
+              "@media": { padding: "1.5rem 1rem" },
+              " p": { fontSize: "1rem" },
+            }
+          : styleMain
+      }
+    >
+      <Box
+        id="login-form-header"
+        sx={{
+          "::before": {
+            content: "''",
+            position: "fixed",
+            backgroundImage: `url(/pokeball_small_logo.png)`,
+            ...styleIconMobile,
+            backgroundRepeat: "no-repeat",
+            filter: `${styleIconFilter}`,
+            zIndex: "-1",
+          },
+        }}
+      >
+        <Typography
+          component="p"
+          variant="h4"
+          sx={{
+            marginBottom: 5,
+            textTransform: "uppercase",
+            fontSize: `${styleHeaderFontSize}`,
+          }}
+        >
+          Pokevue
+        </Typography>
+      </Box>
       <Box component="form" onSubmit={handleSubmit} sx={styleFormContainer}>
         <InputComponent
           required={true}

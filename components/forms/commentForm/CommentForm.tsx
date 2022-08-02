@@ -2,7 +2,8 @@ import React, { useReducer } from "react";
 import { InputComponent } from "../../utils/forms/InputComponent";
 import { SubmitButtonComponent } from "../../utils/forms/SubmitButtonComponent";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Container } from "@mui/material";
+import { Container, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { commentReducer, initialStateComment } from "./commentFormReducer";
 import { writeComment } from "../../../lib/redux/slices/userSlice";
 import { TMyChangeFormEvent } from "../../../utils/types";
@@ -38,18 +39,28 @@ export const CommentForm = ({ pokemonId }: { pokemonId: number }) => {
     });
   };
 
+  const theme = useTheme();
+  const smScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const styleMain = {
+    display: "flex",
+    alignItems: "center",
+    marginTop: "1rem",
+  };
+  const styleInput = { marginRight: "1rem", minWidth: "20rem" };
   return (
     <Container
       component="form"
       onSubmit={handleSubmit}
-      sx={{ display: "flex", alignItems: "center", marginTop: "1rem" }}
+      sx={smScreen ? { ...styleMain, flexDirection: "column" } : styleMain}
     >
       <InputComponent
         label="Enter your comment"
         onChange={onChangeComment}
         value={comment}
         size="small"
-        customSX={{ marginRight: "1rem", minWidth: "20rem" }}
+        customSX={
+          smScreen ? { ...styleInput, marginBottom: "2rem" } : styleInput
+        }
       />
       {isLoading ? (
         <CircularProgress />

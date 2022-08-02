@@ -28,4 +28,5 @@ export const styleGlobalHeadingSection = {
 export const styleGlobalContainerDark = {
   border: "1px solid rgb(255 255 255 / 20%)",
   backgroundColor: "rgb(14 45 81)",
+  borderRadius: "8px",
 };

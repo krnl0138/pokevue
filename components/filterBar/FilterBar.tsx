@@ -50,7 +50,7 @@ export const FilterBar = ({
   const handleOnSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     if (!filterValue) return;
-    const search = filterValue.toLowerCase();
+    const search = filterValue.toLowerCase().trim();
     dispatch(resetFilterBarValue());
     try {
       dispatch(setFilterBarPending(true));
