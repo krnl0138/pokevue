@@ -20,7 +20,7 @@ export const Login = () => {
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [auth, router]);
 
   return (
     !isUser && (

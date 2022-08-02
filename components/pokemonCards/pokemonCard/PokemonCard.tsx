@@ -1,4 +1,4 @@
-import { Box, Card, Skeleton, Stack } from "@mui/material";
+import { Box, Card } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
 import { selectPokemonById } from "../../../lib/redux/slices/pokemonsSlice";
@@ -56,33 +56,34 @@ export const PokemonCard = React.memo(
     const styleCard = inModal ? cardStyleModal : cardStyle;
     return (
       <PokemonCardContext.Provider value={contextValue}>
-        {pokemon ? (
-          <Card
-            onMouseEnter={toggleSetIsHovered}
-            onMouseLeave={toggleSetIsHovered}
-            variant="outlined"
-            sx={
-              theme.palette.mode === "light"
-                ? styleCard
-                : { ...styleCard, ...styleGlobalContainerDark }
-            }
-          >
-            <>
-              <Box>
-                <PokemonCardHeader />
-                <PokemonCardBody />
-              </Box>
+        {
+          pokemon ? (
+            <Card
+              onMouseEnter={toggleSetIsHovered}
+              onMouseLeave={toggleSetIsHovered}
+              variant="outlined"
+              sx={
+                theme.palette.mode === "light"
+                  ? styleCard
+                  : { ...styleCard, ...styleGlobalContainerDark }
+              }
+            >
+              <>
+                <Box>
+                  <PokemonCardHeader />
+                  <PokemonCardBody />
+                </Box>
 
-              {!inModal && <PokemonCardActions />}
-            </>
-          </Card>
-        ) : (
+                {!inModal && <PokemonCardActions />}
+              </>
+            </Card>
+          ) : null
           // TODO architecturaly not working since the component mounts only when recentIds selector fires
-          <Stack spacing={1}>
-            <Skeleton variant="circular" width={50} height={50} />
-            <Skeleton variant="rectangular" width={385} height={500} />
-          </Stack>
-        )}
+          // <Stack spacing={1}>
+          //   <Skeleton variant="circular" width={50} height={50} />
+          //   <Skeleton variant="rectangular" width={385} height={500} />
+          // </Stack>
+        }
       </PokemonCardContext.Provider>
     );
   }

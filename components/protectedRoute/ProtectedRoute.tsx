@@ -32,10 +32,9 @@ export const ProtectedRoute = ({ children }: TProtectedRoute) => {
   const allIds = useAppSelector(selectAllIds);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const redirect = () => router.push(URLS.login);
-
   /* Listen auth and populate user to the store or redirect to login */
   useEffect(() => {
+    const redirect = () => router.push(URLS.login);
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         await db.getUser(user.uid);

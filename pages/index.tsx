@@ -11,17 +11,17 @@ import {
   addRandomPokemon,
   selectAllIds,
   selectAllPokemons,
-  selectRandomIds
+  selectRandomIds,
 } from "../lib/redux/slices/pokemonsSlice";
 import {
   NUM_POKEMONS_TO_LOAD_MORE,
-  NUM_RANDOM_POKEMON_CADRS
+  NUM_RANDOM_POKEMON_CADRS,
 } from "../utils/constants";
 import { createRandomIds } from "../utils/functions";
 import {
   useAppDispatch,
   useAppSelector,
-  useInfiniteScroll
+  useInfiniteScroll,
 } from "../utils/hooks";
 import { TPokemon } from "../utils/types";
 
@@ -65,9 +65,6 @@ export const Index = ({ serverRandoms }: { serverRandoms: TPokemon[] }) => {
     );
     setLoading(false);
     dispatchPokemons(morePokemons);
-    // setTimeout(() => {
-    //   setLoading(false);
-    // }, 1000);
   };
   const loadMoreButtonRef = useInfiniteScroll(handleLoadMore, filterValue);
 
@@ -84,7 +81,7 @@ export const Index = ({ serverRandoms }: { serverRandoms: TPokemon[] }) => {
   return (
     <ProtectedRoute>
       <Layout>
-        <FilterBar />
+        <FilterBar labelFocus="Filter pokemons" />
         {randomIds.length > 0 && (
           <Box sx={{ textAlign: "center" }}>
             <PokemonCards

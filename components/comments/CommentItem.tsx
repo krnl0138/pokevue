@@ -64,7 +64,7 @@ export const CommentItem = ({
     if (!uid) return;
     dispatch(getOtherUser(uid));
     executedRef.current = true;
-  }, []);
+  }, [dispatch, uid]);
 
   const currentUserUid = useAppSelector(selectCurrentUserUid);
   const user = useAppSelector((state: RootState) =>

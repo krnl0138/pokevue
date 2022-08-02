@@ -10,9 +10,8 @@ const Logout = () => {
   const auth = getAuth();
   const dispatch = useAppDispatch();
 
-  const handleRedirect = () => router.push(URLS.home);
-
   useEffect(() => {
+    const handleRedirect = () => router.push(URLS.home);
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         signOut(auth).then(() => {
@@ -24,7 +23,7 @@ const Logout = () => {
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [auth, dispatch, router]);
 };
 
 export default Logout;

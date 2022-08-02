@@ -17,10 +17,11 @@ export const Registration = () => {
         return router.push(URLS.home);
       } else {
         setIsUser(false);
+        return;
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [auth, router]);
 
   return (
     !isUser && (

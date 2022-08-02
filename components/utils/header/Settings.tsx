@@ -26,7 +26,11 @@ export const Settings = ({
 }: TSettings) => {
   return (
     <>
-      <Box sx={{ flexGrow: 0 }}>
+      <Box
+        sx={{
+          flexGrow: 0,
+        }}
+      >
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
             <Avatar alt="User avatar" src={avatar}>
@@ -35,7 +39,14 @@ export const Settings = ({
           </IconButton>
         </Tooltip>
         <Menu
-          sx={{ mt: "45px" }}
+          sx={{
+            mt: "45px",
+            " ul": {
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            },
+          }}
           id="menu-appbar"
           anchorEl={anchorElUser}
           anchorOrigin={{
