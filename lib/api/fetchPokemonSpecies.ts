@@ -10,9 +10,7 @@ export async function fetchPokemonSpecies(search: string | number) {
 
   const res = await fetch(url, requestOptions);
   if (!res.ok) {
-    throw new Error(
-      "There was an error: fetchPokemonSpecies couldn't load data"
-    );
+    throw new Error(url);
   }
   const data: TPokemonSpeciesResponse = await res.json();
 

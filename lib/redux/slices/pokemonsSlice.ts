@@ -31,9 +31,22 @@ export const pokemonsSlice = createSlice({
     addPokemon: (state, action: PayloadAction<TPokemon>) => {
       const pokemon = action.payload;
       const id = pokemon.id;
+      if (state.allIds.includes(id)) return;
+
       state.allIds.push(id);
       state.byId[id] = { ...state.byId[id], ...pokemon };
       if (state.favouriteIds.includes(id)) state.byId[id].isFavourite = true;
+    },
+    addPokemons: (state, action: PayloadAction<TPokemon[]>) => {
+      const pokemons = action.payload;
+      pokemons.forEach((p) => {
+        const id = p.id;
+        if (state.allIds.includes(id)) return;
+
+        state.allIds.push(id);
+        state.byId[id] = { ...state.byId[id], ...p };
+        if (state.favouriteIds.includes(id)) state.byId[id].isFavourite = true;
+      });
     },
     addFavouritePokemon: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -116,13 +129,16 @@ export const pokemonsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getPokemon.fulfilled, (state, action) => {
-      const pokemon = action.payload;
-      const id = pokemon.id;
-      state.allIds.push(id);
-      state.byId[id] = { ...state.byId[id], ...pokemon };
-      if (state.favouriteIds.includes(id)) state.byId[id].isFavourite = true;
-    });
+    builder.addCase(getPokemon.pending, (state, action) => {
+      // console.log(payload.action);
+    }),
+      builder.addCase(getPokemon.fulfilled, (state, action) => {
+        const pokemon = action.payload;
+        const id = pokemon.id;
+        state.allIds.push(id);
+        state.byId[id] = { ...state.byId[id], ...pokemon };
+        if (state.favouriteIds.includes(id)) state.byId[id].isFavourite = true;
+      });
   },
 });
 
@@ -130,6 +146,7 @@ export const pokemonsSlice = createSlice({
 export const { actions, reducer: pokemonsReducer } = pokemonsSlice;
 export const {
   addPokemon,
+  addPokemons,
   removePokemon,
   addRecentPokemon,
   addFavouriteIds,
@@ -163,9 +180,13 @@ export const getPokemon = createAsyncThunk(
   "pokemons/addPokemon",
   async (id: string | number) => {
     const { getAverageRating } = dbInterface();
-    const pokemon = await retrievePokemon(id);
-    getAverageRating(pokemon.id);
-    return pokemon;
+    try {
+      const pokemon = await retrievePokemon(id);
+      getAverageRating(pokemon.id);
+      return pokemon;
+    } catch (error) {
+      throw new Error("Couldnt fetch your pokemon. Try again.");
+    }
   }
 );
 
