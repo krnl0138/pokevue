@@ -55,11 +55,11 @@ export const RegisterForm = () => {
   const { error, isLoading, isRegistered, data } = state;
   const { password, email, username } = data;
 
-  const handleSubmit = async (e: React.SyntheticEvent) => {
+  const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     dispatchRegister({ type: "register" });
     try {
-      await dispatch(userRegister(data));
+      dispatch(userRegister(data));
       dispatchRegister({ type: "success" });
       router.push(URLS.home);
     } catch {
@@ -120,7 +120,7 @@ export const RegisterForm = () => {
         {isLoading ? (
           <CircularProgress />
         ) : (
-          <SubmitButtonComponent text="Login" />
+          <SubmitButtonComponent text="Register" />
         )}
 
         <Button
