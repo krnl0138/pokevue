@@ -1,27 +1,32 @@
+import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/router";
-import { Layout } from "../../components/utils/layout/Layout";
+import { GetServerSideProps } from "next/types";
+import { useEffect, useState } from "react";
 import { PokemonDetailed } from "../../components/pokemonDetailed/PokemonDetailed";
-import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { ProtectedRoute } from "../../components/protectedRoute/ProtectedRoute";
-import { getPokemon } from "../../lib/api/getPokemon";
+import { Layout } from "../../components/utils/layout/Layout";
+import { dbInterface } from "../../lib/api/dbInterface";
+import { fetchEvolution } from "../../lib/api/fetchEvolution";
 import {
-  addPokemon,
+  addPokemons,
+  getPokemon,
   selectPokemonById,
 } from "../../lib/redux/slices/pokemonsSlice";
-import { CircularProgress } from "@mui/material";
-import { GetServerSideProps } from "next/types";
-import { fetchEvolution } from "../../lib/api/fetchEvolution";
+import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { TPokemon } from "../../utils/types";
-import { dbGetAverageRating } from "../../firebase/dbRatings";
 
 // TODO should do SSR with its own richer parse function or render from client store?
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  if (!context.params) throw new Error("no params");
+  console.log("proceed to server props");
+  if (!context.params) {
+    throw new Error("No params we're passed in path");
+  }
   const { id } = context.params;
-  if (!id || Array.isArray(id)) throw new Error("no id or id is an array");
+  if (typeof id !== "string") {
+    throw new Error("No id was provided or the id is not a string");
+  }
+  console.log("calling evolutionPokemons function");
   const evolutionPokemons = await fetchEvolution(id);
-  console.log(evolutionPokemons);
-  if (!evolutionPokemons) throw new Error("no evolutionPokemons was returned");
   return {
     props: { ...evolutionPokemons },
   };
@@ -29,43 +34,55 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 // TODO grab from store by id only if not grab from 1st evo
 const Pokemon = (evolutionPokemons: TPokemon[]) => {
-  console.log(evolutionPokemons[0]);
+  console.log("evolution pokemons in Pokemon are: ", evolutionPokemons);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const id = router.asPath.split("/")[2];
-  const pokemon = useAppSelector((state) =>
-    selectPokemonById(state, Number(id))
-  );
+  const pathId = router.asPath.split("/")[2];
+  const id = Number(pathId);
+  const pokemon = useAppSelector((state) => selectPokemonById(state, id));
+  const db = dbInterface();
+  const [loaded, setLoaded] = useState(false);
 
-  // hotfix, sometimes router returns '[id]' string
-  if (id === "[id]") return <CircularProgress />;
+  /* Populate evolution chain pokemons to the store */
+  useEffect(() => {
+    if (!evolutionPokemons) return;
+    const evo = Object.values(evolutionPokemons);
+    if (evo.length === 0) return;
+    const populateEvo = () => {
+      dispatch(addPokemons(evo));
+    };
+    populateEvo();
+  }, [evolutionPokemons]);
 
-  const loadPokemon = async (id: number) => {
-    if (evolutionPokemons) {
-      Object.values(evolutionPokemons).forEach((p) => {
-        const pokemonId = p.id;
-        dispatch(addPokemon(p));
-        dbGetAverageRating({ pokemonId });
-      });
+  useEffect(() => {
+    if (pokemon) {
+      setLoaded(true);
       return;
     }
-    console.log("id is:", id);
-    if (!id) return;
-    const pokemon = await getPokemon(id);
-    const pokemonId = id;
-    await dbGetAverageRating({ pokemonId });
-    console.log("returned pokemon from getPokemon is: ", pokemon);
-    dispatch(addPokemon(pokemon));
-  };
-  if (!pokemon) loadPokemon(Number(id));
+    const loadPokemon = async (id: number) => {
+      console.log("loading Pokemon");
+      try {
+        await dispatch(getPokemon(id));
+        setLoaded(true);
+      } catch (error) {
+        throw new Error(`An error occured while fetching a pokemon ${error}`);
+      }
+    };
+    loadPokemon(id);
+  }, [pokemon]);
+
+  useEffect(() => {
+    if (!loaded) return;
+    db.getComments(id);
+  }, [loaded]);
 
   return (
     <ProtectedRoute>
       <Layout>
         {pokemon ? (
           <PokemonDetailed
-            id={Number(id)}
-            pokemon={evolutionPokemons[0]}
+            id={id}
+            pokemon={pokemon}
             evolutionPokemons={evolutionPokemons}
           />
         ) : (
