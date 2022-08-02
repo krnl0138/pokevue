@@ -1,23 +1,33 @@
-import React from "react";
-import { Layout } from "../components/utils/layout/Layout";
-import { RegisterForm } from "../components/forms/registerForm/RegisterForm";
-import { URLS } from "../utils/constants";
-import { useAppSelector } from "../utils/hooks";
+import { getAuth } from "firebase/auth";
 import { useRouter } from "next/router";
-import { selectUser } from "../lib/redux/slices/userSlice";
+import { useEffect, useState } from "react";
+import { RegisterForm } from "../components/forms/registerForm/RegisterForm";
+import { Layout } from "../components/utils/layout/Layout";
+import { URLS } from "../utils/constants";
 
 export const Registration = () => {
   const router = useRouter();
-  // TODO it dumps on a new render or tab, always null
-  const user = useAppSelector(selectUser);
+  const auth = getAuth();
+  const [isUser, setIsUser] = useState(false);
   // guard protected route
-  if (user.username) {
-    router.push(URLS.home);
-  }
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsUser(true);
+        return router.push(URLS.home);
+      } else {
+        setIsUser(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
-    <Layout>
-      <RegisterForm />
-    </Layout>
+    !isUser && (
+      <Layout>
+        <RegisterForm />
+      </Layout>
+    )
   );
 };
 
