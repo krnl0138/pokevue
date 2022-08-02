@@ -26,7 +26,9 @@ export const authGoogleAuth = async () => {
   } catch (error: any) {
     const errorCode = error.code;
     const errorMessage = error.message;
-    return `An error happened during login: ${errorCode}: ${errorMessage}`;
+    throw new Error(
+      `An error happened during login: ${errorCode}: ${errorMessage}`
+    );
   }
 };
 
@@ -65,8 +67,13 @@ export const authSignInWithEmailPassword = async (
   }
 };
 
+/* custom logout route is used instead */
 export const authLogout = () => {
-  signOut(auth);
+  signOut(auth)
+    .then(() => alert("You successfully logged out."))
+    .catch((e) => {
+      throw new Error("An error occured during logging out.");
+    });
 };
 
 export const authUpdatePassword = async (newPassword: string) => {

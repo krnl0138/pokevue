@@ -5,19 +5,24 @@ import {
   authSignInWithEmailPassword,
   authUpdateEmail,
   authUpdatePassword,
-} from "./auth";
+} from "../../firebase/auth";
 
-// An agnostic auth provider for Redux
-// Usage: const auth = authProvider();
+/*
+ * An agnostic auth provider for Redux.
+ * Usage: const auth = authInterface();
+ */
 export const authInterface = () => {
   const login = async (email: string, password: string) => {
-    await authSignInWithEmailPassword(email, password);
+    const user = await authSignInWithEmailPassword(email, password);
+    return user;
   };
   const loginWithGoolge = async () => {
-    await authGoogleAuth();
+    const user = await authGoogleAuth();
+    return user;
   };
   const register = async (email: string, password: string) => {
-    await authCreateUser(email, password);
+    const user = await authCreateUser(email, password);
+    return user;
   };
   const logout = () => authLogout();
   const updateEmail = async (email: string) => await authUpdateEmail(email);
