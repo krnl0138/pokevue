@@ -8,6 +8,14 @@ import { TPokemon } from "../../utils/types";
 import { CommentItem } from "./CommentItem";
 import autoAnimate from "@formkit/auto-animate";
 
+const styleCommentsList = {
+  maxWidth: "480px",
+  minWidth: "480px",
+  width: "480px",
+  maxHeight: "300px",
+  overflowY: "auto",
+};
+
 type TComments = {
   pokemonId: TPokemon["id"];
 };
@@ -32,11 +40,7 @@ export const Comments = ({ pokemonId }: TComments) => {
       </Typography>
 
       {pokemonComments.length > 0 ? (
-        <List
-          ref={commentsRef}
-          component="div"
-          sx={{ maxWidth: "480px", minWidth: "480px", width: "480px" }}
-        >
+        <List ref={commentsRef} component="div" sx={styleCommentsList}>
           {pokemonComments.map((commentBody) => {
             if (!commentBody) return;
             return (

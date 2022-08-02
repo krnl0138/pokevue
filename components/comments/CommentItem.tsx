@@ -7,6 +7,7 @@ import {
   ListItem,
   Typography,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { dbInterface } from "../../lib/api/dbInterface";
@@ -18,11 +19,18 @@ import {
 } from "../../lib/redux/slices/usersSlice";
 import {
   styleGlobalBorderComponent,
+  styleGlobalContainerDark,
   styleGlobalHoverShadow,
 } from "../../styles/styles";
-import { AVATAR_PLACEHOLDER as placeholder } from "../../utils/constants";
 import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { TUser } from "../../utils/types";
+
+const styleListItem = {
+  backgroundColor: "#fdfdfd",
+  margin: "4px 0",
+  ...styleGlobalBorderComponent,
+  ...styleGlobalHoverShadow,
+};
 
 const styleUserDataBox = {
   display: "flex",
@@ -65,31 +73,27 @@ export const CommentItem = ({
   const handleOnClick = async () =>
     await db.deleteComment(pokemonId, commentId);
 
+  const theme = useTheme();
+  const styleItem =
+    theme.palette.mode === "light"
+      ? { ...styleListItem, backgroundColor: "#fdfdfd" }
+      : { ...styleListItem, ...styleGlobalContainerDark };
   return (
-    <ListItem
-      component="div"
-      sx={{
-        backgroundColor: "#fdfdfd",
-        margin: "4px 0",
-        ...styleGlobalBorderComponent,
-        ...styleGlobalHoverShadow,
-      }}
-    >
+    <ListItem component="div" sx={styleItem}>
       <Box sx={styleUserDataBox}>
         {user ? (
           <>
-            {user.avatar ? (
-              <Avatar>
+            <Avatar>
+              {user.avatar && (
                 <Image
                   width="70"
                   height="70"
-                  src={user.avatar ? user.avatar : placeholder}
+                  src={user.avatar}
                   alt="User avatar"
                 />
-              </Avatar>
-            ) : (
-              <CircularProgress />
-            )}
+              )}
+              {user.avatar ? "" : user.username}
+            </Avatar>
 
             <Typography
               component="p"

@@ -1,11 +1,12 @@
 import React, { useReducer } from "react";
-import { InputComponent } from "../InputComponent";
-import { SubmitButtonComponent } from "../SubmitButtonComponent";
+import { InputComponent } from "../../utils/forms/InputComponent";
+import { SubmitButtonComponent } from "../../utils/forms/SubmitButtonComponent";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Container, Typography } from "@mui/material";
-import { useAppDispatch } from "../../../utils/hooks";
+import { Container } from "@mui/material";
 import { commentReducer, initialStateComment } from "./commentFormReducer";
 import { writeComment } from "../../../lib/redux/slices/userSlice";
+import { TMyChangeFormEvent } from "../../../utils/types";
+import { useAppDispatch } from "../../../utils/hooks";
 
 // TODO make it persisten with redux Slice
 export const CommentForm = ({ pokemonId }: { pokemonId: number }) => {
@@ -14,53 +15,46 @@ export const CommentForm = ({ pokemonId }: { pokemonId: number }) => {
     commentReducer,
     initialStateComment
   );
-  const { isPublished, isLoading, error, comment } = state;
+  const { isLoading, error, comment } = state;
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+    if (comment === "") return;
     dispatchComment({ type: "publish" });
-    // await addComment(pokemonId, comment);
     try {
-      console.log("I was called");
-      await writeComment(pokemonId, comment);
-      dispatchComment({ type: "success" });
-    } catch (errorC) {
+      dispatch(writeComment(pokemonId, comment));
+    } catch (err) {
       dispatchComment({ type: "failed", value: error });
-      throw new Error(`${errorC}`);
+      throw new Error(`${err}`);
     }
+    dispatchComment({ type: "success" });
+  };
+
+  const onChangeComment = (e: TMyChangeFormEvent) => {
+    dispatchComment({
+      type: "field",
+      field: "comment",
+      value: e.currentTarget.value,
+    });
   };
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit}>
-        <InputComponent
-          label="Enter your comment"
-          id="comment"
-          onChange={(e) =>
-            dispatchComment({
-              type: "field",
-              field: "comment",
-              value: e.currentTarget.value,
-            })
-          }
-          value={comment}
-        />
-        {isLoading ? (
-          <CircularProgress />
-        ) : (
-          <SubmitButtonComponent title="Publish" />
-        )}
-      </form>
-
-      {isPublished && (
-        <Typography component="p" variant="body1">
-          Successfully publish a comment.
-        </Typography>
-      )}
-      {error && (
-        <Typography component="p" variant="body1">
-          There was an error: {error}
-        </Typography>
+    <Container
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ display: "flex", alignItems: "center", marginTop: "1rem" }}
+    >
+      <InputComponent
+        label="Enter your comment"
+        onChange={onChangeComment}
+        value={comment}
+        size="small"
+        customSX={{ marginRight: "1rem", minWidth: "20rem" }}
+      />
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <SubmitButtonComponent text="Publish" />
       )}
     </Container>
   );
