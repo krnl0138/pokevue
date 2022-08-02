@@ -1,12 +1,12 @@
 import { ArrowRightAlt } from "@mui/icons-material";
-import { Box, Container, Typography } from "@mui/material";
-import { useContext } from "react";
+import { Box, Container, Tooltip, Typography } from "@mui/material";
+import React from "react";
 import { capitalize } from "../../../utils/functions";
 import { TPokemon } from "../../../utils/types";
-import { PokemonDetailedContext } from "../pokemonDetailedContext";
 import { PokemonEvoItem } from "./PokemonEvoItem";
 
 const styleEvolutionTitle = {
+  display: "inline-block",
   paddingTop: 2,
   paddingLeft: 3,
   paddingBottom: 1,
@@ -26,34 +26,42 @@ export const PokemonEvo = ({
 }: {
   evolutionPokemons: TPokemon[];
 }) => {
-  const { id, pokemonData } = useContext(PokemonDetailedContext);
-  const { name, avatarBig: avatarBigFirst } = pokemonData;
-  const nameFirst = capitalize(name);
-  const evolution = Object.values(evolutionPokemons);
+  let evolution;
+  if (Object.values(evolutionPokemons).length === 1) {
+    console.log("evolutionPokemons are an array");
+    evolution = Object.values(evolutionPokemons);
+  } else {
+    evolution = [evolutionPokemons];
+  }
+  console.log(
+    "evolutionPokemons length changing are: ",
+    Object.values(evolutionPokemons).length
+  );
+  console.log("evolutionPokemons before changing are: ", evolutionPokemons);
+  // console.log("evolutionPokemons after changing are: ", evolution);
   return (
     <Box component="div">
-      <Typography component="h2" variant="h4" sx={styleEvolutionTitle}>
-        Evolution
-      </Typography>
+      <Tooltip title="Shows you an evolution chain">
+        <Typography component="h2" variant="h4" sx={styleEvolutionTitle}>
+          Evolution
+        </Typography>
+      </Tooltip>
 
       <Container sx={styleEvolutionContainerMain}>
-        <PokemonEvoItem id={id} avatarBig={avatarBigFirst} name={nameFirst} />
-        <ArrowRightAlt fontSize="large" />
-        {evolution.map((evo, i) => {
+        {Object.values(evolutionPokemons).map((evo, i) => {
           const name = capitalize(evo.pokemonData.name);
           const avatarBig = evo.pokemonData.avatarBig;
           return (
-            <>
-              <PokemonEvoItem
-                key={evo.id}
-                id={evo.id}
-                avatarBig={avatarBig}
-                name={name}
-              />
+            <React.Fragment
+              key={evo.id}
+              // component="div"
+              // sx={{ display: "flex", alignItems: "center" }}
+            >
               {i === evolution.length - 1 ? null : (
-                <ArrowRightAlt key={i} fontSize="large" />
+                <ArrowRightAlt fontSize="large" />
               )}
-            </>
+              <PokemonEvoItem id={evo.id} avatarBig={avatarBig} name={name} />
+            </React.Fragment>
           );
         })}
       </Container>

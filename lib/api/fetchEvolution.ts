@@ -1,36 +1,37 @@
-import { TPokemon } from "../../utils/types";
+import { TChainResponse, TPokemon } from "../../utils/types";
 import { fetchPokemonSpecies } from "./fetchPokemonSpecies";
 import { retrievePokemon } from "./retrievePokemon";
 
 /*
- * Just for the practise purpose we recursively fetch
- * all pokemons aside the first one bc we it was fetched
- * on the client-side.
- * It is better and easier to SSR all evolution-chain.
+ * Recursively fetch pokemons data from the API 'chain' endpoint
  */
-export async function fetchEvolution(search: number | string) {
-  const result: TPokemon[] = [];
-  const first = await fetchPokemonSpecies(search);
-  const firstEvoName = first.evolves_from_species?.name;
-  if (!firstEvoName) return;
-
-  const recursive = async (search: number | string) => {
-    console.log("search inside recursive is: ", search);
+export const fetchEvolution = async (search: number | string) => {
+  const species = await fetchPokemonSpecies(search);
+  if (!species.evolves_from_species) {
     const pokemon = await retrievePokemon(search);
-    result.push(pokemon);
-    const evoName = pokemon.pokemonData.evolutionName;
+    return { pokemon };
+  }
+  const request = await fetch(species.evolution_chain.url);
+  const data: TChainResponse = await request.json();
+  const chain = data.chain;
 
-    // base case
-    if (!evoName) {
-      return;
+  const result: TPokemon[] = [];
+
+  const first = await retrievePokemon(chain.species.name);
+  result.push(first);
+
+  const recursive = async (chain: TChainResponse["chain"]["evolves_to"][0]) => {
+    if ((chain.evolves_to.length as any) !== 0) {
+      const pokemon = await retrievePokemon(chain.species.name);
+      result.push(pokemon);
+      await recursive(chain.evolves_to[0] as any);
     } else {
-      await recursive(evoName);
+      const pokemon = await retrievePokemon(chain.species.name);
+      result.push(pokemon);
+      return;
     }
   };
-  try {
-    await recursive(firstEvoName);
-  } catch (error) {
-    throw new Error("An error occured while fetching evolution pokemons");
-  }
+
+  await recursive(chain.evolves_to[0]);
   return result;
-}
+};
