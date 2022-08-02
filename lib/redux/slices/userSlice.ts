@@ -92,12 +92,21 @@ export const userLoginGoogle = (): AppThunk => async (dispatch) => {
       throw new Error(
         "No username or email were provided by Google authentication"
       );
-    await db.createUser(uid, { email, username });
-    if (!photoURL) return;
-    const image = await fetch(photoURL);
-    const blob = await image.blob();
-    await db.uploadUserAvatar(uid, blob as File);
+    try {
+      await db.createUser(uid, { email, username });
+    } catch {
+      throw new Error("An error occured while creating user");
+    }
+    try {
+      if (!photoURL) return;
+      const image = await fetch(photoURL);
+      const blob = await image.blob();
+      await db.uploadUserAvatar(uid, blob as File);
+    } catch {
+      throw new Error("An error occured while uploading an image");
+    }
   } catch (error) {
+    console.error(error);
     throw new Error("Login with Google has failed.");
   }
 };
