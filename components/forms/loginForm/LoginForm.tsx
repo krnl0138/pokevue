@@ -13,9 +13,13 @@ import {
   userLoginGoogle,
 } from "../../../lib/redux/slices/userSlice";
 import { Google } from "@mui/icons-material";
-import { styleGlobalBorderComponent } from "../../../styles/styles";
+import {
+  styleGlobalBorderComponent,
+  styleGlobalContainerDark,
+} from "../../../styles/styles";
 import { InputPasswordComponent } from "../../utils/forms/PasswordComponent";
 import { TMyChangeFormEvent } from "../../../utils/types";
+import { useTheme } from "@mui/material/styles";
 
 const styleMainContainer = {
   position: "absolute",
@@ -24,10 +28,8 @@ const styleMainContainer = {
   transform: "translate(-50%,-50%)",
   padding: 8,
   paddingTop: 6,
-  bgcolor: "#fdfdfd",
   boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
   textAlign: "center",
-  ...styleGlobalBorderComponent,
   ":hover": {
     boxShadow: "rgb(0 0 0 / 24%) 0px 5px 12px",
   },
@@ -40,6 +42,9 @@ const styleFormContainer = {
   flexDirection: "column",
   " > div": { margin: "10px 0" },
 };
+
+const lightBackground = { ...styleGlobalBorderComponent, bgcolor: "#fdfdfd" };
+const darkBackground = styleGlobalContainerDark;
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -75,8 +80,14 @@ export const LoginForm = () => {
     });
   };
 
+  const theme = useTheme();
+  const styleMain =
+    theme.palette.mode === "light"
+      ? { ...styleMainContainer, ...lightBackground }
+      : { ...styleMainContainer, ...darkBackground };
+
   return (
-    <Container maxWidth="xs" sx={styleMainContainer}>
+    <Container maxWidth="xs" sx={styleMain}>
       <Typography component="p" variant="h4" sx={{ marginBottom: 5 }}>
         Pokevue
       </Typography>
