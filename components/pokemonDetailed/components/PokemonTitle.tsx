@@ -26,7 +26,6 @@ export const PokemonTitle = () => {
           ? {
               ...styleHeading,
               fontSize: "2.5rem",
-              bgcolor: "pink",
               lineHeight: "0.8",
               textAlign: "center",
             }

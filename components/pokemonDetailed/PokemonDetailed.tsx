@@ -89,7 +89,7 @@ export const PokemonDetailed = ({
     ? { ...styleContainerPokemonData, flexDirection: "column" }
     : styleContainerPokemonData;
   const stylePokemonAttributes = smallScreen
-    ? { ...styleContainerPokemonAttributes, width: "80%", marginTop: "2rem" }
+    ? { ...styleContainerPokemonAttributes, width: "100%", marginTop: "2rem" }
     : styleContainerPokemonAttributes;
   return (
     <PokemonDetailedContext.Provider value={pokemon}>
