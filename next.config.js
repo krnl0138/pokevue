@@ -7,7 +7,11 @@ const nextConfig = {
 module.exports = {
   nextConfig,
   images: {
-    domains: ["raw.githubusercontent.com", "firebasestorage.googleapis.com"],
+    domains: [
+      "raw.githubusercontent.com",
+      "firebasestorage.googleapis.com",
+      "googleusercontent.com",
+    ],
   },
   experimental: {
     modularizeImports: {
