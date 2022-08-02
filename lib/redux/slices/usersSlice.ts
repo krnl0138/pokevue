@@ -6,7 +6,7 @@ import { dbInterface } from "../../api/dbInterface";
 // type TInitialState = Pick<TUser, "uid" | "avatar" | "username">;
 type TInitialState = {
   [uid: TUser["uid"]]: {
-    avatar: TUser["avatar"];
+    avatar?: TUser["avatar"];
     username: TUser["username"];
   };
 };
@@ -19,20 +19,12 @@ export const usersSlice = createSlice({
   reducers: {
     addOtherUser: (
       state,
-      action: PayloadAction<{ uid: string; avatar: string; username: string }>
+      action: PayloadAction<{ uid: string; username: string; avatar: string }>
     ) => {
-      console.log(
-        "payload in reducer addOtherUser in usersSlice is: ",
-        action.payload
-      );
-      const { uid, avatar, username } = action.payload;
-      state[uid] = { avatar: avatar, username: username };
+      const { uid, username, avatar } = action.payload;
+      state[uid] = { username, avatar };
     },
   },
-  extraReducers: (builder) =>
-    builder.addCase(getOtherUser.fulfilled, (state, action) => {
-      // return { ...state, ...action.payload };
-    }),
 });
 
 // DEFAULT EXPORTS
@@ -50,7 +42,6 @@ export const getOtherUser = createAsyncThunk(
   "users/getOtherUser",
   async (uid: string) => {
     const db = dbInterface();
-    console.log("from usersSlice: getOtherUser was called ");
     await db.getOtherUser(uid);
   }
 );
