@@ -1,6 +1,6 @@
 import { AnyAction, ThunkAction } from "@reduxjs/toolkit";
 import { ChangeEvent } from "react";
-import { Url } from "url";
+import { URL } from "url";
 import { RootState } from "../lib/redux";
 
 export type AppThunk<ReturnType = void> = ThunkAction<
@@ -25,22 +25,22 @@ export type TPokemonResponse = {
   height: number;
   held_items: [];
   id: number;
-  is_default: true;
+  is_default: boolean;
   location_area_encounters: string;
   moves: Array<{
     move: {
       name: string;
-      url: Url;
+      url: URL;
     };
     version_group_details: Array<{
       level_learned_at: number;
       move_learn_method: {
         name: string;
-        url: Url;
+        url: URL;
       };
       version_group: {
         name: string;
-        url: Url;
+        url: URL;
       };
     }>;
   }>;
@@ -85,32 +85,33 @@ export type TPokemonResponse = {
     slot: number;
     type: {
       name: string;
-      url: Url;
+      url: URL;
     };
   }>;
   weight: number;
 };
 
 export type TPokemonSpeciesResponse = {
-  is_baby: false;
-  is_legendary: false;
-  is_mythical: false;
+  is_baby: boolean;
+  is_legendary: boolean;
+  is_mythical: boolean;
   capture_rate: number;
   flavor_text_entries: Array<{
     flavor_text: string;
     language: {
       name: string;
-      url: Url;
+      url: URL;
     };
     version: {
       name: string;
-      url: Url;
+      url: URL;
     };
   }>;
   evolves_from_species: null | {
     name: string;
-    url: Url;
+    url: URL;
   };
+  evolution_chain: { url: URL };
 };
 
 export type TRatings = { [uid: TUser["uid"]]: number };
@@ -135,9 +136,9 @@ export type TPokemon = {
     abilities: Array<{ id: number; name: string }>;
     stats: Array<{ id: number; name: string; value: number }>;
     captureRate: number;
-    isBaby: false;
-    isLegendary: false;
-    isMythical: false;
+    isBaby: boolean;
+    isLegendary: boolean;
+    isMythical: boolean;
     evolutionName: null | string;
   };
 };
@@ -154,3 +155,26 @@ export type TUser = {
 export type TMyChangeFormEvent = ChangeEvent<
   HTMLInputElement | HTMLTextAreaElement
 >;
+
+export type TChainResponse = {
+  chain: {
+    evolution_details: [];
+    evolves_to: [
+      {
+        evolution_details: [];
+        evolves_to: [
+          {
+            evolution_details: [];
+            evolves_to: [];
+            species: { name: string };
+            is_baby: boolean;
+          }
+        ];
+        is_baby: boolean;
+        species: { name: string };
+      }
+    ];
+    is_baby: boolean;
+    species: { name: string };
+  };
+};
