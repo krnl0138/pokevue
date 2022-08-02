@@ -1,4 +1,5 @@
-import { Box, List, ListItem, Typography } from "@mui/material";
+import { Box, List, ListItem, Typography, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Link from "next/link";
 import { URLS } from "../../../utils/constants";
 
@@ -22,10 +23,25 @@ const styleFooterMain = {
 };
 
 export const Footer = () => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("md"));
   return (
     <Box component="footer" sx={styleFooterMain}>
       <Box component="nav" sx={{ marginBottom: 1 }}>
-        <List sx={{ display: "flex" }}>
+        <List
+          sx={
+            matches
+              ? {
+                  display: "flex",
+                  alignItems: "center",
+                  maxHeight: "5rem",
+                  alignContent: "center",
+                  " li": { justifyContent: "center", padding: "0.4rem" },
+                  " a": { fontSize: "0.8rem" },
+                }
+              : { display: "flex" }
+          }
+        >
           <ListItem>
             <Typography component="p" variant="body1">
               <Link href={URLS.home}>
