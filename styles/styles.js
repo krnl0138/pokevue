@@ -16,6 +16,16 @@ export const styleGlobalTextStyle = {
   color: "rgba(0,0,0,0.7)",
 };
 
-export const styleGlobalHeaderColor = {
-  backgroundColor: "rgb(24 125 226 / 90%)",
+export const styleGlobalHeadingSection = {
+  marginTop: "5rem",
+  marginLeft: "7rem",
+  fontWeight: 300,
+  letterSpacing: "0.085em",
+  fontSize: "2.8rem",
+  lineHeight: "1.1",
+};
+
+export const styleGlobalContainerDark = {
+  border: "1px solid rgb(255 255 255 / 20%)",
+  backgroundColor: "rgb(14 45 81)",
 };
