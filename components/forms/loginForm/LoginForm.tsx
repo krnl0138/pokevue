@@ -99,6 +99,7 @@ export const LoginForm = () => {
     theme.palette.mode === "light" ? "rgb(25 118 210)" : "#00b4f8";
 
   const smScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const mdScreen = useMediaQuery(theme.breakpoints.down("md"));
   const styleHeaderFontSize = smScreen ? "1.2rem" : "1.5rem";
   const styleIconMobile = smScreen
     ? {
@@ -126,6 +127,13 @@ export const LoginForm = () => {
               ...styleMain,
               padding: "1.5rem 1rem",
               "@media": { padding: "1.5rem 1rem" },
+              " p": { fontSize: "1rem" },
+            }
+          : mdScreen
+          ? {
+              ...styleMain,
+              padding: "1.5rem 3rem",
+              "@media": { padding: "1.5rem 3rem" },
               " p": { fontSize: "1rem" },
             }
           : styleMain

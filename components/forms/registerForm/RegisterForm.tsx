@@ -105,9 +105,10 @@ export const RegisterForm = () => {
   const styleIconFilter =
     theme.palette.mode === "light" ? "opacity(0.05)" : "opacity(0.2)";
 
-  const matches = useMediaQuery(theme.breakpoints.down("sm"));
-  const styleHeaderFontSize = matches ? "1.2rem" : "1.5rem";
-  const styleIconMobile = matches
+  const smScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const mdScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const styleHeaderFontSize = smScreen ? "1.2rem" : "1.5rem";
+  const styleIconMobile = smScreen
     ? {
         top: "10%",
         left: "50%",
@@ -128,11 +129,18 @@ export const RegisterForm = () => {
     <Container
       maxWidth="xs"
       sx={
-        matches
+        smScreen
           ? {
               ...styleMain,
               padding: "1.5rem 1rem",
               "@media": { padding: "1.5rem 1rem" },
+              " p": { fontSize: "1rem" },
+            }
+          : mdScreen
+          ? {
+              ...styleMain,
+              padding: "1.5rem 3rem",
+              "@media": { padding: "1.5rem 3rem" },
               " p": { fontSize: "1rem" },
             }
           : styleMain
