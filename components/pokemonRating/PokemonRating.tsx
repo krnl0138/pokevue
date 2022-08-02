@@ -1,12 +1,11 @@
 import { Rating, Tooltip, Typography } from "@mui/material";
 import { Container } from "@mui/system";
-import {
-  dbCreateRating,
-  dbGetAverageRating,
-  dbUpdateRating,
-} from "../../firebase/dbRatings";
+import { dbInterface } from "../../lib/api/dbInterface";
 import { selectAverageRating } from "../../lib/redux/slices/pokemonsSlice";
-import { selectUserPokemonRating } from "../../lib/redux/slices/userSlice";
+import {
+  selectCurrentUserUid,
+  selectUserPokemonRating,
+} from "../../lib/redux/slices/userSlice";
 import { useAppSelector } from "../../utils/hooks";
 import { TPokemon } from "../../utils/types";
 
@@ -14,7 +13,7 @@ const styleRatingContainerInCard = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  // fontSize: "1rem",
+  flexGrow: "1",
   paddingRight: "10px",
   paddingLeft: "8px",
   width: "auto",
@@ -23,8 +22,10 @@ const styleRatingContainerInCard = {
 };
 
 const styleAverageRatingParagraph = {
-  fontWeight: "500",
+  fontWeight: "300",
   fontSize: "0.6rem",
+  lineHeight: "1.4",
+  letterSpacing: "0.03em",
 };
 
 const styleRatingContainerInDetailed = {
@@ -38,36 +39,28 @@ const styleRatingContainerInDetailed = {
 };
 
 const styleAverageRatingParagraphInDetailed = {
-  fontWeight: "700",
-  fontSize: "0.9rem",
+  fontWeight: "400",
+  fontSize: "0.85rem",
+  letterSpacing: "0.01rem",
 };
 
-export const PokemonRating = ({
-  id,
-  inDetailed,
-}: {
-  id: TPokemon["id"];
-  inDetailed?: boolean;
-}) => {
-  // const { id: pokemonId } = useContext(PokemonCardContext);
-  const pokemonId = id;
+type TPokemonRating = { id: TPokemon["id"]; inDetailed?: boolean };
+export const PokemonRating = ({ id, inDetailed }: TPokemonRating) => {
+  const db = dbInterface();
   const userRating = useAppSelector((state) =>
-    selectUserPokemonRating(state, pokemonId)
+    selectUserPokemonRating(state, id)
   );
   const averageRating = useAppSelector((state) =>
-    selectAverageRating(state, pokemonId)
+    selectAverageRating(state, id)
   );
-
-  console.log("average userRating is: ", averageRating);
-  console.log("user userRating is: ", userRating);
+  const uid = useAppSelector(selectCurrentUserUid);
 
   const handleOnChange = async (rating: number) => {
     if (!userRating) {
       try {
-        console.log("entering CREATION of a rating");
-        await dbCreateRating({ pokemonId, rating });
         // TODO if no error can we assume it is OK and just update the store?
-        await dbGetAverageRating({ pokemonId });
+        await db.createRating(uid, { id, rating });
+        db.getAverageRating(id);
         return;
       } catch {
         throw new Error("An error occurred while adding rating.");
@@ -75,10 +68,9 @@ export const PokemonRating = ({
     }
 
     try {
-      console.log("entering UPDATE of a rating");
-      await dbUpdateRating({ pokemonId, rating });
+      await db.updateRating(uid, { id, rating });
     } catch {
-      throw new Error("An error occurred while adding rating.");
+      throw new Error("An error occurred while updating rating.");
     }
   };
 
