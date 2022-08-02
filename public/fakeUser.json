@@ -1,8 +1,0 @@
-{
-    "id": 0,
-    "username": "Alex Jones",
-    "email": "alex@example.com",
-    "avatar": "/favicon.ico",
-    "password": "qwerty",
-    "favourites": [15, 25]
-}
