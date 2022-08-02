@@ -1,4 +1,5 @@
 import { List, Snackbar, Stack, Skeleton } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import {
   useRef,
   useEffect,
@@ -11,6 +12,10 @@ import Sortable from "sortablejs";
 import { PokemonCard } from "./pokemonCard/PokemonCard";
 import autoAnimate from "@formkit/auto-animate";
 import { NUM_POKEMONS_TO_LOAD_MORE } from "../../utils/constants";
+import {
+  styleGlobalBorderComponent,
+  styleGlobalContainerDark,
+} from "../../styles/styles";
 
 const styleCardsList = {
   display: "flex",
@@ -49,11 +54,26 @@ export const PokemonCards = ({ ids, inRecent, loading }: TPokemonCards) => {
   /*
    * Pre-render skeleton logic
    */
+  const theme = useTheme();
+  const styleSkeleton =
+    theme.palette.mode === "dark"
+      ? { ...styleGlobalContainerDark }
+      : { ...styleGlobalBorderComponent };
   const skeletonArray = Array(NUM_POKEMONS_TO_LOAD_MORE).fill(0);
   const skeletons = skeletonArray.map((i, index) => (
     <Stack key={index} spacing={1}>
-      <Skeleton variant="circular" width={50} height={50} />
-      <Skeleton variant="rectangular" width={385} height={500} />
+      <Skeleton
+        sx={{ ...styleSkeleton, borderRadius: "50%" }}
+        variant="circular"
+        width={50}
+        height={50}
+      />
+      <Skeleton
+        sx={styleSkeleton}
+        variant="rectangular"
+        width={385}
+        height={500}
+      />
     </Stack>
   ));
 
