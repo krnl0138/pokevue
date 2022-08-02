@@ -17,10 +17,16 @@ import {
   dbWriteFavourite,
   dbWriteUserData,
 } from "../../firebase/dbUsers";
+import {
+  storageDownloadAvatar,
+  storageUploadAvatar,
+} from "../../firebase/storage";
 import { TUser } from "../../utils/types";
 
-// An agnostic db provider for Redux
-// Usage: const db = dbProvider();
+/*
+ * An agnostic db provider for Redux.
+ * Usage: const db = dbInterface();
+ */
 export const dbInterface = () => {
   const createUser = async (
     uid: TUser["uid"],
@@ -32,9 +38,9 @@ export const dbInterface = () => {
   const updateUser = async (
     uid: TUser["uid"],
     data: {
-      username: string;
-      email: string;
-      avatar: string;
+      username?: string;
+      email?: string;
+      avatar?: string;
     }
   ) => {
     await dbUpdateUserData(uid, data);
@@ -48,8 +54,22 @@ export const dbInterface = () => {
     dbRemoveFavourite(uid, favourite);
   };
 
+  const uploadUserAvatar = async (uid: string, file: File) => {
+    await storageUploadAvatar(uid, file);
+  };
+
+  const getUserAvatar = async (uid: string) => {
+    await storageDownloadAvatar(uid);
+  };
+
   const getUser = async (uid: string) => {
     await dbGetUser(uid);
+    // await getUserAvatar(uid);
+  };
+
+  const getOtherUser = async (uid: string) => {
+    console.log("from dbInterface: getOtherUser was called with uid: ", uid);
+    await dbGetOtherUser(uid);
   };
 
   // TODO args should be rewritten properly
@@ -92,11 +112,6 @@ export const dbInterface = () => {
     await dbGetAverageRating(id);
   };
 
-  const getOtherUser = async (uid: string) => {
-    console.log("from dbInterface: getOtherUser was called with uid: ", uid);
-    await dbGetOtherUser(uid);
-  };
-
   const writeComment = async (
     uid: TUser["uid"],
     pokemonId: number,
@@ -128,5 +143,7 @@ export const dbInterface = () => {
     writeComment,
     getComments,
     deleteComment,
+    getUserAvatar,
+    uploadUserAvatar,
   };
 };

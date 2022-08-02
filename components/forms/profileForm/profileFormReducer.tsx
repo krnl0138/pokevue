@@ -2,7 +2,7 @@ export type TProfileFormData = {
   email: string;
   password: string;
   username: string;
-  avatar: string;
+  avatar: null | File;
 };
 
 type TInitialState = {
@@ -13,9 +13,9 @@ type TInitialState = {
 };
 
 type TProfileAction = {
-  type: "field" | "submit" | "success" | "failed";
+  type: "field" | "submit" | "success" | "failed" | "wrongAvatar";
   field?: keyof TProfileFormData;
-  value?: string;
+  value?: string | File;
 };
 
 export const initialStateProfile: TInitialState = {
@@ -25,7 +25,7 @@ export const initialStateProfile: TInitialState = {
   data: {
     email: "",
     password: "",
-    avatar: "",
+    avatar: null,
     username: "",
   },
 };
@@ -46,7 +46,7 @@ export const profileReducer = (
       return {
         ...state,
         isLoading: false,
-        isLoggedIn: true,
+        isSubmitted: true,
         data: { ...initialStateProfile.data },
       };
     }
@@ -55,7 +55,7 @@ export const profileReducer = (
         ...state,
         isLoading: false,
         isFailed: true,
-        error: "Incorrect username or password",
+        error: typeof action.value === "string" ? action.value : "",
         data: { ...initialStateProfile.data },
       };
     }
@@ -64,6 +64,14 @@ export const profileReducer = (
       return {
         ...state,
         data: { ...state.data, [action.field]: action.value },
+      };
+    }
+    case "wrongAvatar": {
+      return {
+        ...state,
+        error:
+          "Your file exceeds the limit of 2mb or it is not an image. Try another file.",
+        data: { ...state.data, avatar: null },
       };
     }
     default:

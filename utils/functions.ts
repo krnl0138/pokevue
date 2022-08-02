@@ -1,4 +1,4 @@
-import { COLORS } from "./constants";
+import { COLORS, IMAGE_FILE_SIZE_BYTES, IMAGE_FILE_TYPES } from "./constants";
 
 export const fetcher = async (url: string) => {
   const res = await fetch(url);
@@ -47,4 +47,12 @@ export const removeDuplicates = (
   initial: number[]
 ) => {
   return Object.values(current).filter((id) => !initial?.includes(id));
+};
+
+export const isAvatarTypeImage = (file: File) => {
+  return IMAGE_FILE_TYPES.includes(file.type);
+};
+
+export const isAvatarSizePassed = (file: File) => {
+  return file.size < IMAGE_FILE_SIZE_BYTES;
 };
