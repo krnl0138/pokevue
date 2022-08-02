@@ -11,6 +11,7 @@ import store from "../lib/redux";
 import { setUser } from "../lib/redux/slices/userSlice";
 import { addOtherUser } from "../lib/redux/slices/usersSlice";
 import { TUser } from "../utils/types";
+import { composeObjFromNonEmpty } from "../utils/functions";
 
 // db
 const db = getDatabase(app);
@@ -30,8 +31,9 @@ export const dbWriteUserData = async (
     throw new Error("No uid or data were provided in dbWriteUserData call!");
   console.log("fired dbWriteUserData with: ", uid);
   console.log("fired dbWriteUserData with: ", data);
-  await set(userRef(uid), data);
-  onValue(userRef(uid), (snapshot) => {
+  onValue(userRef(uid), async (snapshot) => {
+    if (snapshot.exists()) return;
+    await set(userRef(uid), data);
     const value = snapshot.val();
     store.dispatch(setUser({ uid, ...value }));
   });
@@ -51,10 +53,7 @@ export const dbUpdateUserData = async (
    * compose 'newUser' object from non-empty fields of 'data'
    * Firebase's 'update' method accepts only an object
    */
-  const newUser = <typeof data>{};
-  Object.entries(data).map(([key, value]) => {
-    if (value) newUser[key as keyof typeof data] = value;
-  });
+  const newUser = composeObjFromNonEmpty(data);
   console.log("final object is:", newUser);
   await update(userRef(uid), newUser);
   onValue(userRef(uid), (snapshot) => {

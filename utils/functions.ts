@@ -56,3 +56,11 @@ export const isAvatarTypeImage = (file: File) => {
 export const isAvatarSizePassed = (file: File) => {
   return file.size < IMAGE_FILE_SIZE_BYTES;
 };
+
+export const composeObjFromNonEmpty = (data: {[key:string]: any}) => {
+    const newUser = <typeof data>{};
+    Object.entries(data).map(([key, value]) => {
+      if (value) newUser[key as keyof typeof data] = value;
+    });
+    return newUser;
+}
