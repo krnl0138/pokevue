@@ -29,7 +29,8 @@ export const ProtectedRoute = ({ children }: TProtectedRoute) => {
   const db = dbInterface();
   const username = useAppSelector(selectUserUsername);
   const userFavourites = useAppSelector(selectUserFavourites);
-  const pokemonsIds = useAppSelector(selectAllIds);
+  const allIds = useAppSelector(selectAllIds);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const redirect = () => router.push(URLS.login);
 
@@ -38,6 +39,7 @@ export const ProtectedRoute = ({ children }: TProtectedRoute) => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         await db.getUser(user.uid);
+        setIsLoggedIn(true);
         return;
       } else {
         return redirect();
@@ -50,19 +52,18 @@ export const ProtectedRoute = ({ children }: TProtectedRoute) => {
   const [isFavsPopulated, setIsFavsPopulated] = useState(false);
   useEffect(() => {
     if (isFavsPopulated || Object.keys(userFavourites).length === 0) return;
-    const favIdsToFetch = removeDuplicates(userFavourites, pokemonsIds);
+    const favIdsToFetch = removeDuplicates(userFavourites, allIds);
     if (favIdsToFetch.length === 0) return;
 
     const populateFavourites = async () => {
       setIsFavsPopulated(true);
-      const favPokemons = await Promise.all(
-        favIdsToFetch.map((id) => dispatch(getPokemon(id)).unwrap())
-      );
-      favPokemons.forEach((p) => dispatch(addFavouritePokemon(p.id)));
+      // TODO should be Promise.allSettled and retry request for errors if any
+      await Promise.all(favIdsToFetch.map((id) => dispatch(getPokemon(id))));
+      favIdsToFetch.forEach((id) => dispatch(addFavouritePokemon(id)));
     };
 
     populateFavourites();
   }, [username]);
 
-  return username ? children : null;
+  return isLoggedIn ? children : null;
 };
