@@ -1,7 +1,9 @@
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import {
+  styleGlobalContainerDark,
   styleGlobalBorderComponent,
   styleGlobalHoverShadow,
 } from "../../../styles/styles";
@@ -10,7 +12,6 @@ const styleMainContainer = {
   paddingTop: 2,
   paddingBottom: 2,
   marginTop: 1,
-  backgroundColor: "#fefefe",
   ...styleGlobalHoverShadow,
   ...styleGlobalBorderComponent,
 };
@@ -40,8 +41,14 @@ export const PokemonAttributesContainer = ({
   avatar,
   children,
 }: TPokemonAttributesContainer) => {
+  const theme = useTheme();
+
+  const styleMain =
+    theme.palette.mode === "light"
+      ? { ...styleMainContainer, backgroundColor: "#fefefe" }
+      : { ...styleMainContainer, ...styleGlobalContainerDark };
   return (
-    <Container sx={styleMainContainer}>
+    <Container sx={styleMain}>
       <Container sx={styleTitleContainer}>
         <Typography variant="h3" component="h3" sx={styleTitleHeading}>
           {title}

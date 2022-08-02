@@ -1,4 +1,6 @@
 import { Container } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { POKEMON_LOGO } from "../../utils/constants";
 import { TPokemon } from "../../utils/types";
 import { Comments } from "../comments/Comments";
 import { CommentForm } from "../forms/commentForm/CommentForm";
@@ -16,6 +18,20 @@ const styleContainerMain = {
   " h2": {
     fontSize: "3.2rem",
     letterSpacing: "0.03em",
+  },
+  "::before": {
+    content: "''",
+    position: "absolute",
+    width: "32rem",
+    height: "20rem",
+    zIndex: -1,
+    top: "5%",
+    right: "12%",
+    backgroundImage: `url(${POKEMON_LOGO})`,
+    backgroundSize: "32rem 10rem",
+    backgroundRepeat: "no-repeat",
+    filter: "opacity(.1)",
+    transform: "rotate(15deg)",
   },
 };
 
@@ -56,9 +72,21 @@ export const PokemonDetailed = ({
   pokemon,
   evolutionPokemons,
 }: TPokemonDetailed) => {
+  const theme = useTheme();
+  const styleMain =
+    theme.palette.mode === "light"
+      ? {
+          ...styleContainerMain,
+          "::before": {
+            ...styleContainerMain["::before"],
+            filter: "opacity(.3)",
+          },
+        }
+      : styleContainerMain;
+
   return (
     <PokemonDetailedContext.Provider value={pokemon}>
-      <Container sx={styleContainerMain}>
+      <Container sx={styleMain}>
         <Container sx={styleContainerImageTitle}>
           <PokemonTitle />
           <PokemonBigImage />

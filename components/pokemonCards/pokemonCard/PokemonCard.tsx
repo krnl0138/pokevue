@@ -1,6 +1,8 @@
-import { Box, Card, CircularProgress } from "@mui/material";
+import { Box, Card, Skeleton, Stack } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
 import { selectPokemonById } from "../../../lib/redux/slices/pokemonsSlice";
+import { styleGlobalContainerDark } from "../../../styles/styles";
 import { useAppSelector } from "../../../utils/hooks";
 import { PokemonCardActions } from "./components/pokemonCardActions";
 import { PokemonCardBody } from "./components/pokemonCardBody";
@@ -35,39 +37,53 @@ type TPokemonCard = {
   inModal?: boolean;
 };
 
-export const PokemonCard = ({
-  id,
-  inRecent = false,
-  inModal = false,
-}: TPokemonCard) => {
-  const pokemon = useAppSelector((state) => selectPokemonById(state, id));
-  const [isHovered, setIsHovered] = useState(false);
-  const toggleSetIsHovered = () => {
-    setIsHovered(!isHovered);
-  };
+/**
+ * Displays all info about a pokemon, mounts based on list of
+ * ids passed into PokemonCards
+ */
+// eslint-disable-next-line react/display-name
+export const PokemonCard = React.memo(
+  ({ id, inRecent = false, inModal = false }: TPokemonCard) => {
+    const pokemon = useAppSelector((state) => selectPokemonById(state, id));
 
-  const contextValue = { ...pokemon, inModal, inRecent, isHovered };
-  return (
-    <PokemonCardContext.Provider value={contextValue}>
-      <Card
-        onMouseEnter={toggleSetIsHovered}
-        onMouseLeave={toggleSetIsHovered}
-        variant="outlined"
-        sx={inModal ? cardStyleModal : cardStyle}
-      >
+    const [isHovered, setIsHovered] = useState(false);
+    const toggleSetIsHovered = () => {
+      setIsHovered(!isHovered);
+    };
+
+    const contextValue = { ...pokemon, inModal, inRecent, isHovered };
+    const theme = useTheme();
+    const styleCard = inModal ? cardStyleModal : cardStyle;
+    return (
+      <PokemonCardContext.Provider value={contextValue}>
         {pokemon ? (
-          <>
-            <Box>
-              <PokemonCardHeader />
-              <PokemonCardBody />
-            </Box>
+          <Card
+            onMouseEnter={toggleSetIsHovered}
+            onMouseLeave={toggleSetIsHovered}
+            variant="outlined"
+            sx={
+              theme.palette.mode === "light"
+                ? styleCard
+                : { ...styleCard, ...styleGlobalContainerDark }
+            }
+          >
+            <>
+              <Box>
+                <PokemonCardHeader />
+                <PokemonCardBody />
+              </Box>
 
-            {!inModal && <PokemonCardActions />}
-          </>
+              {!inModal && <PokemonCardActions />}
+            </>
+          </Card>
         ) : (
-          <CircularProgress />
+          // TODO architecturaly not working since the component mounts only when recentIds selector fires
+          <Stack spacing={1}>
+            <Skeleton variant="circular" width={50} height={50} />
+            <Skeleton variant="rectangular" width={385} height={500} />
+          </Stack>
         )}
-      </Card>
-    </PokemonCardContext.Provider>
-  );
-};
+      </PokemonCardContext.Provider>
+    );
+  }
+);
