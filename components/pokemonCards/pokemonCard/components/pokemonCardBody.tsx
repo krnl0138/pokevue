@@ -20,7 +20,35 @@ import {
 import { useContext, useMemo } from "react";
 import { getRandomColors } from "../../../../utils/functions";
 import { PokemonCardContext } from "../pokemonCardContext";
-import { styleGlobalTextStyle } from "../../../../styles/styles";
+
+const styleCardBody = {
+  flexGrow: 1,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "flex-start",
+  paddingBottom: 0,
+};
+
+const styleImageContainer = { textAlign: "center" };
+
+const styleDescription = {
+  textAlign: "justify",
+  fontWeight: 300,
+};
+
+const styleList = { display: "flex", flexWrap: "wrap" };
+const styleListItem = { width: "auto", padding: "0 8px 0 0" };
+
+const styleListAbilitiesItemText = { width: "auto", padding: "0 8px 0 0" };
+const styleStatsChip = {
+  backgroundColor: "transparent",
+  border: "none",
+  borderBottom: "1px solid rgb(159 159 159 / 71%)",
+  borderRadius: "16px",
+  padding: "0 0 0 5px",
+  height: "25px",
+  fontWeight: "300",
+};
 
 export const PokemonCardBody = () => {
   const { pokemonData } = useContext(PokemonCardContext);
@@ -28,19 +56,14 @@ export const PokemonCardBody = () => {
   const randomColors = useMemo(() => getRandomColors(abilities), []);
   const descriptionShort = description.split(".").splice(0, 4).join(" ");
 
+  console.log("avatarBig is:", avatarBig);
   return (
-    <CardContent
-      sx={{
-        flexGrow: 1,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-      }}
-    >
-      <Container sx={{ textAlign: "center", paddingBottom: 3 }}>
+    <CardContent sx={styleCardBody}>
+      <Container sx={styleImageContainer}>
         <Image
           height="140"
           width="140"
+          // TODO there are some avatarBig instances that are valid urls but no files on them exist
           src={avatarBig ? avatarBig : placeholder}
           alt="pokemon avatar"
         />
@@ -48,29 +71,19 @@ export const PokemonCardBody = () => {
 
       <Container>
         {description ? (
-          <Typography
-            variant="body2"
-            paragraph={true}
-            sx={{
-              textAlign: "justify",
-              ...styleGlobalTextStyle,
-            }}
-          >
+          <Typography variant="body2" paragraph={true} sx={styleDescription}>
             {descriptionShort}
           </Typography>
         ) : (
-          <p>No description were provided.</p>
+          <Typography variant="body2">No description were provided.</Typography>
         )}
       </Container>
 
       <Container>
-        <List dense={true} sx={{ display: "flex", flexWrap: "wrap" }}>
+        <List dense={true} sx={styleList}>
           {abilities.map((ability, i) => (
-            <ListItem
-              key={ability.id}
-              sx={{ width: "auto", padding: "0 8px 0 0" }}
-            >
-              <ListItemText sx={{ width: "auto", padding: "0 8px 0 0" }}>
+            <ListItem key={ability.id} sx={styleListItem}>
+              <ListItemText sx={styleListAbilitiesItemText}>
                 <Chip
                   label={ability.name}
                   size="small"
@@ -85,32 +98,15 @@ export const PokemonCardBody = () => {
       </Container>
 
       <Container>
-        <List
-          dense={true}
-          disablePadding={true}
-          sx={{ display: "flex", flexWrap: "wrap" }}
-        >
+        <List dense={true} disablePadding={true} sx={styleList}>
           {stats.map((stat) => (
-            <ListItem
-              key={stat.id}
-              sx={{ width: "auto", padding: "0 8px 0 0" }}
-            >
+            <ListItem key={stat.id} sx={styleListItem}>
               <ListItemText>
                 <Chip
-                  color="secondary"
                   label={stat.value}
                   size="small"
                   variant="outlined"
-                  sx={{
-                    backgroundColor: "transparent",
-                    color: "rgba(0, 0, 0, .62)",
-                    border: "none",
-                    borderBottom: "1px solid rgb(159 159 159 / 71%)",
-                    borderRadius: "16px",
-                    padding: "0 0 0 5px",
-                    height: "25px",
-                    fontWeight: "300",
-                  }}
+                  sx={styleStatsChip}
                   icon={
                     stat.name === "hp" ? (
                       <Tooltip title="Health">

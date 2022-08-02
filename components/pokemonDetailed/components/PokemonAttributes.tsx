@@ -10,7 +10,7 @@ export const PokemonAttributes = () => {
       sx={{
         display: "flex",
         paddingTop: 2,
-        ">div": { marginRight: "5px" },
+        ">div": { marginRight: "1rem" },
       }}
     >
       <Chip
