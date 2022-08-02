@@ -34,7 +34,7 @@ export const dbWriteComment = async (
   { pokemonId, comment }: TdbWriteComment
 ) => {
   console.log("dbWriteComment was called with: ", pokemonId, comment);
-  // push '{uid:comment}' to /comments/[pokemonId]/[newCommentKey]:{uid:comment}
+
   const newCommentKey = push(child(ref(db), `commments/${pokemonId}`)).key;
   if (!newCommentKey)
     throw new Error(`An error occured in dbWriteComment while creating a key`);

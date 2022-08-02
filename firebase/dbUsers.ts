@@ -26,8 +26,11 @@ export const dbWriteUserData = async (
     email: string;
   }
 ) => {
+  if (!uid || !data)
+    throw new Error("No uid or data were provided in dbWriteUserData call!");
+  console.log("fired dbWriteUserData with: ", uid);
+  console.log("fired dbWriteUserData with: ", data);
   await set(userRef(uid), data);
-  // as values were set dispatch new values to Redux
   onValue(userRef(uid), (snapshot) => {
     const value = snapshot.val();
     store.dispatch(setUser({ uid, ...value }));
@@ -37,21 +40,23 @@ export const dbWriteUserData = async (
 export const dbUpdateUserData = async (
   uid: TUser["uid"],
   data: {
-    username: string;
-    email: string;
-    avatar: string;
+    avatar?: string;
+    username?: string;
+    email?: string;
   }
 ) => {
+  if (!uid || !data) return;
   console.log("fired dbUpdateUserData with: ", data);
-  // create 'newUser' object from non-empty fields of 'data' arg
-  // Firebase's 'update' method accepts only an object
+  /*
+   * compose 'newUser' object from non-empty fields of 'data'
+   * Firebase's 'update' method accepts only an object
+   */
   const newUser = <typeof data>{};
   Object.entries(data).map(([key, value]) => {
     if (value) newUser[key as keyof typeof data] = value;
   });
   console.log("final object is:", newUser);
   await update(userRef(uid), newUser);
-  // as values were updated dispatch new values to Redux
   onValue(userRef(uid), (snapshot) => {
     const value = snapshot.val();
     store.dispatch(setUser({ uid, ...value }));
@@ -62,31 +67,33 @@ export const dbWriteFavourite = async (
   uid: TUser["uid"],
   favourite: number
 ) => {
+  if (!uid || !favourite) return;
   set(favouriteRef(uid, favourite), favourite);
 };
 
 export const dbRemoveFavourite = (uid: TUser["uid"], favourite: number) => {
+  if (!uid || !favourite) return;
   remove(favouriteRef(uid, favourite));
 };
 
 export const dbGetUser = async (uid: TUser["uid"]) => {
+  if (!uid) return;
   onValue(userRef(uid), (snapshot) => {
     const value = snapshot.val();
     store.dispatch(setUser({ uid, ...value }));
-    console.log("from dbGetUser returning the value");
-    return value;
-    // store.dispatch(userGetAsyncThunk.fulfilled(store.user, { uid, ...value }));
+    // console.log("from dbGetUser returning the value");
+    // return value;
   });
 };
 
 export const dbGetOtherUser = async (uid: TUser["uid"]) => {
+  if (!uid) return;
   console.log("dbGetOtherUser was called with uid ", uid);
   onValue(userRef(uid), (snapshot) => {
     const value = snapshot.val();
     if (!value) throw new Error("No user was found in dbGetOtherUser call");
-    const { username } = value;
-    const avatar = value.avatar ? value.avatar : "";
-    const otherUser = { uid, avatar, username };
+    const { username, avatar } = value;
+    const otherUser = { uid, username, avatar };
     console.log("from dbGetOtherUser the 'otherUser' object is: ", otherUser);
     store.dispatch(addOtherUser(otherUser));
   });
