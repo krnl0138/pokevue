@@ -109,8 +109,9 @@ export const RegisterForm = () => {
   const styleHeaderFontSize = matches ? "1.2rem" : "1.5rem";
   const styleIconMobile = matches
     ? {
-        top: "3%",
-        right: "42%",
+        top: "10%",
+        left: "50%",
+        transform: "translate(-50%,-50%)",
         height: "60px",
         width: "60px",
         backgroundSize: "60px 60px",

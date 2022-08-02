@@ -98,12 +98,13 @@ export const LoginForm = () => {
   const styleLink =
     theme.palette.mode === "light" ? "rgb(25 118 210)" : "#00b4f8";
 
-  const matches = useMediaQuery(theme.breakpoints.down("sm"));
-  const styleHeaderFontSize = matches ? "1.2rem" : "1.5rem";
-  const styleIconMobile = matches
+  const smScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const styleHeaderFontSize = smScreen ? "1.2rem" : "1.5rem";
+  const styleIconMobile = smScreen
     ? {
-        top: "3%",
-        right: "38%",
+        top: "10%",
+        left: "50%",
+        transform: "translate(-50%,-50%)",
         backgroundSize: "60px 60px",
         height: "60px",
         width: "60px",
@@ -120,7 +121,7 @@ export const LoginForm = () => {
     <Container
       maxWidth="xs"
       sx={
-        matches
+        smScreen
           ? {
               ...styleMain,
               padding: "1.5rem 1rem",
