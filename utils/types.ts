@@ -178,3 +178,9 @@ export type TChainResponse = {
     species: { name: string };
   };
 };
+
+export type TCarouselItem = {
+  name: string;
+  description: string;
+  image: string;
+};

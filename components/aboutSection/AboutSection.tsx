@@ -4,8 +4,12 @@ import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import Link from "next/link";
 import { styleGlobalHeadingSection } from "../../styles/styles";
-import { AVATAR_PLACEHOLDER } from "../../utils/constants";
-import { CarouselAbout } from "./aboutCarousel";
+import {
+  AVATAR_PLACEHOLDER,
+  SPACEBURGER_PUBLIC_SCREENSHOTS,
+} from "../../utils/constants";
+import { AboutCarousel } from "./AboutCarousel";
+import { PokevueMobile } from "./PokevueMobile";
 
 const styleMain = {
   marginTop: "2rem",
@@ -31,7 +35,7 @@ const styleTextContainer = {
 
 const styleSectionHeading = {
   fontSize: "1.2rem",
-  marginBottom: "2rem",
+  margin: "2rem 0",
   textTransform: "uppercase",
 };
 
@@ -70,8 +74,6 @@ export const AboutSection = () => {
         />
       </Typography>
 
-      <CarouselAbout />
-
       <Container maxWidth="lg" sx={styleTextContainer}>
         <Typography component="h2" variant="h5" sx={styleSectionHeading}>
           About this project
@@ -80,7 +82,7 @@ export const AboutSection = () => {
           Hi, my name is Ivan! I&apos;ve built this site as a pet-project of
           mine for my front-end portfolio. The source code is openly published
           at{" "}
-          <Link href="https://github.com/">
+          <Link href="https://github.com/krnl0138/pokevue">
             <a>
               Github page
               <OpenInNew fontSize="small" sx={{ fontSize: "0.8rem" }} />
@@ -88,7 +90,8 @@ export const AboutSection = () => {
           </Link>
           .
           <br />
-          I&apos;m actively looking for a job right now feel free to email me at{" "}
+          I&apos;m actively looking for a job right now -- feel free to email me
+          at{" "}
           <Link href="mailto:krnl03182@gmail.com">
             <a>
               krnl03182@gmail.com
@@ -103,6 +106,15 @@ export const AboutSection = () => {
           You can optionally customize your profile and manage your data.
           <br />
           <br />
+          P.S. Before this project I&apos;ve never watched Pokemon series so I
+          myself have learned a lot of new stuff.
+        </Typography>
+
+        <Typography component="h2" variant="h5" sx={styleSectionHeading}>
+          Technical Details
+        </Typography>
+
+        <Typography component="p" sx={styleText}>
           My main focus is in front-end development, I also like to study
           back-end concepts and frameworks to be able to participate in the
           creation of complex systems and services. I understand business logic
@@ -121,9 +133,23 @@ export const AboutSection = () => {
           NextJS + React/Redux + MaterialUI.
           <br />
           <br />
-          P.S. Before this project I&apos;ve never watched Pokemon series so I
-          myself have learned a lot of new stuff.
+          Works nice on mobile too! See below the screenshots for Iphone, Ipad.
         </Typography>
+
+        <PokevueMobile />
+
+        <Typography component="p" sx={styleText}>
+          I have also built this website while taking my courses at Yandex
+          Academy. Below are some screenshots. It works on JWT-tokens and uses
+          with websocket to show your feed. It is available at:{" "}
+          <Link href="https://spaceburger.nomoredomains.rocks">
+            <a>
+              spaceburger.nomoredomains.rocks
+              <OpenInNew fontSize="small" sx={{ fontSize: "0.8rem" }} />
+            </a>
+          </Link>
+        </Typography>
+        <AboutCarousel items={SPACEBURGER_PUBLIC_SCREENSHOTS} />
       </Container>
     </Box>
   );

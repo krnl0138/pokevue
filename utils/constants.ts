@@ -104,3 +104,31 @@ export const SPACEBURGER_PUBLIC_SCREENSHOTS = [
     image: "/spaceburger/5.webp",
   },
 ];
+
+export const POKEVUE_PUBLIC_SCREENSHOTS = [
+  {
+    name: "Pokevue Screenshot 1",
+    description: "Iphone: Pokemon card",
+    image: "/pokevue/1.webp",
+  },
+  {
+    name: "Pokevue Screenshot 2",
+    description: "Iphone: Pokemon view",
+    image: "/pokevue/2.webp",
+  },
+  {
+    name: "Pokevue Screenshot 3",
+    description: "Ipad: Pokemon cards",
+    image: "/pokevue/3.webp",
+  },
+  {
+    name: "Pokevue Screenshot 4",
+    description: "Ipad: Pokemon description",
+    image: "/pokevue/4.webp",
+  },
+  {
+    name: "Pokevue Screenshot 5",
+    description: "Ipad: Pokemon view",
+    image: "/pokevue/5.webp",
+  },
+];

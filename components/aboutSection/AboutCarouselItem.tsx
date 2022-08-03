@@ -1,15 +1,9 @@
 import { Container, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
+import { TCarouselItem } from "../../utils/types";
 
-type TCarouselItem = {
-  item: {
-    name: string;
-    description: string;
-    image: string;
-  };
-};
-export const CarouselItem = ({ item }: TCarouselItem) => {
+export const CarouselItem = ({ item }: { item: TCarouselItem }) => {
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const md = useMediaQuery(theme.breakpoints.down("md"));
@@ -17,9 +11,9 @@ export const CarouselItem = ({ item }: TCarouselItem) => {
   const styleItemDimensions = sm
     ? { maxWidth: "16rem", minHeight: "14rem" }
     : md
-    ? { maxWidth: "22rem", minHeight: "21rem" }
+    ? { maxWidth: "22rem", minHeight: "25rem" }
     : xl
-    ? { maxWidth: "50rem", minHeight: "40rem" }
+    ? { maxWidth: "50rem", minHeight: "35rem" }
     : { maxWidth: "70rem", minHeight: "70rem" };
 
   const styleItemHeading = sm
@@ -28,7 +22,7 @@ export const CarouselItem = ({ item }: TCarouselItem) => {
     ? { fontSize: "1rem" }
     : { fontSize: "1.5rem" };
   return (
-    <Container sx={styleItemDimensions}>
+    <Container sx={{ ...styleItemDimensions }}>
       <Image
         src={item.image}
         alt={item.name}
@@ -36,6 +30,7 @@ export const CarouselItem = ({ item }: TCarouselItem) => {
         width="100%"
         height="100%"
       />
+
       <Typography component="h2" sx={styleItemHeading}>
         {item.description}
       </Typography>
