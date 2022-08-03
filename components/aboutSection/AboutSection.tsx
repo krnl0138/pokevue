@@ -1,10 +1,11 @@
+import { OpenInNew } from "@mui/icons-material";
 import { Box, Container, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import Link from "next/link";
-import { AVATAR_PLACEHOLDER } from "../../utils/constants";
 import Image from "next/image";
-import { OpenInNew } from "@mui/icons-material";
+import Link from "next/link";
 import { styleGlobalHeadingSection } from "../../styles/styles";
+import { AVATAR_PLACEHOLDER } from "../../utils/constants";
+import { CarouselAbout } from "./aboutCarousel";
 
 const styleMain = {
   marginTop: "2rem",
@@ -68,6 +69,8 @@ export const AboutSection = () => {
           height="20px"
         />
       </Typography>
+
+      <CarouselAbout />
 
       <Container maxWidth="lg" sx={styleTextContainer}>
         <Typography component="h2" variant="h5" sx={styleSectionHeading}>

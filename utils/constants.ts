@@ -76,3 +76,31 @@ export const IMAGE_FILE_TYPES = [
 ];
 
 export const IMAGE_FILE_SIZE_BYTES = 2100000;
+
+export const SPACEBURGER_PUBLIC_SCREENSHOTS = [
+  {
+    name: "Spaceburger Screenshot 1",
+    description: "Main screen",
+    image: "/spaceburger/1.webp",
+  },
+  {
+    name: "Spaceburger Screenshot 2",
+    description: "A successful order",
+    image: "/spaceburger/2.webp",
+  },
+  {
+    name: "Spaceburger Screenshot 3",
+    description: "User order history",
+    image: "/spaceburger/3.webp",
+  },
+  {
+    name: "Spaceburger Screenshot 4",
+    description: "User profile menu",
+    image: "/spaceburger/4.webp",
+  },
+  {
+    name: "Spaceburger Screenshot 5",
+    description: "Overall websocket order feed",
+    image: "/spaceburger/5.webp",
+  },
+];
