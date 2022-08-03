@@ -46,14 +46,15 @@ const styleText = {
 
 export const AboutSection = () => {
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.down("md"));
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const md = useMediaQuery(theme.breakpoints.down("md"));
   return (
     <Box component="section" sx={styleMain}>
       <Typography
         component="h1"
         variant="h1"
         sx={
-          matches
+          md
             ? {
                 ...styleGlobalHeadingSection,
                 marginLeft: 0,
@@ -74,7 +75,12 @@ export const AboutSection = () => {
         />
       </Typography>
 
-      <Container maxWidth="lg" sx={styleTextContainer}>
+      <Container
+        maxWidth="lg"
+        sx={
+          sm ? { ...styleTextContainer, padding: "1rem" } : styleTextContainer
+        }
+      >
         <Typography component="h2" variant="h5" sx={styleSectionHeading}>
           About this project
         </Typography>

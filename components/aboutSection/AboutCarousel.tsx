@@ -6,8 +6,8 @@ import { CarouselItem } from "./AboutCarouselItem";
 
 export const AboutCarousel = ({ items }: { items: TCarouselItem[] }) => {
   const theme = useTheme();
-  const lg = useMediaQuery(theme.breakpoints.down("lg"));
-  const styleCarousel = lg ? { margin: "0" } : { margin: "0 10%" };
+  const md = useMediaQuery(theme.breakpoints.down("md"));
+  const styleCarousel = md ? { margin: "0" } : { margin: "0 10%" };
   return (
     <Carousel sx={styleCarousel}>
       {items.map((item, i) => (

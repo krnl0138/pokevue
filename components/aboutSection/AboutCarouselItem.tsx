@@ -9,12 +9,12 @@ export const CarouselItem = ({ item }: { item: TCarouselItem }) => {
   const md = useMediaQuery(theme.breakpoints.down("md"));
   const xl = useMediaQuery(theme.breakpoints.down("xl"));
   const styleItemDimensions = sm
-    ? { maxWidth: "16rem", minHeight: "14rem" }
+    ? { minHeight: "14rem" }
     : md
-    ? { maxWidth: "22rem", minHeight: "25rem" }
+    ? { minHeight: "25rem" }
     : xl
-    ? { maxWidth: "50rem", minHeight: "35rem" }
-    : { maxWidth: "70rem", minHeight: "70rem" };
+    ? { minHeight: "35rem" }
+    : { minHeight: "40rem" };
 
   const styleItemHeading = sm
     ? { fontSize: "0.5rem" }
